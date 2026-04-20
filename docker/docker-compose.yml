@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: tablewise_postgres
+    environment:
+      POSTGRES_DB: tablewise
+      POSTGRES_USER: tablewise_user
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - tablewise_network
+
+  redis:
+    image: redis:7-alpine
+    container_name: tablewise_redis
+    command: redis-server --requirepass ${REDIS_PASSWORD}
+    volumes:
+      - redis_data:/data
+    ports:
+      - "6379:6379"
+    networks:
+      - tablewise_network
+
+  seq:
+    image: datalust/seq:latest
+    container_name: tablewise_seq
+    environment:
+      ACCEPT_EULA: Y
+    volumes:
+      - seq_data:/data
+    ports:
+      - "5341:80"
+    networks:
+      - tablewise_network
+
+volumes:
+  postgres_data:
+  redis_data:
+  seq_data:
+
+networks:
+  tablewise_network:
+    driver: bridge

@@ -1,0 +1,13 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Tablewise.Api/Tablewise.Api.csproj" />
+    <Project Path="src/Tablewise.Application/Tablewise.Application.csproj" />
+    <Project Path="src/Tablewise.Domain/Tablewise.Domain.csproj" />
+    <Project Path="src/Tablewise.Infrastructure/Tablewise.Infrastructure.csproj" />
+    <Project Path="src/Tablewise.RuleEngine/Tablewise.RuleEngine.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Tablewise.IntegrationTests/Tablewise.IntegrationTests.csproj" />
+    <Project Path="tests/Tablewise.UnitTests/Tablewise.UnitTests.csproj" />
+  </Folder>
+</Solution>
