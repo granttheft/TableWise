@@ -1,11 +1,16 @@
+using Amazon.Runtime;
+using Amazon.S3;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
+using Tablewise.Application.Interfaces;
 using Tablewise.Domain.Interfaces;
 using Tablewise.Infrastructure.Persistence;
 using Tablewise.Infrastructure.Persistence.Interceptors;
 using Tablewise.Infrastructure.Services;
+using Tablewise.Infrastructure.Storage;
 
 namespace Tablewise.Infrastructure;
 
@@ -65,6 +70,37 @@ public static class DependencyInjection
         // Repository Pattern & Unit of Work
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
+        AddR2FileStorage(services, configuration);
+
         return services;
+    }
+
+    /// <summary>
+    /// Cloudflare R2 (S3 uyumlu) istemcisi ve dosya depolama servisini kaydeder.
+    /// </summary>
+    /// <param name="services">Service collection.</param>
+    /// <param name="configuration">Uygulama yapılandırması.</param>
+    private static void AddR2FileStorage(IServiceCollection services, IConfiguration configuration)
+    {
+        services.Configure<R2StorageOptions>(configuration.GetSection(R2StorageOptions.SectionName));
+
+        services.AddSingleton<AmazonS3Client>(sp =>
+        {
+            var opts = sp.GetRequiredService<IOptions<R2StorageOptions>>().Value;
+            var credentials = new BasicAWSCredentials(opts.AccessKey, opts.SecretKey);
+            var accountId = string.IsNullOrWhiteSpace(opts.AccountId) ? "000000000000" : opts.AccountId.Trim();
+            var serviceUrl = $"https://{accountId}.r2.cloudflarestorage.com";
+
+            var awsConfig = new AmazonS3Config
+            {
+                ServiceURL = serviceUrl,
+                ForcePathStyle = true
+            };
+
+            return new AmazonS3Client(credentials, awsConfig);
+        });
+
+        services.AddSingleton<IAmazonS3>(sp => sp.GetRequiredService<AmazonS3Client>());
+        services.AddScoped<IFileStorageService, R2FileStorageService>();
     }
 }
