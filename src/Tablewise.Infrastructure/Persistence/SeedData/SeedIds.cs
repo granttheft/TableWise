@@ -11,6 +11,11 @@ internal static class SeedIds
     public static readonly Guid PlanBusinessId = Guid.Parse("33333333-3333-3333-3333-333333333333");
     public static readonly Guid PlanEnterpriseId = Guid.Parse("44444444-4444-4444-4444-444444444444");
 
+    /// <summary>
+    /// SuperAdmin ve sistem kullanıcıları için teknik tenant (UI'da gösterilmez).
+    /// </summary>
+    public static readonly Guid PlatformTenantId = Guid.Parse("00000000-0000-0000-0000-000000000001");
+
     // Demo Tenant & SuperAdmin
     public static readonly Guid SuperAdminUserId = Guid.Parse("99999999-9999-9999-9999-999999999999");
     public static readonly Guid DemoTenantId = Guid.Parse("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa");

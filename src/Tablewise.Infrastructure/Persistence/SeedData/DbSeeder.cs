@@ -1,3 +1,5 @@
+using System.Security.Cryptography;
+using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Tablewise.Domain.Entities;
@@ -10,6 +12,8 @@ namespace Tablewise.Infrastructure.Persistence.SeedData;
 /// </summary>
 public class DbSeeder
 {
+    private const int DemoVenueSlotDurationMinutes = 90;
+
     private readonly TablewiseDbContext _context;
     private readonly ILogger<DbSeeder> _logger;
 
@@ -27,13 +31,13 @@ public class DbSeeder
     /// <summary>
     /// Seed işlemini çalıştırır. Sadece Development ortamında çalışmalı.
     /// </summary>
+    /// <returns>Asenkron görev.</returns>
     public async Task SeedAsync()
     {
         try
         {
             _logger.LogInformation("Seed data işlemi başlıyor...");
 
-            // İdempotency kontrolü: Demo tenant varsa seed'i atla
             var demoTenantExists = await _context.Tenants
                 .IgnoreQueryFilters()
                 .AnyAsync(t => t.Id == SeedIds.DemoTenantId);
@@ -44,8 +48,8 @@ public class DbSeeder
                 return;
             }
 
-            // Seed sırası önemli (foreign key constraint)
             await SeedPlansAsync();
+            await SeedPlatformTenantAsync();
             await SeedSuperAdminAsync();
             await SeedDemoTenantAsync();
             await SeedDemoVenueAsync();
@@ -168,7 +172,7 @@ public class DbSeeder
                 Tier = PlanTier.Enterprise,
                 Name = "Enterprise",
                 Description = "Sınırsız özellikler ve özel SLA",
-                MonthlyPriceTry = 0m, // Teklif bazlı
+                MonthlyPriceTry = 0m,
                 YearlyPriceTry = 0m,
                 IsVisible = true,
                 FeaturesJson = """
@@ -198,17 +202,38 @@ public class DbSeeder
         _logger.LogInformation("4 plan kaydı eklendi.");
     }
 
+    /// <summary>
+    /// SuperAdmin için teknik tenant oluşturur (User FK ve TenantScopedEntity için zorunlu).
+    /// </summary>
+    private async Task SeedPlatformTenantAsync()
+    {
+        var platformTenant = new Tenant
+        {
+            Id = SeedIds.PlatformTenantId,
+            Name = "Tablewise Platform",
+            Slug = "platform-internal",
+            Email = "platform-internal@tablewise.local",
+            PasswordHash = BCrypt.Net.BCrypt.HashPassword("PlatformTenant-NotForLogin-ChangeMe"),
+            PlanId = SeedIds.PlanEnterpriseId,
+            PlanStatus = PlanStatus.Active,
+            IsActive = true,
+            IsEmailVerified = true,
+            CreatedAt = DateTime.UtcNow
+        };
+
+        await _context.Tenants.AddAsync(platformTenant);
+        _logger.LogInformation("Platform tenant eklendi.");
+    }
+
+    /// <summary>
+    /// Süper admin kullanıcısı ekler (şifre: SuperAdmin123!).
+    /// </summary>
     private async Task SeedSuperAdminAsync()
     {
-        // SuperAdmin için geçici bir system tenant oluştur (TenantId zorunlu olduğu için)
-        // Gerçek implementasyonda SuperAdmin TenantId kontrolünden muaf tutulmalı
-        var systemTenantId = Guid.Parse("00000000-0000-0000-0000-000000000001");
-        
-        // Şifre: SuperAdmin123! (BCrypt hash)
         var superAdmin = new User
         {
             Id = SeedIds.SuperAdminUserId,
-            TenantId = systemTenantId, // Sistem tenant ID'si
+            TenantId = SeedIds.PlatformTenantId,
             FirstName = "Super",
             LastName = "Admin",
             Email = "superadmin@tablewise.com.tr",
@@ -231,17 +256,16 @@ public class DbSeeder
             Name = "Demo Restoran A.Ş.",
             Slug = "demo-restoran",
             Email = "info@demo-restoran.com",
-            PasswordHash = string.Empty, // Tenant login yok, sadece User login var
+            PasswordHash = BCrypt.Net.BCrypt.HashPassword("TenantPortal-NotUsed-ChangeMe"),
             PlanId = SeedIds.PlanProId,
             PlanStatus = PlanStatus.Active,
-            TrialEndsAt = DateTime.UtcNow.AddDays(-15), // Trial 15 gün önce bitmiş
-            PlanRenewsAt = DateTime.UtcNow.AddMonths(11), // 12 ay sonra yenilenecek
+            TrialEndsAt = DateTime.UtcNow.AddDays(-15),
+            PlanRenewsAt = DateTime.UtcNow.AddMonths(11),
             IsActive = true,
             IsEmailVerified = true,
             CreatedAt = DateTime.UtcNow.AddMonths(-1)
         };
 
-        // Demo subscription (Pro plan, aktif dönem)
         var subscription = new Subscription
         {
             Id = SeedIds.DemoSubscriptionId,
@@ -249,15 +273,13 @@ public class DbSeeder
             PlanId = SeedIds.PlanProId,
             Status = PlanStatus.Active,
             PeriodStart = DateTime.UtcNow.AddMonths(-1),
-            PeriodEnd = DateTime.UtcNow.AddMonths(11), // 12 aylık aktif
-            Amount = 9900m, // Yıllık ödeme
+            PeriodEnd = DateTime.UtcNow.AddMonths(11),
+            Amount = 9900m,
             Currency = "TRY",
             NextBillingDate = DateTime.UtcNow.AddMonths(11),
             CreatedAt = DateTime.UtcNow.AddMonths(-1)
         };
 
-        // Demo tenant owner user
-        // Şifre: Demo123!
         var demoOwner = new User
         {
             Id = SeedIds.DemoOwnerUserId,
@@ -285,19 +307,14 @@ public class DbSeeder
             Id = SeedIds.DemoVenueId,
             TenantId = SeedIds.DemoTenantId,
             Name = "Ana Salon",
-            Slug = "ana-salon",
             Description = "Bağdat Caddesi'ndeki ana şubemiz",
             Address = "Bağdat Caddesi No:123, Kadıköy, İstanbul",
             PhoneNumber = "+905551112233",
-            Email = "anapalon@demo-restoran.com",
             TimeZone = "Europe/Istanbul",
-            DefaultOpenTime = new TimeSpan(12, 0, 0), // 12:00
-            DefaultCloseTime = new TimeSpan(23, 0, 0), // 23:00
-            DefaultSlotDurationMinutes = 90,
-            DefaultTurnoverMinutes = 30,
-            MaxAdvanceBookingDays = 30,
-            MinAdvanceBookingHours = 2,
-            IsActive = true,
+            OpeningTime = new TimeSpan(12, 0, 0),
+            ClosingTime = new TimeSpan(23, 0, 0),
+            SlotDurationMinutes = DemoVenueSlotDurationMinutes,
+            DepositRefundPolicy = DepositRefundPolicy.FullRefund,
             CreatedAt = DateTime.UtcNow.AddMonths(-1)
         };
 
@@ -314,9 +331,10 @@ public class DbSeeder
                 Id = SeedIds.Table1Id,
                 TenantId = SeedIds.DemoTenantId,
                 VenueId = SeedIds.DemoVenueId,
-                TableNumber = "1",
+                Name = "Masa 1",
                 Capacity = 2,
                 Location = TableLocation.Indoor,
+                SortOrder = 1,
                 IsActive = true,
                 CreatedAt = DateTime.UtcNow.AddMonths(-1)
             },
@@ -325,9 +343,10 @@ public class DbSeeder
                 Id = SeedIds.Table2Id,
                 TenantId = SeedIds.DemoTenantId,
                 VenueId = SeedIds.DemoVenueId,
-                TableNumber = "2",
+                Name = "Masa 2",
                 Capacity = 2,
                 Location = TableLocation.Indoor,
+                SortOrder = 2,
                 IsActive = true,
                 CreatedAt = DateTime.UtcNow.AddMonths(-1)
             },
@@ -336,9 +355,10 @@ public class DbSeeder
                 Id = SeedIds.Table3Id,
                 TenantId = SeedIds.DemoTenantId,
                 VenueId = SeedIds.DemoVenueId,
-                TableNumber = "3",
+                Name = "Masa 3",
                 Capacity = 4,
                 Location = TableLocation.Indoor,
+                SortOrder = 3,
                 IsActive = true,
                 CreatedAt = DateTime.UtcNow.AddMonths(-1)
             },
@@ -347,9 +367,10 @@ public class DbSeeder
                 Id = SeedIds.Table4Id,
                 TenantId = SeedIds.DemoTenantId,
                 VenueId = SeedIds.DemoVenueId,
-                TableNumber = "4",
+                Name = "Masa 4",
                 Capacity = 6,
                 Location = TableLocation.Indoor,
+                SortOrder = 4,
                 IsActive = true,
                 CreatedAt = DateTime.UtcNow.AddMonths(-1)
             },
@@ -358,9 +379,10 @@ public class DbSeeder
                 Id = SeedIds.Table5Id,
                 TenantId = SeedIds.DemoTenantId,
                 VenueId = SeedIds.DemoVenueId,
-                TableNumber = "5",
+                Name = "Masa 5",
                 Capacity = 8,
                 Location = TableLocation.Outdoor,
+                SortOrder = 5,
                 IsActive = true,
                 CreatedAt = DateTime.UtcNow.AddMonths(-1)
             }
@@ -372,6 +394,8 @@ public class DbSeeder
 
     private async Task SeedTableCombinationsAsync()
     {
+        var tableIdsJson = JsonSerializer.Serialize(new[] { SeedIds.Table3Id, SeedIds.Table4Id });
+
         var combo = new TableCombination
         {
             Id = SeedIds.TableCombo1Id,
@@ -379,7 +403,7 @@ public class DbSeeder
             VenueId = SeedIds.DemoVenueId,
             Name = "Masa 3+4 Birleşik",
             CombinedCapacity = 10,
-            TableIds = new List<Guid> { SeedIds.Table3Id, SeedIds.Table4Id },
+            TableIds = tableIdsJson,
             IsActive = true,
             CreatedAt = DateTime.UtcNow.AddMonths(-1)
         };
@@ -390,7 +414,7 @@ public class DbSeeder
 
     private async Task SeedVenueClosuresAsync()
     {
-        var now = DateTime.UtcNow;
+        var year = DateTime.UtcNow.Year;
         var closures = new List<VenueClosure>
         {
             new()
@@ -398,11 +422,9 @@ public class DbSeeder
                 Id = SeedIds.VenueClosure1Id,
                 TenantId = SeedIds.DemoTenantId,
                 VenueId = SeedIds.DemoVenueId,
-                Name = "Ramazan Bayramı Tatili",
-                StartDate = new DateTime(now.Year, 4, 10, 0, 0, 0, DateTimeKind.Utc),
-                EndDate = new DateTime(now.Year, 4, 13, 23, 59, 59, DateTimeKind.Utc),
-                IsFullDayClosure = true,
-                Reason = "Resmi tatil",
+                Date = new DateTime(year, 4, 10, 0, 0, 0, DateTimeKind.Utc),
+                IsFullDay = true,
+                Reason = "Ramazan Bayramı — tam gün kapalı (örnek)",
                 CreatedAt = DateTime.UtcNow.AddMonths(-1)
             },
             new()
@@ -410,11 +432,11 @@ public class DbSeeder
                 Id = SeedIds.VenueClosure2Id,
                 TenantId = SeedIds.DemoTenantId,
                 VenueId = SeedIds.DemoVenueId,
-                Name = "Özel Etkinlik - Erken Kapanış",
-                StartDate = new DateTime(now.Year, 5, 15, 21, 0, 0, DateTimeKind.Utc),
-                EndDate = new DateTime(now.Year, 5, 15, 23, 0, 0, DateTimeKind.Utc),
-                IsFullDayClosure = false,
-                Reason = "Özel davet nedeniyle 21:00'de kapanış",
+                Date = new DateTime(year, 5, 15, 0, 0, 0, DateTimeKind.Utc),
+                IsFullDay = false,
+                OpenTime = new TimeSpan(12, 0, 0),
+                CloseTime = new TimeSpan(21, 0, 0),
+                Reason = "Özel etkinlik — 21:00'e kadar açık (örnek kısmi gün)",
                 CreatedAt = DateTime.UtcNow.AddMonths(-1)
             }
         };
@@ -432,11 +454,10 @@ public class DbSeeder
                 Id = SeedIds.CustomField1Id,
                 TenantId = SeedIds.DemoTenantId,
                 VenueId = SeedIds.DemoVenueId,
-                FieldName = "Doğum günü mü?",
+                Label = "Doğum günü mü?",
                 FieldType = CustomFieldType.Boolean,
                 IsRequired = false,
                 SortOrder = 1,
-                IsActive = true,
                 CreatedAt = DateTime.UtcNow.AddMonths(-1)
             },
             new()
@@ -444,16 +465,11 @@ public class DbSeeder
                 Id = SeedIds.CustomField2Id,
                 TenantId = SeedIds.DemoTenantId,
                 VenueId = SeedIds.DemoVenueId,
-                FieldName = "Menü Tercihi",
+                Label = "Menü tercihi",
                 FieldType = CustomFieldType.Select,
                 IsRequired = false,
-                OptionsJson = """
-                {
-                    "options": ["Klasik", "Vegan", "Vejeteryan", "Glütensiz"]
-                }
-                """,
+                Options = """["Klasik","Vegan","Vejeteryan","Glütensiz"]""",
                 SortOrder = 2,
-                IsActive = true,
                 CreatedAt = DateTime.UtcNow.AddMonths(-1)
             },
             new()
@@ -461,11 +477,10 @@ public class DbSeeder
                 Id = SeedIds.CustomField3Id,
                 TenantId = SeedIds.DemoTenantId,
                 VenueId = SeedIds.DemoVenueId,
-                FieldName = "Özel İstek",
+                Label = "Özel istek",
                 FieldType = CustomFieldType.Text,
                 IsRequired = false,
                 SortOrder = 3,
-                IsActive = true,
                 CreatedAt = DateTime.UtcNow.AddMonths(-1)
             }
         };
@@ -485,7 +500,8 @@ public class DbSeeder
                 VenueId = SeedIds.DemoVenueId,
                 Name = "Erken Rezervasyon İndirimi",
                 Description = "7 gün önceden yapılan rezervasyonlara %10 indirim",
-                Trigger = RuleTrigger.OnReservationCreate,
+                RuleType = "EarlyBooking",
+                TriggerType = RuleTrigger.OnReservationCreate,
                 Priority = 10,
                 IsActive = true,
                 ConditionsJson = """
@@ -525,7 +541,8 @@ public class DbSeeder
                 VenueId = SeedIds.DemoVenueId,
                 Name = "VIP Önceliği",
                 Description = "VIP müşterilere pencere kenarı masalar öncelikli",
-                Trigger = RuleTrigger.OnReservationCreate,
+                RuleType = "VIPPriority",
+                TriggerType = RuleTrigger.OnReservationCreate,
                 Priority = 20,
                 IsActive = true,
                 ConditionsJson = """
@@ -563,7 +580,8 @@ public class DbSeeder
                 VenueId = SeedIds.DemoVenueId,
                 Name = "Büyük Grup Yönlendirmesi",
                 Description = "6+ kişilik rezervasyonlar outdoor masalara yönlendirilir",
-                Trigger = RuleTrigger.OnReservationCreate,
+                RuleType = "LargeGroupRouting",
+                TriggerType = RuleTrigger.OnReservationCreate,
                 Priority = 15,
                 IsActive = true,
                 ConditionsJson = """
@@ -601,7 +619,8 @@ public class DbSeeder
                 VenueId = SeedIds.DemoVenueId,
                 Name = "Hafta Sonu Kapora Zorunluluğu",
                 Description = "Cuma/Cumartesi akşam rezervasyonlarda ₺200 kapora gerekli",
-                Trigger = RuleTrigger.OnReservationCreate,
+                RuleType = "DepositRequired",
+                TriggerType = RuleTrigger.OnReservationCreate,
                 Priority = 30,
                 IsActive = true,
                 ConditionsJson = """
@@ -645,8 +664,9 @@ public class DbSeeder
                 TenantId = SeedIds.DemoTenantId,
                 VenueId = SeedIds.DemoVenueId,
                 Name = "Masa Çevrim Süresi",
-                Description = "Aynı masa için 30 dakika arayla yeni rezervasyon alınabilir",
-                Trigger = RuleTrigger.OnSlotCheck,
+                Description = "Masa atama aşamasında çevrim süresi kontrolü (örnek kural)",
+                RuleType = "TableTurnover",
+                TriggerType = RuleTrigger.OnSeatAssign,
                 Priority = 5,
                 IsActive = true,
                 ConditionsJson = """
@@ -685,253 +705,181 @@ public class DbSeeder
 
     private async Task SeedCustomersAsync()
     {
+        var seedTime = DateTime.UtcNow.AddMonths(-1);
         var customers = new List<Customer>
         {
             new()
             {
                 Id = SeedIds.Customer1Id,
                 TenantId = SeedIds.DemoTenantId,
-                FirstName = "Mehmet",
-                LastName = "Demir",
+                FullName = "Mehmet Demir",
+                Phone = "+905551001001",
                 Email = "mehmet.demir@example.com",
-                PhoneNumber = "+905551001001",
                 Tier = CustomerTier.VIP,
-                TotalReservations = 25,
-                CompletedReservations = 22,
-                CancelledReservations = 3,
-                NoShowCount = 0,
-                TotalSpent = 12500m,
-                Notes = "Sık gelen VIP müşterimiz, pencere kenarı masa tercih ediyor",
-                CreatedAt = DateTime.UtcNow.AddMonths(-6)
+                TotalVisits = 22,
+                Notes = "Sık gelen VIP müşteri; pencere kenarı tercihi",
+                CreatedAt = seedTime.AddMonths(-5)
             },
             new()
             {
                 Id = SeedIds.Customer2Id,
                 TenantId = SeedIds.DemoTenantId,
-                FirstName = "Ayşe",
-                LastName = "Kaya",
+                FullName = "Ayşe Kaya",
+                Phone = "+905551001002",
                 Email = "ayse.kaya@example.com",
-                PhoneNumber = "+905551001002",
                 Tier = CustomerTier.Regular,
-                TotalReservations = 8,
-                CompletedReservations = 7,
-                CancelledReservations = 1,
-                NoShowCount = 0,
-                TotalSpent = 3200m,
-                CreatedAt = DateTime.UtcNow.AddMonths(-4)
+                TotalVisits = 7,
+                CreatedAt = seedTime.AddMonths(-3)
             },
             new()
             {
                 Id = SeedIds.Customer3Id,
                 TenantId = SeedIds.DemoTenantId,
-                FirstName = "Can",
-                LastName = "Özkan",
+                FullName = "Can Özkan",
+                Phone = "+905551001003",
                 Email = "can.ozkan@example.com",
-                PhoneNumber = "+905551001003",
-                Tier = CustomerTier.New,
-                TotalReservations = 2,
-                CompletedReservations = 2,
-                CancelledReservations = 0,
-                NoShowCount = 0,
-                TotalSpent = 850m,
-                CreatedAt = DateTime.UtcNow.AddMonths(-1)
+                Tier = CustomerTier.Gold,
+                TotalVisits = 2,
+                CreatedAt = seedTime
             },
             new()
             {
                 Id = SeedIds.Customer4Id,
                 TenantId = SeedIds.DemoTenantId,
-                FirstName = "Zeynep",
-                LastName = "Arslan",
+                FullName = "Zeynep Arslan",
+                Phone = "+905551001004",
                 Email = "zeynep.arslan@example.com",
-                PhoneNumber = "+905551001004",
                 Tier = CustomerTier.Regular,
-                TotalReservations = 12,
-                CompletedReservations = 11,
-                CancelledReservations = 1,
-                NoShowCount = 0,
-                TotalSpent = 4800m,
-                CreatedAt = DateTime.UtcNow.AddMonths(-5)
+                TotalVisits = 11,
+                CreatedAt = seedTime.AddMonths(-4)
             },
             new()
             {
                 Id = SeedIds.Customer5Id,
                 TenantId = SeedIds.DemoTenantId,
-                FirstName = "Emre",
-                LastName = "Yıldız",
+                FullName = "Emre Yıldız",
+                Phone = "+905551001005",
                 Email = "emre.yildiz@example.com",
-                PhoneNumber = "+905551001005",
                 Tier = CustomerTier.VIP,
-                TotalReservations = 18,
-                CompletedReservations = 17,
-                CancelledReservations = 1,
-                NoShowCount = 0,
-                TotalSpent = 9200m,
-                Notes = "Vegan menü tercihi var",
-                CreatedAt = DateTime.UtcNow.AddMonths(-8)
+                TotalVisits = 17,
+                Notes = "Vegan menü tercihi",
+                CreatedAt = seedTime.AddMonths(-7)
             },
             new()
             {
                 Id = SeedIds.Customer6Id,
                 TenantId = SeedIds.DemoTenantId,
-                FirstName = "Selin",
-                LastName = "Çelik",
+                FullName = "Selin Çelik",
+                Phone = "+905551001006",
                 Email = "selin.celik@example.com",
-                PhoneNumber = "+905551001006",
                 Tier = CustomerTier.Regular,
-                TotalReservations = 6,
-                CompletedReservations = 5,
-                CancelledReservations = 1,
-                NoShowCount = 0,
-                TotalSpent = 2100m,
-                CreatedAt = DateTime.UtcNow.AddMonths(-3)
+                TotalVisits = 5,
+                CreatedAt = seedTime.AddMonths(-2)
             },
             new()
             {
                 Id = SeedIds.Customer7Id,
                 TenantId = SeedIds.DemoTenantId,
-                FirstName = "Burak",
-                LastName = "Koç",
+                FullName = "Burak Koç",
+                Phone = "+905551001007",
                 Email = "burak.koc@example.com",
-                PhoneNumber = "+905551001007",
-                Tier = CustomerTier.Blocked,
-                TotalReservations = 4,
-                CompletedReservations = 1,
-                CancelledReservations = 1,
-                NoShowCount = 2,
-                TotalSpent = 350m,
-                Notes = "2 kez no-show, bloke edildi",
-                CreatedAt = DateTime.UtcNow.AddMonths(-2)
+                Tier = CustomerTier.Blacklisted,
+                IsBlacklisted = true,
+                BlacklistReason = "Tekrarlayan no-show",
+                TotalVisits = 1,
+                Notes = "Kara liste (örnek)",
+                CreatedAt = seedTime.AddMonths(-1)
             },
             new()
             {
                 Id = SeedIds.Customer8Id,
                 TenantId = SeedIds.DemoTenantId,
-                FirstName = "Elif",
-                LastName = "Şahin",
+                FullName = "Elif Şahin",
+                Phone = "+905551001008",
                 Email = "elif.sahin@example.com",
-                PhoneNumber = "+905551001008",
-                Tier = CustomerTier.New,
-                TotalReservations = 1,
-                CompletedReservations = 1,
-                CancelledReservations = 0,
-                NoShowCount = 0,
-                TotalSpent = 420m,
-                CreatedAt = DateTime.UtcNow.AddDays(-15)
+                Tier = CustomerTier.Regular,
+                TotalVisits = 1,
+                CreatedAt = seedTime.AddDays(-14)
             },
             new()
             {
                 Id = SeedIds.Customer9Id,
                 TenantId = SeedIds.DemoTenantId,
-                FirstName = "Cem",
-                LastName = "Aydın",
+                FullName = "Cem Aydın",
+                Phone = "+905551001009",
                 Email = "cem.aydin@example.com",
-                PhoneNumber = "+905551001009",
                 Tier = CustomerTier.Regular,
-                TotalReservations = 9,
-                CompletedReservations = 8,
-                CancelledReservations = 1,
-                NoShowCount = 0,
-                TotalSpent = 3600m,
-                CreatedAt = DateTime.UtcNow.AddMonths(-4)
+                TotalVisits = 8,
+                CreatedAt = seedTime.AddMonths(-3)
             },
             new()
             {
                 Id = SeedIds.Customer10Id,
                 TenantId = SeedIds.DemoTenantId,
-                FirstName = "Deniz",
-                LastName = "Yılmaz",
+                FullName = "Deniz Yılmaz",
+                Phone = "+905551001010",
                 Email = "deniz.yilmaz@example.com",
-                PhoneNumber = "+905551001010",
                 Tier = CustomerTier.VIP,
-                TotalReservations = 30,
-                CompletedReservations = 28,
-                CancelledReservations = 2,
-                NoShowCount = 0,
-                TotalSpent = 15800m,
-                Notes = "Kurumsal müşteri, grup rezervasyonları sık",
-                CreatedAt = DateTime.UtcNow.AddMonths(-10)
+                TotalVisits = 28,
+                Notes = "Kurumsal müşteri; grup rezervasyonları sık",
+                CreatedAt = seedTime.AddMonths(-9)
             },
             new()
             {
                 Id = SeedIds.Customer11Id,
                 TenantId = SeedIds.DemoTenantId,
-                FirstName = "Gizem",
-                LastName = "Öztürk",
+                FullName = "Gizem Öztürk",
+                Phone = "+905551001011",
                 Email = "gizem.ozturk@example.com",
-                PhoneNumber = "+905551001011",
                 Tier = CustomerTier.Regular,
-                TotalReservations = 7,
-                CompletedReservations = 6,
-                CancelledReservations = 1,
-                NoShowCount = 0,
-                TotalSpent = 2800m,
-                CreatedAt = DateTime.UtcNow.AddMonths(-3)
+                TotalVisits = 6,
+                CreatedAt = seedTime.AddMonths(-2)
             },
             new()
             {
                 Id = SeedIds.Customer12Id,
                 TenantId = SeedIds.DemoTenantId,
-                FirstName = "Kaan",
-                LastName = "Aksoy",
+                FullName = "Kaan Aksoy",
+                Phone = "+905551001012",
                 Email = "kaan.aksoy@example.com",
-                PhoneNumber = "+905551001012",
-                Tier = CustomerTier.New,
-                TotalReservations = 1,
-                CompletedReservations = 0,
-                CancelledReservations = 0,
-                NoShowCount = 0,
-                TotalSpent = 0m,
-                Notes = "Gelecek hafta için rezervasyon yaptı",
-                CreatedAt = DateTime.UtcNow.AddDays(-3)
+                Tier = CustomerTier.Gold,
+                TotalVisits = 0,
+                Notes = "Yeni müşteri (örnek)",
+                CreatedAt = seedTime.AddDays(-2)
             },
             new()
             {
                 Id = SeedIds.Customer13Id,
                 TenantId = SeedIds.DemoTenantId,
-                FirstName = "Nazlı",
-                LastName = "Güneş",
+                FullName = "Nazlı Güneş",
+                Phone = "+905551001013",
                 Email = "nazli.gunes@example.com",
-                PhoneNumber = "+905551001013",
                 Tier = CustomerTier.Regular,
-                TotalReservations = 10,
-                CompletedReservations = 9,
-                CancelledReservations = 1,
-                NoShowCount = 0,
-                TotalSpent = 4200m,
-                CreatedAt = DateTime.UtcNow.AddMonths(-5)
+                TotalVisits = 9,
+                CreatedAt = seedTime.AddMonths(-4)
             },
             new()
             {
                 Id = SeedIds.Customer14Id,
                 TenantId = SeedIds.DemoTenantId,
-                FirstName = "Onur",
-                LastName = "Kara",
+                FullName = "Onur Kara",
+                Phone = "+905551001014",
                 Email = "onur.kara@example.com",
-                PhoneNumber = "+905551001014",
                 Tier = CustomerTier.VIP,
-                TotalReservations = 22,
-                CompletedReservations = 20,
-                CancelledReservations = 2,
-                NoShowCount = 0,
-                TotalSpent = 11500m,
-                Notes = "Özel günlerde kapalı masa tercih ediyor",
-                CreatedAt = DateTime.UtcNow.AddMonths(-7)
+                TotalVisits = 20,
+                Notes = "Özel günlerde kapalı masa tercihi",
+                CreatedAt = seedTime.AddMonths(-6)
             },
             new()
             {
                 Id = SeedIds.Customer15Id,
                 TenantId = SeedIds.DemoTenantId,
-                FirstName = "Pınar",
-                LastName = "Duman",
+                FullName = "Pınar Duman",
+                Phone = "+905551001015",
                 Email = "pinar.duman@example.com",
-                PhoneNumber = "+905551001015",
                 Tier = CustomerTier.Regular,
-                TotalReservations = 5,
-                CompletedReservations = 5,
-                CancelledReservations = 0,
-                NoShowCount = 0,
-                TotalSpent = 2200m,
-                CreatedAt = DateTime.UtcNow.AddMonths(-2)
+                TotalVisits = 5,
+                CreatedAt = seedTime.AddMonths(-1)
             }
         };
 
@@ -944,56 +892,82 @@ public class DbSeeder
         var now = DateTime.UtcNow;
         var reservations = new List<Reservation>();
 
-        // Son 30 gün içinde dağıtılmış rezervasyonlar
-        var random = new Random(42); // Sabit seed, tutarlılık için
-        var customerIds = new[]
+        var customerProfiles = new (Guid Id, string FullName, string Phone)[]
         {
-            SeedIds.Customer1Id, SeedIds.Customer2Id, SeedIds.Customer3Id,
-            SeedIds.Customer4Id, SeedIds.Customer5Id, SeedIds.Customer6Id,
-            SeedIds.Customer8Id, SeedIds.Customer9Id, SeedIds.Customer10Id,
-            SeedIds.Customer11Id, SeedIds.Customer13Id, SeedIds.Customer14Id, SeedIds.Customer15Id
+            (SeedIds.Customer1Id, "Mehmet Demir", "+905551001001"),
+            (SeedIds.Customer2Id, "Ayşe Kaya", "+905551001002"),
+            (SeedIds.Customer3Id, "Can Özkan", "+905551001003"),
+            (SeedIds.Customer4Id, "Zeynep Arslan", "+905551001004"),
+            (SeedIds.Customer5Id, "Emre Yıldız", "+905551001005"),
+            (SeedIds.Customer6Id, "Selin Çelik", "+905551001006"),
+            (SeedIds.Customer8Id, "Elif Şahin", "+905551001008"),
+            (SeedIds.Customer9Id, "Cem Aydın", "+905551001009"),
+            (SeedIds.Customer10Id, "Deniz Yılmaz", "+905551001010"),
+            (SeedIds.Customer11Id, "Gizem Öztürk", "+905551001011"),
+            (SeedIds.Customer13Id, "Nazlı Güneş", "+905551001013"),
+            (SeedIds.Customer14Id, "Onur Kara", "+905551001014"),
+            (SeedIds.Customer15Id, "Pınar Duman", "+905551001015")
         };
+
         var tableIds = new[] { SeedIds.Table1Id, SeedIds.Table2Id, SeedIds.Table3Id, SeedIds.Table4Id, SeedIds.Table5Id };
 
-        for (int i = 0; i < 30; i++)
+        var random = new Random(42);
+        for (var i = 0; i < 30; i++)
         {
             var daysAgo = random.Next(1, 31);
-            var reservationDate = now.AddDays(-daysAgo).Date.AddHours(19 + random.Next(0, 3));
+            var reservedFor = now.AddDays(-daysAgo).Date.AddHours(19 + random.Next(0, 3));
 
-            var customerId = customerIds[random.Next(customerIds.Length)];
+            var profile = customerProfiles[random.Next(customerProfiles.Length)];
             var tableId = tableIds[random.Next(tableIds.Length)];
             var partySize = random.Next(2, 7);
 
-            var status = daysAgo <= 1 ? ReservationStatus.Pending :
-                         daysAgo <= 3 ? (random.Next(0, 10) > 7 ? ReservationStatus.Confirmed : ReservationStatus.Completed) :
-                         daysAgo <= 10 ? ReservationStatus.Completed :
-                         random.Next(0, 10) > 8 ? ReservationStatus.Cancelled : ReservationStatus.Completed;
+            var status = daysAgo <= 1
+                ? ReservationStatus.Pending
+                : daysAgo <= 3
+                    ? random.Next(0, 10) > 7 ? ReservationStatus.Confirmed : ReservationStatus.Completed
+                    : daysAgo <= 10
+                        ? ReservationStatus.Completed
+                        : random.Next(0, 10) > 8 ? ReservationStatus.Cancelled : ReservationStatus.Completed;
 
             reservations.Add(new Reservation
             {
                 Id = Guid.NewGuid(),
                 TenantId = SeedIds.DemoTenantId,
                 VenueId = SeedIds.DemoVenueId,
-                CustomerId = customerId,
+                CustomerId = profile.Id,
                 TableId = tableId,
-                ReservationDate = reservationDate,
+                GuestName = profile.FullName,
+                GuestPhone = profile.Phone,
                 PartySize = partySize,
+                ReservedFor = reservedFor,
+                EndTime = reservedFor.AddMinutes(DemoVenueSlotDurationMinutes),
                 Status = status,
-                Source = ReservationSource.Website,
+                Source = ReservationSource.BookingUI,
                 ConfirmCode = GenerateConfirmCode(),
-                Notes = i % 5 == 0 ? "Pencere kenarı masa tercihi" : null,
-                CreatedAt = reservationDate.AddDays(-random.Next(1, 5))
+                SpecialRequests = i % 5 == 0 ? "Pencere kenarı masa tercihi" : null,
+                CreatedAt = reservedFor.AddDays(-random.Next(1, 5))
             });
         }
 
         await _context.Reservations.AddRangeAsync(reservations);
-        _logger.LogInformation($"{reservations.Count} rezervasyon eklendi.");
+        _logger.LogInformation("{Count} rezervasyon eklendi.", reservations.Count);
     }
 
+    /// <summary>
+    /// 8 karakterlik, kriptografik olarak güvenli onay kodu üretir (O/0 ve I/1 hariç alfabe).
+    /// </summary>
+    /// <returns>Onay kodu.</returns>
     private static string GenerateConfirmCode()
     {
-        const string chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; // Karışabilecek karakterler hariç
-        var random = new Random();
-        return new string(Enumerable.Range(0, 8).Select(_ => chars[random.Next(chars.Length)]).ToArray());
+        const string chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+        Span<char> result = stackalloc char[8];
+        var bytes = new byte[8];
+        RandomNumberGenerator.Fill(bytes);
+        for (var i = 0; i < result.Length; i++)
+        {
+            result[i] = chars[bytes[i] % chars.Length];
+        }
+
+        return new string(result);
     }
 }
