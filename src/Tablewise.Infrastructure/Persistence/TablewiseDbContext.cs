@@ -128,10 +128,19 @@ public class TablewiseDbContext : DbContext
                 case EntityState.Added:
                     entry.Entity.CreatedAt = DateTime.UtcNow;
 
-                    // TenantScopedEntity için TenantId otomatik set
+                    // TenantScopedEntity için TenantId otomatik set (eğer henüz set edilmemişse)
                     if (entry.Entity is TenantScopedEntity tenantScopedEntity && tenantScopedEntity.TenantId == Guid.Empty)
                     {
-                        tenantScopedEntity.TenantId = _tenantContext.TenantId;
+                        // TenantContext'ten TenantId al (seed sırasında null olabilir, o zaman atlıyoruz)
+                        try
+                        {
+                            tenantScopedEntity.TenantId = _tenantContext.TenantId;
+                        }
+                        catch (InvalidOperationException)
+                        {
+                            // TenantContext set edilmemişse (seed, migration gibi durumlarda),
+                            // entity'nin TenantId'si zaten manuel set edilmiş olmalı
+                        }
                     }
                     break;
 

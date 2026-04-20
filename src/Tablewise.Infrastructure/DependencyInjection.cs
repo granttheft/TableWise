@@ -1,8 +1,11 @@
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Tablewise.Domain.Interfaces;
 using Tablewise.Infrastructure.Persistence;
 using Tablewise.Infrastructure.Persistence.Interceptors;
+using Tablewise.Infrastructure.Services;
 
 namespace Tablewise.Infrastructure;
 
@@ -21,6 +24,13 @@ public static class DependencyInjection
         this IServiceCollection services,
         IConfiguration configuration)
     {
+        // HttpContextAccessor (ITenantContext ve ICurrentUser için gerekli)
+        services.AddHttpContextAccessor();
+
+        // Context Services
+        services.AddScoped<ITenantContext, TenantContext>();
+        services.AddScoped<ICurrentUser, CurrentUserService>();
+
         // Interceptors
         services.AddScoped<AuditSaveChangesInterceptor>();
         services.AddScoped<SoftDeleteInterceptor>();
@@ -52,8 +62,8 @@ public static class DependencyInjection
             }
         });
 
-        // TODO: Repository ve UnitOfWork kayıtları sonraki fazda eklenecek
-        // TODO: ITenantContext ve ICurrentUser implementation'ları sonraki fazda eklenecek
+        // Repository Pattern & Unit of Work
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         return services;
     }
