@@ -54,6 +54,31 @@ public class User : TenantScopedEntity
     /// </summary>
     public string? PhoneNumber { get; set; }
 
+    /// <summary>
+    /// Email doğrulandı mı?
+    /// </summary>
+    public bool IsEmailVerified { get; set; }
+
+    /// <summary>
+    /// Email doğrulama token'ı (kullanılmadıysa null).
+    /// </summary>
+    public string? EmailVerificationToken { get; set; }
+
+    /// <summary>
+    /// Email doğrulama token'ının son kullanma tarihi (UTC).
+    /// </summary>
+    public DateTime? EmailVerificationExpiry { get; set; }
+
+    /// <summary>
+    /// Şifre sıfırlama token'ı (kullanılmadıysa null).
+    /// </summary>
+    public string? PasswordResetToken { get; set; }
+
+    /// <summary>
+    /// Şifre sıfırlama token'ının son kullanma tarihi (UTC).
+    /// </summary>
+    public DateTime? PasswordResetExpiry { get; set; }
+
     // Navigation Properties
 
     /// <summary>

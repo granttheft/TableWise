@@ -1,12 +1,14 @@
 using Amazon.Runtime;
 using Amazon.S3;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using StackExchange.Redis;
 using Tablewise.Application.Interfaces;
 using Tablewise.Domain.Interfaces;
+using Tablewise.Infrastructure.Auth;
+using Tablewise.Infrastructure.Cache;
 using Tablewise.Infrastructure.Persistence;
 using Tablewise.Infrastructure.Persistence.Interceptors;
 using Tablewise.Infrastructure.Services;
@@ -70,9 +72,51 @@ public static class DependencyInjection
         // Repository Pattern & Unit of Work
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
+        // Auth Services
+        AddAuthServices(services, configuration);
+
+        // Redis Cache
+        AddRedisCache(services, configuration);
+
+        // R2 File Storage
         AddR2FileStorage(services, configuration);
 
+        // Email Service (placeholder - SendGrid implementation sonraki fazda)
+        services.AddScoped<IEmailService, PlaceholderEmailService>();
+
         return services;
+    }
+
+    /// <summary>
+    /// Auth servislerini kaydeder (JWT, AuthService).
+    /// </summary>
+    private static void AddAuthServices(IServiceCollection services, IConfiguration configuration)
+    {
+        services.Configure<JwtSettings>(configuration.GetSection(JwtSettings.SectionName));
+        services.Configure<AuthSettings>(configuration.GetSection(AuthSettings.SectionName));
+
+        services.AddSingleton<IJwtTokenService, JwtTokenService>();
+        services.AddScoped<IAuthService, AuthService>();
+    }
+
+    /// <summary>
+    /// Redis cache servisini kaydeder.
+    /// </summary>
+    private static void AddRedisCache(IServiceCollection services, IConfiguration configuration)
+    {
+        services.Configure<RedisSettings>(configuration.GetSection(RedisSettings.SectionName));
+
+        services.AddSingleton<IConnectionMultiplexer>(sp =>
+        {
+            var settings = sp.GetRequiredService<IOptions<RedisSettings>>().Value;
+            var options = ConfigurationOptions.Parse(settings.ConnectionString);
+            options.ConnectRetry = settings.ConnectRetry;
+            options.ConnectTimeout = settings.ConnectTimeoutMs;
+            options.AbortOnConnectFail = false;
+            return ConnectionMultiplexer.Connect(options);
+        });
+
+        services.AddScoped<ICacheService, RedisCacheService>();
     }
 
     /// <summary>

@@ -49,6 +49,7 @@ public class TablewiseDbContext : DbContext
     public DbSet<NotificationLog> NotificationLogs => Set<NotificationLog>();
     public DbSet<AuditLog> AuditLogs => Set<AuditLog>();
     public DbSet<IdempotencyKey> IdempotencyKeys => Set<IdempotencyKey>();
+    public DbSet<RevocableRefreshToken> RefreshTokens => Set<RevocableRefreshToken>();
 
     /// <summary>
     /// Model yapılandırması. Assembly'den tüm IEntityTypeConfiguration'ları uygular.
