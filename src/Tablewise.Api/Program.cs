@@ -106,6 +106,12 @@ try
 
     builder.Services.AddAuthorization();
 
+    // MediatR
+    builder.Services.AddMediatR(cfg =>
+    {
+        cfg.RegisterServicesFromAssembly(typeof(Tablewise.Application.Interfaces.IAuthService).Assembly);
+    });
+
     // FluentValidation
     builder.Services.AddValidatorsFromAssemblyContaining<RegisterTenantDtoValidator>();
     builder.Services.AddFluentValidationAutoValidation();
@@ -181,6 +187,33 @@ try
                     QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
                     QueueLimit = 5
                 }));
+
+        // Staff invite: 10 req/saat (tenant bazlı spam önleme)
+        options.AddPolicy("staff-invite", httpContext =>
+            RateLimitPartition.GetFixedWindowLimiter(
+                partitionKey: httpContext.User.FindFirst("tenant_id")?.Value ?? GetClientIpAddress(httpContext),
+                factory: _ => new FixedWindowRateLimiterOptions
+                {
+                    PermitLimit = 10,
+                    Window = TimeSpan.FromHours(1),
+                    QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
+                    QueueLimit = 0
+                }));
+
+        // Accept invite: 5 req/saat (token bazlı brute-force önleme)
+        options.AddPolicy("accept-invite", httpContext =>
+        {
+            var token = httpContext.Request.RouteValues["token"]?.ToString() ?? "unknown";
+            return RateLimitPartition.GetFixedWindowLimiter(
+                partitionKey: $"accept:{token}",
+                factory: _ => new FixedWindowRateLimiterOptions
+                {
+                    PermitLimit = 5,
+                    Window = TimeSpan.FromHours(1),
+                    QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
+                    QueueLimit = 0
+                });
+        });
 
         // Global fallback
         options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(httpContext =>

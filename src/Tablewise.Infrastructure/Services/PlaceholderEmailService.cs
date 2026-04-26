@@ -59,4 +59,20 @@ public sealed class PlaceholderEmailService : IEmailService
 
         return Task.CompletedTask;
     }
+
+    /// <inheritdoc />
+    public Task SendStaffInvitationEmailAsync(
+        string toEmail,
+        string tenantName,
+        string inviterName,
+        string role,
+        string inviteLink,
+        CancellationToken cancellationToken = default)
+    {
+        _logger.LogInformation(
+            "[EMAIL] Personel davet emaili: To={Email}, Tenant={TenantName}, Inviter={InviterName}, Role={Role}, Link={Link}",
+            toEmail, tenantName, inviterName, role, inviteLink);
+
+        return Task.CompletedTask;
+    }
 }

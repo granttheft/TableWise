@@ -41,4 +41,21 @@ public interface IEmailService
         string toEmail,
         string userName,
         CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Personel davet emaili gönderir.
+    /// </summary>
+    /// <param name="toEmail">Alıcı email</param>
+    /// <param name="tenantName">İşletme adı</param>
+    /// <param name="inviterName">Davet eden kişi</param>
+    /// <param name="role">Atanacak rol</param>
+    /// <param name="inviteLink">Davet linki</param>
+    /// <param name="cancellationToken">İptal token'ı</param>
+    Task SendStaffInvitationEmailAsync(
+        string toEmail,
+        string tenantName,
+        string inviterName,
+        string role,
+        string inviteLink,
+        CancellationToken cancellationToken = default);
 }
