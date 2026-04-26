@@ -7,6 +7,7 @@ using Microsoft.Extensions.Options;
 using StackExchange.Redis;
 using Tablewise.Application.Interfaces;
 using Tablewise.Domain.Interfaces;
+using Tablewise.Application.Settings;
 using Tablewise.Infrastructure.Auth;
 using Tablewise.Infrastructure.Cache;
 using Tablewise.Infrastructure.Persistence;
@@ -71,6 +72,9 @@ public static class DependencyInjection
 
         // Repository Pattern & Unit of Work
         services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+        // IApplicationDbContext - Clean Architecture için DbContext soyutlaması
+        services.AddScoped<IApplicationDbContext>(sp => sp.GetRequiredService<TablewiseDbContext>());
 
         // Application Services
         services.AddScoped<IPlanLimitService, Tablewise.Application.Services.PlanLimitService>();

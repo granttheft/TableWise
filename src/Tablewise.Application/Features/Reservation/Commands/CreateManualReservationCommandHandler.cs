@@ -153,7 +153,7 @@ public sealed class CreateManualReservationCommandHandler : IRequestHandler<Crea
             DepositAmount = depositRequired ? venue.DepositAmount : null
         };
 
-        _unitOfWork.Reservations.Add(reservation);
+        await _unitOfWork.Reservations.AddAsync(reservation, cancellationToken).ConfigureAwait(false);
 
         // 8. Status log
         var statusLog = new ReservationStatusLog
@@ -164,23 +164,25 @@ public sealed class CreateManualReservationCommandHandler : IRequestHandler<Crea
             ChangedByUserId = _currentUser.UserId,
             ChangedBy = _currentUser.Email
         };
-        _unitOfWork.ReservationStatusLogs.Add(statusLog);
+        await _unitOfWork.ReservationStatusLogs.AddAsync(statusLog, cancellationToken).ConfigureAwait(false);
 
         // 9. Audit log
         var auditLog = new AuditLog
         {
             TenantId = tenantId,
             EntityType = "Reservation",
-            EntityId = reservation.Id,
+            EntityId = reservation.Id.ToString(),
             Action = "ManualCreated",
             PerformedBy = _currentUser.Email ?? "Staff",
-            Details = $"Manuel rezervasyon oluşturuldu. ConfirmCode: {confirmCode}"
+            NewValue = $"GuestName: {reservation.GuestName}, ReservedFor: {reservation.ReservedFor}",
+            CreatedAt = DateTime.UtcNow
         };
-        _unitOfWork.AuditLogs.Add(auditLog);
+        await _unitOfWork.AuditLogs.AddAsync(auditLog, cancellationToken).ConfigureAwait(false);
 
+        // 10. Save
         await _unitOfWork.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
-        // 10. Cache invalidate
+        // Cache invalidate
         await _slotService.InvalidateCacheAsync(venue.Id, request.ReservedFor.Date, cancellationToken)
             .ConfigureAwait(false);
 
@@ -252,7 +254,7 @@ public sealed class CreateManualReservationCommandHandler : IRequestHandler<Crea
             Tier = CustomerTier.Regular,
             LastReservationAt = DateTime.UtcNow
         };
-        _unitOfWork.Customers.Add(newCustomer);
+        await _unitOfWork.Customers.AddAsync(newCustomer, cancellationToken).ConfigureAwait(false);
         return newCustomer;
     }
 

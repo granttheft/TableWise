@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Tablewise.Application.DTOs.VenueCustomField;
 using Tablewise.Domain.Exceptions;
 using Tablewise.Domain.Interfaces;
-using Tablewise.Infrastructure.Persistence;
+using Tablewise.Application.Interfaces;
 
 namespace Tablewise.Application.Features.VenueCustomField.Queries;
 
@@ -12,11 +12,11 @@ namespace Tablewise.Application.Features.VenueCustomField.Queries;
 /// </summary>
 public sealed class GetVenueCustomFieldsQueryHandler : IRequestHandler<GetVenueCustomFieldsQuery, List<VenueCustomFieldDto>>
 {
-    private readonly TablewiseDbContext _dbContext;
+    private readonly IApplicationDbContext _dbContext;
     private readonly ITenantContext _tenantContext;
 
     public GetVenueCustomFieldsQueryHandler(
-        TablewiseDbContext dbContext,
+        IApplicationDbContext dbContext,
         ITenantContext tenantContext)
     {
         _dbContext = dbContext;

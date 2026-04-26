@@ -5,7 +5,7 @@ using Tablewise.Domain.Entities;
 using Tablewise.Domain.Enums;
 using Tablewise.Domain.Exceptions;
 using Tablewise.Domain.Interfaces;
-using Tablewise.Infrastructure.Persistence;
+using Tablewise.Application.Interfaces;
 
 namespace Tablewise.Application.Features.VenueCustomField.Commands;
 
@@ -14,13 +14,13 @@ namespace Tablewise.Application.Features.VenueCustomField.Commands;
 /// </summary>
 public sealed class UpdateVenueCustomFieldCommandHandler : IRequestHandler<UpdateVenueCustomFieldCommand, Unit>
 {
-    private readonly TablewiseDbContext _dbContext;
+    private readonly IApplicationDbContext _dbContext;
     private readonly ITenantContext _tenantContext;
     private readonly ICurrentUser _currentUser;
     private readonly ILogger<UpdateVenueCustomFieldCommandHandler> _logger;
 
     public UpdateVenueCustomFieldCommandHandler(
-        TablewiseDbContext dbContext,
+        IApplicationDbContext dbContext,
         ITenantContext tenantContext,
         ICurrentUser currentUser,
         ILogger<UpdateVenueCustomFieldCommandHandler> logger)

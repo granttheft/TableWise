@@ -5,7 +5,7 @@ using Tablewise.Domain.Entities;
 using Tablewise.Domain.Enums;
 using Tablewise.Domain.Exceptions;
 using Tablewise.Domain.Interfaces;
-using Tablewise.Infrastructure.Persistence;
+using Tablewise.Application.Interfaces;
 
 namespace Tablewise.Application.Features.Staff.Commands;
 
@@ -14,7 +14,7 @@ namespace Tablewise.Application.Features.Staff.Commands;
 /// </summary>
 public sealed class RemoveStaffCommandHandler : IRequestHandler<RemoveStaffCommand>
 {
-    private readonly TablewiseDbContext _dbContext;
+    private readonly IApplicationDbContext _dbContext;
     private readonly ITenantContext _tenantContext;
     private readonly ICurrentUser _currentUser;
     private readonly ILogger<RemoveStaffCommandHandler> _logger;
@@ -23,7 +23,7 @@ public sealed class RemoveStaffCommandHandler : IRequestHandler<RemoveStaffComma
     /// RemoveStaffCommandHandler constructor.
     /// </summary>
     public RemoveStaffCommandHandler(
-        TablewiseDbContext dbContext,
+        IApplicationDbContext dbContext,
         ITenantContext tenantContext,
         ICurrentUser currentUser,
         ILogger<RemoveStaffCommandHandler> logger)

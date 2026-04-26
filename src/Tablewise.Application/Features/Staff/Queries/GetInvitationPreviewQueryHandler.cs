@@ -2,7 +2,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Tablewise.Application.DTOs.Staff;
 using Tablewise.Domain.Exceptions;
-using Tablewise.Infrastructure.Persistence;
+using Tablewise.Application.Interfaces;
 
 namespace Tablewise.Application.Features.Staff.Queries;
 
@@ -11,12 +11,12 @@ namespace Tablewise.Application.Features.Staff.Queries;
 /// </summary>
 public sealed class GetInvitationPreviewQueryHandler : IRequestHandler<GetInvitationPreviewQuery, InvitationPreviewDto>
 {
-    private readonly TablewiseDbContext _dbContext;
+    private readonly IApplicationDbContext _dbContext;
 
     /// <summary>
     /// GetInvitationPreviewQueryHandler constructor.
     /// </summary>
-    public GetInvitationPreviewQueryHandler(TablewiseDbContext dbContext)
+    public GetInvitationPreviewQueryHandler(IApplicationDbContext dbContext)
     {
         _dbContext = dbContext;
     }
@@ -26,7 +26,7 @@ public sealed class GetInvitationPreviewQueryHandler : IRequestHandler<GetInvita
     {
         var invitation = await _dbContext.UserInvitations
             .Include(inv => inv.Tenant)
-            .Include(inv => inv.InviterUser)
+            .Include(inv => inv.InvitedBy)
             .Where(inv => inv.Token == request.Token && !inv.IsDeleted)
             .FirstOrDefaultAsync(cancellationToken)
             .ConfigureAwait(false);
@@ -56,11 +56,11 @@ public sealed class GetInvitationPreviewQueryHandler : IRequestHandler<GetInvita
         {
             Email = invitation.Email,
             TenantName = invitation.Tenant?.Name ?? "Unknown",
-            InvitedBy = invitation.InviterUser != null
-                ? $"{invitation.InviterUser.FirstName} {invitation.InviterUser.LastName}".Trim()
+            InvitedBy = invitation.InvitedBy != null
+                ? $"{invitation.InvitedBy.FirstName} {invitation.InvitedBy.LastName}".Trim()
                 : "Unknown",
             Role = invitation.Role.ToString(),
-            InvitedAt = invitation.InvitedAt,
+            InvitedAt = invitation.CreatedAt,
             ExpiresAt = invitation.ExpiresAt
         };
     }

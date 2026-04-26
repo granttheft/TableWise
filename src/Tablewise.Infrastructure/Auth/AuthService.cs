@@ -9,6 +9,8 @@ using Tablewise.Domain.Exceptions;
 using Tablewise.Infrastructure.Persistence;
 using BCryptNet = BCrypt.Net.BCrypt;
 
+using Tablewise.Application.Settings;
+
 namespace Tablewise.Infrastructure.Auth;
 
 /// <summary>

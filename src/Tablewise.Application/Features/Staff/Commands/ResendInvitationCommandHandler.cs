@@ -7,8 +7,7 @@ using Tablewise.Domain.Entities;
 using Tablewise.Domain.Enums;
 using Tablewise.Domain.Exceptions;
 using Tablewise.Domain.Interfaces;
-using Tablewise.Infrastructure.Auth;
-using Tablewise.Infrastructure.Persistence;
+using Tablewise.Application.Settings;
 
 namespace Tablewise.Application.Features.Staff.Commands;
 
@@ -17,7 +16,7 @@ namespace Tablewise.Application.Features.Staff.Commands;
 /// </summary>
 public sealed class ResendInvitationCommandHandler : IRequestHandler<ResendInvitationCommand>
 {
-    private readonly TablewiseDbContext _dbContext;
+    private readonly IApplicationDbContext _dbContext;
     private readonly ITenantContext _tenantContext;
     private readonly ICurrentUser _currentUser;
     private readonly IEmailService _emailService;
@@ -28,7 +27,7 @@ public sealed class ResendInvitationCommandHandler : IRequestHandler<ResendInvit
     /// ResendInvitationCommandHandler constructor.
     /// </summary>
     public ResendInvitationCommandHandler(
-        TablewiseDbContext dbContext,
+        IApplicationDbContext dbContext,
         ITenantContext tenantContext,
         ICurrentUser currentUser,
         IEmailService emailService,
@@ -57,7 +56,7 @@ public sealed class ResendInvitationCommandHandler : IRequestHandler<ResendInvit
         // Davet bul
         var invitation = await _dbContext.UserInvitations
             .Include(inv => inv.Tenant)
-            .Include(inv => inv.InviterUser)
+            .Include(inv => inv.InvitedBy)
             .FirstOrDefaultAsync(inv =>
                 inv.Id == request.InvitationId &&
                 inv.TenantId == tenantId &&
@@ -104,7 +103,7 @@ public sealed class ResendInvitationCommandHandler : IRequestHandler<ResendInvit
         _ = SendInvitationEmailSafeAsync(
             invitation.Email,
             invitation.Tenant!.Name,
-            $"{invitation.InviterUser!.FirstName} {invitation.InviterUser.LastName}".Trim(),
+            $"{invitation.InvitedBy!.FirstName} {invitation.InvitedBy.LastName}".Trim(),
             invitation.Role.ToString(),
             invitation.Token);
 

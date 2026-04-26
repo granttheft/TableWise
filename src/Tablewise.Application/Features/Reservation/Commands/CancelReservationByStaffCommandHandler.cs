@@ -85,19 +85,20 @@ public sealed class CancelReservationByStaffCommandHandler : IRequestHandler<Can
             ChangedBy = _currentUser.Email,
             Reason = $"İşletme tarafından iptal: {request.Reason}"
         };
-        _unitOfWork.ReservationStatusLogs.Add(statusLog);
+        await _unitOfWork.ReservationStatusLogs.AddAsync(statusLog, cancellationToken).ConfigureAwait(false);
 
         // Audit log
         var auditLog = new AuditLog
         {
             TenantId = reservation.TenantId,
             EntityType = "Reservation",
-            EntityId = reservation.Id,
+            EntityId = reservation.Id.ToString(),
             Action = "CancelledByStaff",
             PerformedBy = _currentUser.Email ?? "Staff",
-            Details = request.Reason
+            NewValue = $"Reason: {request.Reason}",
+            CreatedAt = DateTime.UtcNow
         };
-        _unitOfWork.AuditLogs.Add(auditLog);
+        await _unitOfWork.AuditLogs.AddAsync(auditLog, cancellationToken).ConfigureAwait(false);
 
         await _unitOfWork.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 

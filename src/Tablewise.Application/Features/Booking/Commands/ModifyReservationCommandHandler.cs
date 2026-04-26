@@ -169,13 +169,13 @@ public sealed class ModifyReservationCommandHandler : IRequestHandler<ModifyRese
                 ChangedBy = "Customer",
                 Reason = "Rezervasyon değiştirildi"
             };
-            _unitOfWork.ReservationStatusLogs.Add(oldStatusLog);
+            await _unitOfWork.ReservationStatusLogs.AddAsync(oldStatusLog, cancellationToken).ConfigureAwait(false);
 
             // 9. Yeni ConfirmCode üret
             var newConfirmCode = await GenerateUniqueConfirmCodeAsync(cancellationToken).ConfigureAwait(false);
 
             // 10. Yeni rezervasyon oluştur
-            var newReservation = new Reservation
+            var newReservation = new Domain.Entities.Reservation
             {
                 TenantId = tenantId,
                 VenueId = venue.Id,
@@ -202,7 +202,7 @@ public sealed class ModifyReservationCommandHandler : IRequestHandler<ModifyRese
                 ModifiedFromReservationId = existingReservation.Id
             };
 
-            _unitOfWork.Reservations.Add(newReservation);
+            await _unitOfWork.Reservations.AddAsync(newReservation, cancellationToken).ConfigureAwait(false);
 
             // 11. Yeni status log
             var newStatusLog = new ReservationStatusLog
@@ -213,19 +213,20 @@ public sealed class ModifyReservationCommandHandler : IRequestHandler<ModifyRese
                 ChangedBy = "System",
                 Reason = "Değişiklikten oluşturuldu"
             };
-            _unitOfWork.ReservationStatusLogs.Add(newStatusLog);
+            await _unitOfWork.ReservationStatusLogs.AddAsync(newStatusLog, cancellationToken).ConfigureAwait(false);
 
             // 12. Audit log
             var auditLog = new AuditLog
             {
                 TenantId = tenantId,
                 EntityType = "Reservation",
-                EntityId = newReservation.Id,
+                EntityId = newReservation.Id.ToString(),
                 Action = "Modified",
                 PerformedBy = "Customer",
-                Details = $"Rezervasyon değiştirildi. Eski: {existingReservation.ConfirmCode}, Yeni: {newConfirmCode}"
+                NewValue = $"OldCode: {existingReservation.ConfirmCode}, NewCode: {newConfirmCode}",
+                CreatedAt = DateTime.UtcNow
             };
-            _unitOfWork.AuditLogs.Add(auditLog);
+            await _unitOfWork.AuditLogs.AddAsync(auditLog, cancellationToken).ConfigureAwait(false);
 
             await _unitOfWork.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
@@ -318,7 +319,7 @@ public sealed class ModifyReservationCommandHandler : IRequestHandler<ModifyRese
         return null;
     }
 
-    private async Task SendModificationEmailAsync(Reservation newReservation, string venueName, Reservation oldReservation)
+    private async Task SendModificationEmailAsync(Domain.Entities.Reservation newReservation, string venueName, Domain.Entities.Reservation oldReservation)
     {
         if (string.IsNullOrEmpty(newReservation.GuestEmail)) return;
 

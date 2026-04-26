@@ -6,7 +6,6 @@ using Tablewise.Domain.Entities;
 using Tablewise.Domain.Enums;
 using Tablewise.Domain.Exceptions;
 using Tablewise.Domain.Interfaces;
-using Tablewise.Infrastructure.Persistence;
 
 namespace Tablewise.Application.Features.Tenant.Commands;
 
@@ -15,14 +14,14 @@ namespace Tablewise.Application.Features.Tenant.Commands;
 /// </summary>
 public sealed class ConfirmLogoUploadCommandHandler : IRequestHandler<ConfirmLogoUploadCommand, Unit>
 {
-    private readonly TablewiseDbContext _dbContext;
+    private readonly IApplicationDbContext _dbContext;
     private readonly ITenantContext _tenantContext;
     private readonly ICurrentUser _currentUser;
     private readonly IStorageService _storageService;
     private readonly ILogger<ConfirmLogoUploadCommandHandler> _logger;
 
     public ConfirmLogoUploadCommandHandler(
-        TablewiseDbContext dbContext,
+        IApplicationDbContext dbContext,
         ITenantContext tenantContext,
         ICurrentUser currentUser,
         IStorageService storageService,

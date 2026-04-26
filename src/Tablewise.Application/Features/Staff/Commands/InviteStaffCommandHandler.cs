@@ -7,8 +7,7 @@ using Tablewise.Domain.Entities;
 using Tablewise.Domain.Enums;
 using Tablewise.Domain.Exceptions;
 using Tablewise.Domain.Interfaces;
-using Tablewise.Infrastructure.Auth;
-using Tablewise.Infrastructure.Persistence;
+using Tablewise.Application.Settings;
 
 namespace Tablewise.Application.Features.Staff.Commands;
 
@@ -17,7 +16,7 @@ namespace Tablewise.Application.Features.Staff.Commands;
 /// </summary>
 public sealed class InviteStaffCommandHandler : IRequestHandler<InviteStaffCommand, Guid>
 {
-    private readonly TablewiseDbContext _dbContext;
+    private readonly IApplicationDbContext _dbContext;
     private readonly ITenantContext _tenantContext;
     private readonly ICurrentUser _currentUser;
     private readonly IEmailService _emailService;
@@ -28,7 +27,7 @@ public sealed class InviteStaffCommandHandler : IRequestHandler<InviteStaffComma
     /// InviteStaffCommandHandler constructor.
     /// </summary>
     public InviteStaffCommandHandler(
-        TablewiseDbContext dbContext,
+        IApplicationDbContext dbContext,
         ITenantContext tenantContext,
         ICurrentUser currentUser,
         IEmailService emailService,
@@ -119,9 +118,8 @@ public sealed class InviteStaffCommandHandler : IRequestHandler<InviteStaffComma
             TenantId = tenantId,
             Email = emailLower,
             Role = request.Role,
-            Token = Guid.NewGuid().ToString("N"), // 32 karakter hex
-            InvitedBy = currentUserId,
-            InvitedAt = DateTime.UtcNow,
+            Token = Guid.NewGuid().ToString("N"),
+            InvitedByUserId = currentUserId ?? Guid.Empty,
             ExpiresAt = DateTime.UtcNow.AddDays(7),
             CreatedAt = DateTime.UtcNow
         };

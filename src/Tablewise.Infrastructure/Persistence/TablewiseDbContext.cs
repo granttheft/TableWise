@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Tablewise.Application.Interfaces;
 using Tablewise.Domain.Common;
 using Tablewise.Domain.Entities;
 using Tablewise.Domain.Interfaces;
@@ -9,8 +10,9 @@ namespace Tablewise.Infrastructure.Persistence;
 /// <summary>
 /// Tablewise uygulaması için ana DbContext.
 /// Multi-tenant yapı, Global Query Filter ve Soft Delete desteği içerir.
+/// IApplicationDbContext implementasyonu ile Clean Architecture sağlanır.
 /// </summary>
-public class TablewiseDbContext : DbContext
+public class TablewiseDbContext : DbContext, IApplicationDbContext
 {
     private readonly ITenantContext _tenantContext;
     private readonly ICurrentUser _currentUser;

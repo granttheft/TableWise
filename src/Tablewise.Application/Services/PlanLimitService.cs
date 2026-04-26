@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Tablewise.Application.Interfaces;
 using Tablewise.Domain.Exceptions;
-using Tablewise.Infrastructure.Persistence;
 
 namespace Tablewise.Application.Services;
 
@@ -12,14 +11,14 @@ namespace Tablewise.Application.Services;
 /// </summary>
 public sealed class PlanLimitService : IPlanLimitService
 {
-    private readonly TablewiseDbContext _dbContext;
+    private readonly IApplicationDbContext _dbContext;
     private readonly ILogger<PlanLimitService> _logger;
 
     /// <summary>
     /// PlanLimitService constructor.
     /// </summary>
     public PlanLimitService(
-        TablewiseDbContext dbContext,
+        IApplicationDbContext dbContext,
         ILogger<PlanLimitService> logger)
     {
         _dbContext = dbContext;
@@ -114,7 +113,7 @@ public sealed class PlanLimitService : IPlanLimitService
     }
 
     /// <inheritdoc />
-    public async Task<TenantUsageDto> GetTenantUsageAsync(Guid tenantId, CancellationToken cancellationToken = default)
+    public async Task<PlanUsageSummaryDto> GetTenantUsageAsync(Guid tenantId, CancellationToken cancellationToken = default)
     {
         var limits = await GetPlanLimitsAsync(tenantId, cancellationToken).ConfigureAwait(false);
 
@@ -136,7 +135,7 @@ public sealed class PlanLimitService : IPlanLimitService
             .FirstOrDefaultAsync(cancellationToken)
             .ConfigureAwait(false);
 
-        return new TenantUsageDto
+        return new PlanUsageSummaryDto
         {
             Venues = new UsageInfo
             {
@@ -158,6 +157,58 @@ public sealed class PlanLimitService : IPlanLimitService
                 Current = reservationCount,
                 Maximum = limits.MaxReservationsPerMonth
             }
+        };
+    }
+
+    /// <inheritdoc />
+    public int GetMonthlyReservationLimit(Domain.Enums.PlanTier tier)
+    {
+        return tier switch
+        {
+            Domain.Enums.PlanTier.Starter => 100,
+            Domain.Enums.PlanTier.Pro => 500,
+            Domain.Enums.PlanTier.Business => 2000,
+            Domain.Enums.PlanTier.Enterprise => -1, // Sınırsız
+            _ => 100
+        };
+    }
+
+    /// <inheritdoc />
+    public int GetVenueLimit(Domain.Enums.PlanTier tier)
+    {
+        return tier switch
+        {
+            Domain.Enums.PlanTier.Starter => 1,
+            Domain.Enums.PlanTier.Pro => 1,
+            Domain.Enums.PlanTier.Business => 3,
+            Domain.Enums.PlanTier.Enterprise => -1, // Sınırsız
+            _ => 1
+        };
+    }
+
+    /// <inheritdoc />
+    public int GetUserLimit(Domain.Enums.PlanTier tier)
+    {
+        return tier switch
+        {
+            Domain.Enums.PlanTier.Starter => 2,
+            Domain.Enums.PlanTier.Pro => 5,
+            Domain.Enums.PlanTier.Business => 20,
+            Domain.Enums.PlanTier.Enterprise => -1, // Sınırsız
+            _ => 2
+        };
+    }
+
+    /// <inheritdoc />
+    public int GetTableLimit(Domain.Enums.PlanTier tier)
+    {
+        return tier switch
+        {
+            Domain.Enums.PlanTier.Starter => 3,
+            Domain.Enums.PlanTier.Pro => -1, // Sınırsız
+            Domain.Enums.PlanTier.Business => -1, // Sınırsız
+            Domain.Enums.PlanTier.Enterprise => -1, // Sınırsız
+            _ => 3
         };
     }
 

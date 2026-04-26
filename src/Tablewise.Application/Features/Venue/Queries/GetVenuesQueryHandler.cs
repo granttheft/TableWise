@@ -2,7 +2,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Tablewise.Application.DTOs.Venue;
 using Tablewise.Domain.Interfaces;
-using Tablewise.Infrastructure.Persistence;
+using Tablewise.Application.Interfaces;
 
 namespace Tablewise.Application.Features.Venue.Queries;
 
@@ -11,11 +11,11 @@ namespace Tablewise.Application.Features.Venue.Queries;
 /// </summary>
 public sealed class GetVenuesQueryHandler : IRequestHandler<GetVenuesQuery, List<VenueDto>>
 {
-    private readonly TablewiseDbContext _dbContext;
+    private readonly IApplicationDbContext _dbContext;
     private readonly ITenantContext _tenantContext;
 
     public GetVenuesQueryHandler(
-        TablewiseDbContext dbContext,
+        IApplicationDbContext dbContext,
         ITenantContext tenantContext)
     {
         _dbContext = dbContext;

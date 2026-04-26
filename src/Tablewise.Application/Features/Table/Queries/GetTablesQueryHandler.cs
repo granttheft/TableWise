@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Tablewise.Application.DTOs.Table;
 using Tablewise.Domain.Exceptions;
 using Tablewise.Domain.Interfaces;
-using Tablewise.Infrastructure.Persistence;
+using Tablewise.Application.Interfaces;
 
 namespace Tablewise.Application.Features.Table.Queries;
 
@@ -12,11 +12,11 @@ namespace Tablewise.Application.Features.Table.Queries;
 /// </summary>
 public sealed class GetTablesQueryHandler : IRequestHandler<GetTablesQuery, List<TableDto>>
 {
-    private readonly TablewiseDbContext _dbContext;
+    private readonly IApplicationDbContext _dbContext;
     private readonly ITenantContext _tenantContext;
 
     public GetTablesQueryHandler(
-        TablewiseDbContext dbContext,
+        IApplicationDbContext dbContext,
         ITenantContext tenantContext)
     {
         _dbContext = dbContext;

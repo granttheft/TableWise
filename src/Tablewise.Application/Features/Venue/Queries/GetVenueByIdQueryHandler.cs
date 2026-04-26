@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Tablewise.Application.DTOs.Venue;
 using Tablewise.Domain.Exceptions;
 using Tablewise.Domain.Interfaces;
-using Tablewise.Infrastructure.Persistence;
+using Tablewise.Application.Interfaces;
 
 namespace Tablewise.Application.Features.Venue.Queries;
 
@@ -12,11 +12,11 @@ namespace Tablewise.Application.Features.Venue.Queries;
 /// </summary>
 public sealed class GetVenueByIdQueryHandler : IRequestHandler<GetVenueByIdQuery, VenueDto>
 {
-    private readonly TablewiseDbContext _dbContext;
+    private readonly IApplicationDbContext _dbContext;
     private readonly ITenantContext _tenantContext;
 
     public GetVenueByIdQueryHandler(
-        TablewiseDbContext dbContext,
+        IApplicationDbContext dbContext,
         ITenantContext tenantContext)
     {
         _dbContext = dbContext;

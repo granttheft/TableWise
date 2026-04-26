@@ -109,46 +109,79 @@ public sealed class GetReservationsQueryHandler : IRequestHandler<GetReservation
                 : query.OrderBy(r => r.ReservedFor)
         };
 
-        // Pagination
-        var items = await query
+        // Pagination - Select raw data, then map in memory
+        var rawItems = await query
             .Skip((request.Page - 1) * request.PageSize)
             .Take(request.PageSize)
-            .Select(r => new ReservationDto
+            .Select(r => new
             {
-                Id = r.Id,
-                VenueId = r.VenueId,
+                r.Id,
+                r.VenueId,
                 VenueName = r.Venue != null ? r.Venue.Name : string.Empty,
-                TableId = r.TableId,
-                TableName = r.Table != null ? r.Table.Name : null,
-                TableCombinationId = r.TableCombinationId,
-                TableCombinationName = r.TableCombination != null ? r.TableCombination.Name : null,
-                CustomerId = r.CustomerId,
-                GuestName = r.GuestName,
-                GuestEmail = r.GuestEmail,
-                GuestPhone = r.GuestPhone,
-                CustomerTier = r.Customer != null ? r.Customer.Tier.ToString() : null,
-                PartySize = r.PartySize,
-                ReservedFor = r.ReservedFor,
-                EndTime = r.EndTime,
+                r.TableId,
+                TableName = r.Table != null ? r.Table.Name : (string?)null,
+                r.TableCombinationId,
+                TableCombinationName = r.TableCombination != null ? r.TableCombination.Name : (string?)null,
+                r.CustomerId,
+                r.GuestName,
+                r.GuestEmail,
+                r.GuestPhone,
+                CustomerTier = r.Customer != null ? r.Customer.Tier.ToString() : (string?)null,
+                r.PartySize,
+                r.ReservedFor,
+                r.EndTime,
                 Status = r.Status.ToString(),
                 Source = r.Source.ToString(),
-                ConfirmCode = r.ConfirmCode,
-                SpecialRequests = r.SpecialRequests,
-                InternalNotes = r.InternalNotes,
-                DiscountPercent = r.DiscountPercent,
+                r.ConfirmCode,
+                r.SpecialRequests,
+                r.InternalNotes,
+                r.DiscountPercent,
                 DepositStatus = r.DepositStatus.ToString(),
-                DepositAmount = r.DepositAmount,
-                DepositPaidAt = r.DepositPaidAt,
-                CancellationReason = r.CancellationReason,
-                CancelledAt = r.CancelledAt,
-                CreatedAt = r.CreatedAt,
-                CustomFieldAnswers = string.IsNullOrEmpty(r.CustomFieldAnswers)
-                    ? null
-                    : JsonSerializer.Deserialize<Dictionary<string, string>>(r.CustomFieldAnswers),
-                ModifiedFromReservationId = r.ModifiedFromReservationId
+                r.DepositAmount,
+                r.DepositPaidAt,
+                r.CancellationReason,
+                r.CancelledAt,
+                r.CreatedAt,
+                r.CustomFieldAnswers,
+                r.ModifiedFromReservationId
             })
             .ToListAsync(cancellationToken)
             .ConfigureAwait(false);
+
+        var items = rawItems.Select(r => new ReservationDto
+        {
+            Id = r.Id,
+            VenueId = r.VenueId,
+            VenueName = r.VenueName,
+            TableId = r.TableId,
+            TableName = r.TableName,
+            TableCombinationId = r.TableCombinationId,
+            TableCombinationName = r.TableCombinationName,
+            CustomerId = r.CustomerId,
+            GuestName = r.GuestName,
+            GuestEmail = r.GuestEmail,
+            GuestPhone = r.GuestPhone,
+            CustomerTier = r.CustomerTier,
+            PartySize = r.PartySize,
+            ReservedFor = r.ReservedFor,
+            EndTime = r.EndTime,
+            Status = r.Status,
+            Source = r.Source,
+            ConfirmCode = r.ConfirmCode,
+            SpecialRequests = r.SpecialRequests,
+            InternalNotes = r.InternalNotes,
+            DiscountPercent = r.DiscountPercent,
+            DepositStatus = r.DepositStatus,
+            DepositAmount = r.DepositAmount,
+            DepositPaidAt = r.DepositPaidAt,
+            CancellationReason = r.CancellationReason,
+            CancelledAt = r.CancelledAt,
+            CreatedAt = r.CreatedAt,
+            CustomFieldAnswers = string.IsNullOrEmpty(r.CustomFieldAnswers)
+                ? null
+                : JsonSerializer.Deserialize<Dictionary<string, string>>(r.CustomFieldAnswers),
+            ModifiedFromReservationId = r.ModifiedFromReservationId
+        }).ToList();
 
         return new ReservationListResponseDto
         {

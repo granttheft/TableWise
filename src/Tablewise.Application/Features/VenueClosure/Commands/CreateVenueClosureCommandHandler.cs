@@ -5,7 +5,7 @@ using Tablewise.Domain.Entities;
 using Tablewise.Domain.Enums;
 using Tablewise.Domain.Exceptions;
 using Tablewise.Domain.Interfaces;
-using Tablewise.Infrastructure.Persistence;
+using Tablewise.Application.Interfaces;
 
 namespace Tablewise.Application.Features.VenueClosure.Commands;
 
@@ -14,13 +14,13 @@ namespace Tablewise.Application.Features.VenueClosure.Commands;
 /// </summary>
 public sealed class CreateVenueClosureCommandHandler : IRequestHandler<CreateVenueClosureCommand, List<Guid>>
 {
-    private readonly TablewiseDbContext _dbContext;
+    private readonly IApplicationDbContext _dbContext;
     private readonly ITenantContext _tenantContext;
     private readonly ICurrentUser _currentUser;
     private readonly ILogger<CreateVenueClosureCommandHandler> _logger;
 
     public CreateVenueClosureCommandHandler(
-        TablewiseDbContext dbContext,
+        IApplicationDbContext dbContext,
         ITenantContext tenantContext,
         ICurrentUser currentUser,
         ILogger<CreateVenueClosureCommandHandler> logger)
@@ -106,7 +106,7 @@ public sealed class CreateVenueClosureCommandHandler : IRequestHandler<CreateVen
             var hasActiveReservations = await _dbContext.Reservations
                 .AnyAsync(r => 
                     r.VenueId == request.VenueId && 
-                    r.ReservationDate == currentDate &&
+                    r.ReservedFor == currentDate &&
                     !r.IsDeleted &&
                     r.Status != ReservationStatus.Cancelled,
                     cancellationToken)

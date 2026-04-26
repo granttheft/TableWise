@@ -1,4 +1,4 @@
-namespace Tablewise.Infrastructure.Auth;
+namespace Tablewise.Application.Settings;
 
 /// <summary>
 /// Authentication yapılandırma ayarları.

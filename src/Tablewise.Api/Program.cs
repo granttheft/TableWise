@@ -11,6 +11,7 @@ using Serilog.Events;
 using Tablewise.Api.Middleware;
 using Tablewise.Application.Validators.Auth;
 using Tablewise.Infrastructure;
+using Tablewise.Application.Settings;
 using Tablewise.Infrastructure.Auth;
 using Tablewise.Infrastructure.Persistence;
 using Tablewise.Infrastructure.Persistence.SeedData;

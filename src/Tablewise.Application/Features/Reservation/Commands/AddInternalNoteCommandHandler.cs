@@ -39,7 +39,6 @@ public sealed class AddInternalNoteCommandHandler : IRequestHandler<AddInternalN
             throw new NotFoundException("Reservation", request.ReservationId.ToString(), "Rezervasyon bulunamadı.");
         }
 
-        // Mevcut nota ekle (timestamp ile)
         var timestamp = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm");
         var author = _currentUser.Email ?? "Staff";
         var newNote = $"[{timestamp}] {author}: {request.Note}";
@@ -53,18 +52,18 @@ public sealed class AddInternalNoteCommandHandler : IRequestHandler<AddInternalN
             reservation.InternalNotes += "\n" + newNote;
         }
 
-        // Audit log
         var auditLog = new AuditLog
         {
             TenantId = reservation.TenantId,
             EntityType = "Reservation",
-            EntityId = reservation.Id,
+            EntityId = reservation.Id.ToString(),
             Action = "NoteAdded",
             PerformedBy = author,
-            Details = "Internal not eklendi"
+            NewValue = request.Note,
+            CreatedAt = DateTime.UtcNow
         };
-        _unitOfWork.AuditLogs.Add(auditLog);
 
+        await _unitOfWork.AuditLogs.AddAsync(auditLog, cancellationToken).ConfigureAwait(false);
         await _unitOfWork.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
         return true;

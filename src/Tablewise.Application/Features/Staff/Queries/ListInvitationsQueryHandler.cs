@@ -4,7 +4,7 @@ using Tablewise.Application.DTOs.Staff;
 using Tablewise.Domain.Enums;
 using Tablewise.Domain.Exceptions;
 using Tablewise.Domain.Interfaces;
-using Tablewise.Infrastructure.Persistence;
+using Tablewise.Application.Interfaces;
 
 namespace Tablewise.Application.Features.Staff.Queries;
 
@@ -13,7 +13,7 @@ namespace Tablewise.Application.Features.Staff.Queries;
 /// </summary>
 public sealed class ListInvitationsQueryHandler : IRequestHandler<ListInvitationsQuery, List<InvitationDto>>
 {
-    private readonly TablewiseDbContext _dbContext;
+    private readonly IApplicationDbContext _dbContext;
     private readonly ITenantContext _tenantContext;
     private readonly ICurrentUser _currentUser;
 
@@ -21,7 +21,7 @@ public sealed class ListInvitationsQueryHandler : IRequestHandler<ListInvitation
     /// ListInvitationsQueryHandler constructor.
     /// </summary>
     public ListInvitationsQueryHandler(
-        TablewiseDbContext dbContext,
+        IApplicationDbContext dbContext,
         ITenantContext tenantContext,
         ICurrentUser currentUser)
     {
@@ -42,7 +42,7 @@ public sealed class ListInvitationsQueryHandler : IRequestHandler<ListInvitation
         }
 
         var query = _dbContext.UserInvitations
-            .Include(inv => inv.InviterUser)
+            .Include(inv => inv.InvitedBy)
             .Where(inv => inv.TenantId == tenantId && !inv.IsDeleted);
 
         if (request.PendingOnly)
@@ -52,16 +52,16 @@ public sealed class ListInvitationsQueryHandler : IRequestHandler<ListInvitation
         }
 
         var invitations = await query
-            .OrderByDescending(inv => inv.InvitedAt)
+            .OrderByDescending(inv => inv.CreatedAt)
             .Select(inv => new InvitationDto
             {
                 Id = inv.Id,
                 Email = inv.Email,
                 Role = inv.Role,
-                InvitedBy = inv.InviterUser != null
-                    ? $"{inv.InviterUser.FirstName} {inv.InviterUser.LastName}".Trim()
+                InvitedBy = inv.InvitedBy != null
+                    ? $"{inv.InvitedBy.FirstName} {inv.InvitedBy.LastName}".Trim()
                     : "Unknown",
-                InvitedAt = inv.InvitedAt,
+                InvitedAt = inv.CreatedAt,
                 ExpiresAt = inv.ExpiresAt,
                 IsAccepted = inv.AcceptedAt.HasValue,
                 AcceptedAt = inv.AcceptedAt

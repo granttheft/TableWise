@@ -6,8 +6,7 @@ using Tablewise.Application.DTOs.Auth;
 using Tablewise.Application.Interfaces;
 using Tablewise.Domain.Entities;
 using Tablewise.Domain.Exceptions;
-using Tablewise.Infrastructure.Auth;
-using Tablewise.Infrastructure.Persistence;
+using Tablewise.Application.Settings;
 using BCryptNet = BCrypt.Net.BCrypt;
 
 namespace Tablewise.Application.Features.Staff.Commands;
@@ -17,7 +16,7 @@ namespace Tablewise.Application.Features.Staff.Commands;
 /// </summary>
 public sealed class AcceptInvitationCommandHandler : IRequestHandler<AcceptInvitationCommand, AuthResultDto>
 {
-    private readonly TablewiseDbContext _dbContext;
+    private readonly IApplicationDbContext _dbContext;
     private readonly IJwtTokenService _jwtService;
     private readonly AuthSettings _authSettings;
     private readonly ILogger<AcceptInvitationCommandHandler> _logger;
@@ -26,7 +25,7 @@ public sealed class AcceptInvitationCommandHandler : IRequestHandler<AcceptInvit
     /// AcceptInvitationCommandHandler constructor.
     /// </summary>
     public AcceptInvitationCommandHandler(
-        TablewiseDbContext dbContext,
+        IApplicationDbContext dbContext,
         IJwtTokenService jwtService,
         IOptions<AuthSettings> authSettings,
         ILogger<AcceptInvitationCommandHandler> logger)
@@ -104,7 +103,7 @@ public sealed class AcceptInvitationCommandHandler : IRequestHandler<AcceptInvit
             Role = invitation.Role,
             IsActive = true,
             IsEmailVerified = true, // Davet ile geldiği için doğrulanmış sayılır
-            InvitedAt = invitation.InvitedAt,
+            InvitedAt = invitation.CreatedAt,
             LastLoginAt = DateTime.UtcNow,
             CreatedAt = DateTime.UtcNow
         };

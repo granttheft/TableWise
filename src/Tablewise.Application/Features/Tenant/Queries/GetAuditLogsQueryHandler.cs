@@ -4,7 +4,7 @@ using Tablewise.Application.DTOs.Tenant;
 using Tablewise.Domain.Enums;
 using Tablewise.Domain.Exceptions;
 using Tablewise.Domain.Interfaces;
-using Tablewise.Infrastructure.Persistence;
+using Tablewise.Application.Interfaces;
 
 namespace Tablewise.Application.Features.Tenant.Queries;
 
@@ -13,12 +13,12 @@ namespace Tablewise.Application.Features.Tenant.Queries;
 /// </summary>
 public sealed class GetAuditLogsQueryHandler : IRequestHandler<GetAuditLogsQuery, PagedAuditLogsDto>
 {
-    private readonly TablewiseDbContext _dbContext;
+    private readonly IApplicationDbContext _dbContext;
     private readonly ITenantContext _tenantContext;
     private readonly ICurrentUser _currentUser;
 
     public GetAuditLogsQueryHandler(
-        TablewiseDbContext dbContext,
+        IApplicationDbContext dbContext,
         ITenantContext tenantContext,
         ICurrentUser currentUser)
     {

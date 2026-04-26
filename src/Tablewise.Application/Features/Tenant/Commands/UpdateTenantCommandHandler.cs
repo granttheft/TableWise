@@ -5,7 +5,7 @@ using Tablewise.Domain.Entities;
 using Tablewise.Domain.Enums;
 using Tablewise.Domain.Exceptions;
 using Tablewise.Domain.Interfaces;
-using Tablewise.Infrastructure.Persistence;
+using Tablewise.Application.Interfaces;
 
 namespace Tablewise.Application.Features.Tenant.Commands;
 
@@ -14,13 +14,13 @@ namespace Tablewise.Application.Features.Tenant.Commands;
 /// </summary>
 public sealed class UpdateTenantCommandHandler : IRequestHandler<UpdateTenantCommand, Unit>
 {
-    private readonly TablewiseDbContext _dbContext;
+    private readonly IApplicationDbContext _dbContext;
     private readonly ITenantContext _tenantContext;
     private readonly ICurrentUser _currentUser;
     private readonly ILogger<UpdateTenantCommandHandler> _logger;
 
     public UpdateTenantCommandHandler(
-        TablewiseDbContext dbContext,
+        IApplicationDbContext dbContext,
         ITenantContext tenantContext,
         ICurrentUser currentUser,
         ILogger<UpdateTenantCommandHandler> logger)

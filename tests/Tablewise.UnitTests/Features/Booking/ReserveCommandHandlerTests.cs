@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Tablewise.Application.Features.Booking.Commands;
@@ -330,7 +331,7 @@ public class ReserveCommandHandlerTests
             .Returns(new TestAsyncEnumerator<Customer>(emptyList.GetEnumerator()));
 
         customerRepoMock.Setup(x => x.Query()).Returns(mockDbSet.Object);
-        customerRepoMock.Setup(x => x.Add(It.IsAny<Customer>()));
+        customerRepoMock.Setup(x => x.AddAsync(It.IsAny<Customer>(), It.IsAny<CancellationToken>()));
         _unitOfWorkMock.Setup(x => x.Customers).Returns(customerRepoMock.Object);
     }
 
@@ -348,16 +349,16 @@ public class ReserveCommandHandlerTests
             .Returns(new TestAsyncEnumerator<Reservation>(emptyList.GetEnumerator()));
 
         reservationRepoMock.Setup(x => x.Query()).Returns(mockDbSet.Object);
-        reservationRepoMock.Setup(x => x.Add(It.IsAny<Reservation>()));
+        reservationRepoMock.Setup(x => x.AddAsync(It.IsAny<Reservation>(), It.IsAny<CancellationToken>()));
         _unitOfWorkMock.Setup(x => x.Reservations).Returns(reservationRepoMock.Object);
 
         // StatusLog ve AuditLog
         var statusLogRepoMock = new Mock<IRepository<ReservationStatusLog>>();
-        statusLogRepoMock.Setup(x => x.Add(It.IsAny<ReservationStatusLog>()));
+        statusLogRepoMock.Setup(x => x.AddAsync(It.IsAny<ReservationStatusLog>(), It.IsAny<CancellationToken>()));
         _unitOfWorkMock.Setup(x => x.ReservationStatusLogs).Returns(statusLogRepoMock.Object);
 
         var auditLogRepoMock = new Mock<IRepository<AuditLog>>();
-        auditLogRepoMock.Setup(x => x.Add(It.IsAny<AuditLog>()));
+        auditLogRepoMock.Setup(x => x.AddAsync(It.IsAny<AuditLog>(), It.IsAny<CancellationToken>()));
         _unitOfWorkMock.Setup(x => x.AuditLogs).Returns(auditLogRepoMock.Object);
 
         // Table

@@ -6,7 +6,6 @@ using Tablewise.Domain.Entities;
 using Tablewise.Domain.Enums;
 using Tablewise.Domain.Exceptions;
 using Tablewise.Domain.Interfaces;
-using Tablewise.Infrastructure.Persistence;
 
 namespace Tablewise.Application.Features.Venue.Commands;
 
@@ -15,14 +14,14 @@ namespace Tablewise.Application.Features.Venue.Commands;
 /// </summary>
 public sealed class CreateVenueCommandHandler : IRequestHandler<CreateVenueCommand, Guid>
 {
-    private readonly TablewiseDbContext _dbContext;
+    private readonly IApplicationDbContext _dbContext;
     private readonly ITenantContext _tenantContext;
     private readonly ICurrentUser _currentUser;
     private readonly IPlanLimitService _planLimitService;
     private readonly ILogger<CreateVenueCommandHandler> _logger;
 
     public CreateVenueCommandHandler(
-        TablewiseDbContext dbContext,
+        IApplicationDbContext dbContext,
         ITenantContext tenantContext,
         ICurrentUser currentUser,
         IPlanLimitService planLimitService,

@@ -49,13 +49,34 @@ public interface IPlanLimitService
     /// <param name="tenantId">Tenant ID</param>
     /// <param name="cancellationToken">İptal token'ı</param>
     /// <returns>Kullanım bilgileri</returns>
-    Task<TenantUsageDto> GetTenantUsageAsync(Guid tenantId, CancellationToken cancellationToken = default);
+    Task<PlanUsageSummaryDto> GetTenantUsageAsync(Guid tenantId, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Plan tier'ına göre aylık rezervasyon limitini döner.
+    /// </summary>
+    int GetMonthlyReservationLimit(Domain.Enums.PlanTier tier);
+
+    /// <summary>
+    /// Plan tier'ına göre mekan limitini döner.
+    /// </summary>
+    int GetVenueLimit(Domain.Enums.PlanTier tier);
+
+    /// <summary>
+    /// Plan tier'ına göre kullanıcı limitini döner.
+    /// </summary>
+    int GetUserLimit(Domain.Enums.PlanTier tier);
+
+    /// <summary>
+    /// Plan tier'ına göre masa limitini döner.
+    /// </summary>
+    int GetTableLimit(Domain.Enums.PlanTier tier);
 }
 
 /// <summary>
-/// Tenant kullanım istatistikleri DTO'su.
+/// Plan kullanım özeti DTO'su.
+/// IPlanLimitService tarafından döndürülür.
 /// </summary>
-public sealed record TenantUsageDto
+public sealed record PlanUsageSummaryDto
 {
     /// <summary>
     /// Mekan sayısı / limit.

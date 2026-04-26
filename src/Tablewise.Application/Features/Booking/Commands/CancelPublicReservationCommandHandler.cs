@@ -84,26 +84,24 @@ public sealed class CancelPublicReservationCommandHandler : IRequestHandler<Canc
             ChangedBy = "Customer",
             Reason = reservation.CancellationReason
         };
-        _unitOfWork.ReservationStatusLogs.Add(statusLog);
+        await _unitOfWork.ReservationStatusLogs.AddAsync(statusLog, cancellationToken).ConfigureAwait(false);
 
         // 6. Audit log
         var auditLog = new AuditLog
         {
             TenantId = reservation.TenantId,
             EntityType = "Reservation",
-            EntityId = reservation.Id,
+            EntityId = reservation.Id.ToString(),
             Action = "CancelledByCustomer",
             PerformedBy = "Customer",
-            Details = $"Rezervasyon müşteri tarafından iptal edildi. Neden: {reservation.CancellationReason}"
+            NewValue = $"CancellationReason: {reservation.CancellationReason}",
+            CreatedAt = DateTime.UtcNow
         };
-        _unitOfWork.AuditLogs.Add(auditLog);
+        await _unitOfWork.AuditLogs.AddAsync(auditLog, cancellationToken).ConfigureAwait(false);
 
-        // 7. Kapora iadesi (deposit varsa - Faz 7'de implemente edilecek)
+        // 7. Kapora iadesi (Faz 7)
         if (reservation.DepositStatus == DepositStatus.Paid)
         {
-            // TODO: Faz 7'de İyzico refund işlemi
-            reservation.DepositStatus = DepositStatus.Refunded;
-            reservation.DepositRefundedAt = DateTime.UtcNow;
             _logger.LogInformation("Kapora iadesi başlatıldı. ReservationId: {ReservationId}", reservation.Id);
         }
 
@@ -123,7 +121,7 @@ public sealed class CancelPublicReservationCommandHandler : IRequestHandler<Canc
         return true;
     }
 
-    private async Task SendCancellationEmailAsync(Reservation reservation)
+    private async Task SendCancellationEmailAsync(Domain.Entities.Reservation reservation)
     {
         if (string.IsNullOrEmpty(reservation.GuestEmail))
             return;

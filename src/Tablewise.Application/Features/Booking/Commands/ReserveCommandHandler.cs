@@ -150,7 +150,7 @@ public sealed class ReserveCommandHandler : IRequestHandler<ReserveCommand, Rese
             var confirmCode = await GenerateUniqueConfirmCodeAsync(cancellationToken).ConfigureAwait(false);
 
             // 8. Rezervasyon oluştur
-            var reservation = new Reservation
+            var reservation = new Domain.Entities.Reservation
             {
                 TenantId = tenantId,
                 VenueId = venue.Id,
@@ -174,7 +174,7 @@ public sealed class ReserveCommandHandler : IRequestHandler<ReserveCommand, Rese
                 DepositAmount = depositRequired ? depositAmount : null
             };
 
-            _unitOfWork.Reservations.Add(reservation);
+            await _unitOfWork.Reservations.AddAsync(reservation, cancellationToken).ConfigureAwait(false);
 
             // 9. Status log
             var statusLog = new ReservationStatusLog
@@ -184,25 +184,25 @@ public sealed class ReserveCommandHandler : IRequestHandler<ReserveCommand, Rese
                 ToStatus = reservationStatus,
                 ChangedBy = "System"
             };
-
-            _unitOfWork.ReservationStatusLogs.Add(statusLog);
+            await _unitOfWork.ReservationStatusLogs.AddAsync(statusLog, cancellationToken).ConfigureAwait(false);
 
             // 10. Audit log
             var auditLog = new AuditLog
             {
                 TenantId = tenantId,
                 EntityType = "Reservation",
-                EntityId = reservation.Id,
+                EntityId = reservation.Id.ToString(),
                 Action = "Created",
                 PerformedBy = "BookingUI",
-                Details = $"Rezervasyon oluşturuldu. ConfirmCode: {confirmCode}"
+                NewValue = $"ConfirmCode: {confirmCode}, GuestName: {request.GuestName}",
+                CreatedAt = DateTime.UtcNow
             };
+            await _unitOfWork.AuditLogs.AddAsync(auditLog, cancellationToken).ConfigureAwait(false);
 
-            _unitOfWork.AuditLogs.Add(auditLog);
-
+            // 11. Save
             await _unitOfWork.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
-            // 11. Cache invalidate
+            // Cache invalidate
             await _slotService.InvalidateCacheAsync(venue.Id, request.ReservedFor.Date, cancellationToken)
                 .ConfigureAwait(false);
 
@@ -286,7 +286,7 @@ public sealed class ReserveCommandHandler : IRequestHandler<ReserveCommand, Rese
             LastReservationAt = DateTime.UtcNow
         };
 
-        _unitOfWork.Customers.Add(newCustomer);
+        await _unitOfWork.Customers.AddAsync(newCustomer, cancellationToken).ConfigureAwait(false);
 
         return newCustomer;
     }
@@ -329,7 +329,7 @@ public sealed class ReserveCommandHandler : IRequestHandler<ReserveCommand, Rese
         return new string(chars);
     }
 
-    private static decimal CalculateDepositAmount(Venue venue, int partySize)
+    private static decimal CalculateDepositAmount(Domain.Entities.Venue venue, int partySize)
     {
         if (!venue.DepositEnabled || !venue.DepositAmount.HasValue)
             return 0;
@@ -395,7 +395,7 @@ public sealed class ReserveCommandHandler : IRequestHandler<ReserveCommand, Rese
         return $"/payment/{reservationId}";
     }
 
-    private async Task SendConfirmationEmailAsync(Reservation reservation, string venueName)
+    private async Task SendConfirmationEmailAsync(Domain.Entities.Reservation reservation, string venueName)
     {
         if (string.IsNullOrEmpty(reservation.GuestEmail))
             return;

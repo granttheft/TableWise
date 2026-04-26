@@ -6,7 +6,6 @@ using Tablewise.Domain.Entities;
 using Tablewise.Domain.Enums;
 using Tablewise.Domain.Exceptions;
 using Tablewise.Domain.Interfaces;
-using Tablewise.Infrastructure.Persistence;
 
 namespace Tablewise.Application.Features.Table.Commands;
 
@@ -15,14 +14,14 @@ namespace Tablewise.Application.Features.Table.Commands;
 /// </summary>
 public sealed class CreateTableCommandHandler : IRequestHandler<CreateTableCommand, Guid>
 {
-    private readonly TablewiseDbContext _dbContext;
+    private readonly IApplicationDbContext _dbContext;
     private readonly ITenantContext _tenantContext;
     private readonly ICurrentUser _currentUser;
     private readonly IPlanLimitService _planLimitService;
     private readonly ILogger<CreateTableCommandHandler> _logger;
 
     public CreateTableCommandHandler(
-        TablewiseDbContext dbContext,
+        IApplicationDbContext dbContext,
         ITenantContext tenantContext,
         ICurrentUser currentUser,
         IPlanLimitService planLimitService,

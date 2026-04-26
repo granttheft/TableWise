@@ -15,9 +15,19 @@ public class VenueCustomField : TenantScopedEntity
     public Guid VenueId { get; set; }
 
     /// <summary>
+    /// Alan adı (Name). Internal identifier.
+    /// </summary>
+    public string Name { get; set; } = string.Empty;
+
+    /// <summary>
     /// Alan etiketi (label). Örn: "Özel İstek", "Allerji Bilgisi".
     /// </summary>
     public string Label { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Placeholder metin (input alanında gösterilir).
+    /// </summary>
+    public string? Placeholder { get; set; }
 
     /// <summary>
     /// Alan tipi (Text, Number, Boolean, Select, Date).
@@ -38,6 +48,12 @@ public class VenueCustomField : TenantScopedEntity
     /// Select tipi için seçenekler (JSONB). Format: ["Seçenek 1", "Seçenek 2"].
     /// </summary>
     public string? Options { get; set; }
+
+    /// <summary>
+    /// Public rezervasyon formunda gösterilsin mi?
+    /// False ise sadece staff tarafından görülür.
+    /// </summary>
+    public bool IsPublic { get; set; } = true;
 
     // Navigation Properties
 

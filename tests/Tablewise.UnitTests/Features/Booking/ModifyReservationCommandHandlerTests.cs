@@ -261,7 +261,7 @@ public class ModifyReservationCommandHandlerTests
             .Returns(new TestAsyncEnumerator<Reservation>(list.GetEnumerator()));
 
         reservationRepoMock.Setup(x => x.Query()).Returns(mockDbSet.Object);
-        reservationRepoMock.Setup(x => x.Add(It.IsAny<Reservation>()));
+        reservationRepoMock.Setup(x => x.AddAsync(It.IsAny<Reservation>(), It.IsAny<CancellationToken>()));
         _unitOfWorkMock.Setup(x => x.Reservations).Returns(reservationRepoMock.Object);
     }
 
@@ -304,12 +304,12 @@ public class ModifyReservationCommandHandlerTests
     {
         // StatusLog
         var statusLogRepoMock = new Mock<IRepository<ReservationStatusLog>>();
-        statusLogRepoMock.Setup(x => x.Add(It.IsAny<ReservationStatusLog>()));
+        statusLogRepoMock.Setup(x => x.AddAsync(It.IsAny<ReservationStatusLog>(), It.IsAny<CancellationToken>()));
         _unitOfWorkMock.Setup(x => x.ReservationStatusLogs).Returns(statusLogRepoMock.Object);
 
         // AuditLog
         var auditLogRepoMock = new Mock<IRepository<AuditLog>>();
-        auditLogRepoMock.Setup(x => x.Add(It.IsAny<AuditLog>()));
+        auditLogRepoMock.Setup(x => x.AddAsync(It.IsAny<AuditLog>(), It.IsAny<CancellationToken>()));
         _unitOfWorkMock.Setup(x => x.AuditLogs).Returns(auditLogRepoMock.Object);
 
         // Tables

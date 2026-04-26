@@ -5,7 +5,7 @@ using Tablewise.Domain.Entities;
 using Tablewise.Domain.Enums;
 using Tablewise.Domain.Exceptions;
 using Tablewise.Domain.Interfaces;
-using Tablewise.Infrastructure.Persistence;
+using Tablewise.Application.Interfaces;
 
 namespace Tablewise.Application.Features.Venue.Commands;
 
@@ -14,13 +14,13 @@ namespace Tablewise.Application.Features.Venue.Commands;
 /// </summary>
 public sealed class DeleteVenueCommandHandler : IRequestHandler<DeleteVenueCommand, Unit>
 {
-    private readonly TablewiseDbContext _dbContext;
+    private readonly IApplicationDbContext _dbContext;
     private readonly ITenantContext _tenantContext;
     private readonly ICurrentUser _currentUser;
     private readonly ILogger<DeleteVenueCommandHandler> _logger;
 
     public DeleteVenueCommandHandler(
-        TablewiseDbContext dbContext,
+        IApplicationDbContext dbContext,
         ITenantContext tenantContext,
         ICurrentUser currentUser,
         ILogger<DeleteVenueCommandHandler> logger)
@@ -56,7 +56,7 @@ public sealed class DeleteVenueCommandHandler : IRequestHandler<DeleteVenueComma
             .AnyAsync(r => 
                 r.VenueId == request.VenueId && 
                 !r.IsDeleted && 
-                r.ReservationDate >= DateTime.UtcNow.Date &&
+                r.ReservedFor >= DateTime.UtcNow.Date &&
                 r.Status != ReservationStatus.Cancelled,
                 cancellationToken)
             .ConfigureAwait(false);

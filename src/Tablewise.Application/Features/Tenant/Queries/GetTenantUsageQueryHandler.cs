@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using Tablewise.Application.DTOs.Tenant;
 using Tablewise.Application.Interfaces;
 using Tablewise.Domain.Interfaces;
-using Tablewise.Infrastructure.Persistence;
 
 namespace Tablewise.Application.Features.Tenant.Queries;
 
@@ -12,12 +11,12 @@ namespace Tablewise.Application.Features.Tenant.Queries;
 /// </summary>
 public sealed class GetTenantUsageQueryHandler : IRequestHandler<GetTenantUsageQuery, TenantUsageDto>
 {
-    private readonly TablewiseDbContext _dbContext;
+    private readonly IApplicationDbContext _dbContext;
     private readonly ITenantContext _tenantContext;
     private readonly IPlanLimitService _planLimitService;
 
     public GetTenantUsageQueryHandler(
-        TablewiseDbContext dbContext,
+        IApplicationDbContext dbContext,
         ITenantContext tenantContext,
         IPlanLimitService planLimitService)
     {

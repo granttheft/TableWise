@@ -91,28 +91,26 @@ public sealed class UpdateReservationStatusCommandHandler : IRequestHandler<Upda
             ChangedBy = _currentUser.Email,
             Reason = request.Reason
         };
-        _unitOfWork.ReservationStatusLogs.Add(statusLog);
+        await _unitOfWork.ReservationStatusLogs.AddAsync(statusLog, cancellationToken).ConfigureAwait(false);
 
         // Audit log
         var auditLog = new AuditLog
         {
             TenantId = reservation.TenantId,
             EntityType = "Reservation",
-            EntityId = reservation.Id,
+            EntityId = reservation.Id.ToString(),
             Action = $"StatusChanged:{oldStatus}->{newStatus}",
             PerformedBy = _currentUser.Email ?? "Staff",
-            Details = request.Reason
+            NewValue = request.Reason ?? string.Empty,
+            CreatedAt = DateTime.UtcNow
         };
-        _unitOfWork.AuditLogs.Add(auditLog);
+        await _unitOfWork.AuditLogs.AddAsync(auditLog, cancellationToken).ConfigureAwait(false);
 
         await _unitOfWork.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
-        // Cache invalidate (iptal durumunda)
-        if (newStatus == ReservationStatus.Cancelled)
-        {
-            await _slotService.InvalidateCacheAsync(reservation.VenueId, reservation.ReservedFor.Date, cancellationToken)
-                .ConfigureAwait(false);
-        }
+        // Cache invalidate
+        await _slotService.InvalidateCacheAsync(reservation.VenueId, reservation.ReservedFor.Date, cancellationToken)
+            .ConfigureAwait(false);
 
         _logger.LogInformation(
             "Rezervasyon durumu güncellendi. Id: {Id}, {Old} -> {New}, By: {User}",

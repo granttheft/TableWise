@@ -4,7 +4,7 @@ using Tablewise.Application.DTOs.Staff;
 using Tablewise.Domain.Enums;
 using Tablewise.Domain.Exceptions;
 using Tablewise.Domain.Interfaces;
-using Tablewise.Infrastructure.Persistence;
+using Tablewise.Application.Interfaces;
 
 namespace Tablewise.Application.Features.Staff.Queries;
 
@@ -13,7 +13,7 @@ namespace Tablewise.Application.Features.Staff.Queries;
 /// </summary>
 public sealed class ListStaffQueryHandler : IRequestHandler<ListStaffQuery, List<StaffMemberDto>>
 {
-    private readonly TablewiseDbContext _dbContext;
+    private readonly IApplicationDbContext _dbContext;
     private readonly ITenantContext _tenantContext;
     private readonly ICurrentUser _currentUser;
 
@@ -21,7 +21,7 @@ public sealed class ListStaffQueryHandler : IRequestHandler<ListStaffQuery, List
     /// ListStaffQueryHandler constructor.
     /// </summary>
     public ListStaffQueryHandler(
-        TablewiseDbContext dbContext,
+        IApplicationDbContext dbContext,
         ITenantContext tenantContext,
         ICurrentUser currentUser)
     {
@@ -61,7 +61,7 @@ public sealed class ListStaffQueryHandler : IRequestHandler<ListStaffQuery, List
                 Role = u.Role,
                 IsActive = u.IsActive,
                 IsEmailVerified = u.IsEmailVerified,
-                InvitedAt = u.InvitedAt,
+                InvitedAt = u.CreatedAt,
                 LastLoginAt = u.LastLoginAt,
                 CreatedAt = u.CreatedAt
             })
