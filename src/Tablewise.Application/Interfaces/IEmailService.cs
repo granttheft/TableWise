@@ -58,4 +58,76 @@ public interface IEmailService
         string role,
         string inviteLink,
         CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Rezervasyon onay emaili gönderir.
+    /// </summary>
+    /// <param name="toEmail">Alıcı email</param>
+    /// <param name="guestName">Misafir adı</param>
+    /// <param name="venueName">Mekan adı</param>
+    /// <param name="reservedFor">Rezervasyon tarihi/saati</param>
+    /// <param name="confirmCode">Onay kodu</param>
+    /// <param name="cancellationToken">İptal token'ı</param>
+    Task SendReservationConfirmationAsync(
+        string toEmail,
+        string guestName,
+        string venueName,
+        DateTime reservedFor,
+        string confirmCode,
+        CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Rezervasyon iptal emaili gönderir.
+    /// </summary>
+    /// <param name="toEmail">Alıcı email</param>
+    /// <param name="guestName">Misafir adı</param>
+    /// <param name="venueName">Mekan adı</param>
+    /// <param name="reservedFor">Rezervasyon tarihi/saati</param>
+    /// <param name="confirmCode">Onay kodu</param>
+    /// <param name="cancellationToken">İptal token'ı</param>
+    Task SendReservationCancellationAsync(
+        string toEmail,
+        string guestName,
+        string venueName,
+        DateTime reservedFor,
+        string confirmCode,
+        CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Rezervasyon değişiklik emaili gönderir.
+    /// </summary>
+    /// <param name="toEmail">Alıcı email</param>
+    /// <param name="guestName">Misafir adı</param>
+    /// <param name="venueName">Mekan adı</param>
+    /// <param name="oldDateTime">Eski tarih/saat</param>
+    /// <param name="newDateTime">Yeni tarih/saat</param>
+    /// <param name="newConfirmCode">Yeni onay kodu</param>
+    /// <param name="cancellationToken">İptal token'ı</param>
+    Task SendReservationModificationAsync(
+        string toEmail,
+        string guestName,
+        string venueName,
+        DateTime oldDateTime,
+        DateTime newDateTime,
+        string newConfirmCode,
+        CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Rezervasyon hatırlatma emaili gönderir.
+    /// </summary>
+    /// <param name="toEmail">Alıcı email</param>
+    /// <param name="guestName">Misafir adı</param>
+    /// <param name="venueName">Mekan adı</param>
+    /// <param name="venueAddress">Mekan adresi</param>
+    /// <param name="reservedFor">Rezervasyon tarihi/saati</param>
+    /// <param name="confirmCode">Onay kodu</param>
+    /// <param name="cancellationToken">İptal token'ı</param>
+    Task SendReservationReminderAsync(
+        string toEmail,
+        string guestName,
+        string venueName,
+        string? venueAddress,
+        DateTime reservedFor,
+        string confirmCode,
+        CancellationToken cancellationToken = default);
 }

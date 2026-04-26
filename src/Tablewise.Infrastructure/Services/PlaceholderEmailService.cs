@@ -75,4 +75,70 @@ public sealed class PlaceholderEmailService : IEmailService
 
         return Task.CompletedTask;
     }
+
+    /// <inheritdoc />
+    public Task SendReservationConfirmationAsync(
+        string toEmail,
+        string guestName,
+        string venueName,
+        DateTime reservedFor,
+        string confirmCode,
+        CancellationToken cancellationToken = default)
+    {
+        _logger.LogInformation(
+            "[EMAIL] Rezervasyon onay: To={Email}, Guest={GuestName}, Venue={VenueName}, Date={Date}, Code={Code}",
+            toEmail, guestName, venueName, reservedFor, confirmCode);
+
+        return Task.CompletedTask;
+    }
+
+    /// <inheritdoc />
+    public Task SendReservationCancellationAsync(
+        string toEmail,
+        string guestName,
+        string venueName,
+        DateTime reservedFor,
+        string confirmCode,
+        CancellationToken cancellationToken = default)
+    {
+        _logger.LogInformation(
+            "[EMAIL] Rezervasyon iptal: To={Email}, Guest={GuestName}, Venue={VenueName}, Date={Date}, Code={Code}",
+            toEmail, guestName, venueName, reservedFor, confirmCode);
+
+        return Task.CompletedTask;
+    }
+
+    /// <inheritdoc />
+    public Task SendReservationModificationAsync(
+        string toEmail,
+        string guestName,
+        string venueName,
+        DateTime oldDateTime,
+        DateTime newDateTime,
+        string newConfirmCode,
+        CancellationToken cancellationToken = default)
+    {
+        _logger.LogInformation(
+            "[EMAIL] Rezervasyon değişiklik: To={Email}, Guest={GuestName}, Venue={VenueName}, OldDate={OldDate}, NewDate={NewDate}, NewCode={Code}",
+            toEmail, guestName, venueName, oldDateTime, newDateTime, newConfirmCode);
+
+        return Task.CompletedTask;
+    }
+
+    /// <inheritdoc />
+    public Task SendReservationReminderAsync(
+        string toEmail,
+        string guestName,
+        string venueName,
+        string? venueAddress,
+        DateTime reservedFor,
+        string confirmCode,
+        CancellationToken cancellationToken = default)
+    {
+        _logger.LogInformation(
+            "[EMAIL] Rezervasyon hatırlatma: To={Email}, Guest={GuestName}, Venue={VenueName}, Address={Address}, Date={Date}, Code={Code}",
+            toEmail, guestName, venueName, venueAddress, reservedFor, confirmCode);
+
+        return Task.CompletedTask;
+    }
 }

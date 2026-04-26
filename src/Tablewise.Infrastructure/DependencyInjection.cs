@@ -87,6 +87,12 @@ public static class DependencyInjection
         // Email Service (placeholder - SendGrid implementation sonraki fazda)
         services.AddScoped<IEmailService, PlaceholderEmailService>();
 
+        // Booking Services (Faz 2.2)
+        services.AddScoped<IIdempotencyService, IdempotencyService>();
+        services.AddScoped<ISlotAvailabilityService, SlotAvailabilityService>();
+        services.AddScoped<IDistributedLockService, DistributedLockService>();
+        services.AddScoped<IRuleEvaluator, StubRuleEvaluator>();
+
         return services;
     }
 

@@ -306,8 +306,8 @@ try
     // 8. Tenant Resolver (JWT'den veya slug'dan tenant çözer)
     app.UseMiddleware<TenantResolverMiddleware>();
 
-    // 9. İleride: IdempotencyMiddleware (POST /reserve için)
-    // app.UseMiddleware<IdempotencyMiddleware>();
+    // 9. IdempotencyMiddleware (POST /reserve için)
+    app.UseMiddleware<IdempotencyMiddleware>();
 
     // Development ortamında ek ayarlar
     if (app.Environment.IsDevelopment())

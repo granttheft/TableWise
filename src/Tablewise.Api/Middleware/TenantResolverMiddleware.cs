@@ -42,6 +42,11 @@ public sealed class TenantResolverMiddleware
     private const string BookingPathPrefix = "/rezervasyon/";
 
     /// <summary>
+    /// API booking path prefix (slug'dan tenant çözümlenecek).
+    /// </summary>
+    private const string ApiBookingPathPrefix = "/api/v1/book/";
+
+    /// <summary>
     /// TenantResolverMiddleware constructor.
     /// </summary>
     public TenantResolverMiddleware(
@@ -72,7 +77,24 @@ public sealed class TenantResolverMiddleware
         // Booking UI path kontrolü (/rezervasyon/{slug})
         if (path.StartsWith(BookingPathPrefix, StringComparison.OrdinalIgnoreCase))
         {
-            await ResolveFromSlugAsync(context, tenantContext, dbContext, path).ConfigureAwait(false);
+            await ResolveFromSlugAsync(context, tenantContext, dbContext, path, BookingPathPrefix).ConfigureAwait(false);
+            await _next(context).ConfigureAwait(false);
+            return;
+        }
+
+        // API Booking path kontrolü (/api/v1/book/{slug}/...)
+        if (path.StartsWith(ApiBookingPathPrefix, StringComparison.OrdinalIgnoreCase))
+        {
+            // /api/v1/book/confirm/{code} gibi path'ler için slug yok - bypass
+            var pathAfterBook = path[ApiBookingPathPrefix.Length..];
+            if (pathAfterBook.StartsWith("confirm", StringComparison.OrdinalIgnoreCase))
+            {
+                // ConfirmCode ile erişim - tenant filter'ı query içinde bypass edilecek
+                await _next(context).ConfigureAwait(false);
+                return;
+            }
+
+            await ResolveFromSlugAsync(context, tenantContext, dbContext, path, ApiBookingPathPrefix).ConfigureAwait(false);
             await _next(context).ConfigureAwait(false);
             return;
         }
@@ -115,10 +137,11 @@ public sealed class TenantResolverMiddleware
         HttpContext context,
         ITenantContext tenantContext,
         TablewiseDbContext dbContext,
-        string path)
+        string path,
+        string prefix)
     {
-        // /rezervasyon/{slug}/... formatından slug çıkar
-        var pathAfterPrefix = path[BookingPathPrefix.Length..];
+        // /{prefix}/{slug}/... formatından slug çıkar
+        var pathAfterPrefix = path[prefix.Length..];
         var slashIndex = pathAfterPrefix.IndexOf('/');
         var slug = slashIndex > 0 ? pathAfterPrefix[..slashIndex] : pathAfterPrefix;
 

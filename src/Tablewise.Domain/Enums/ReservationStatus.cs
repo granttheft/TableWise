@@ -28,5 +28,11 @@ public enum ReservationStatus
     /// <summary>
     /// Gelmedi (No-show). Rezervasyon saati geçti ancak müşteri gelmedi.
     /// </summary>
-    NoShow = 4
+    NoShow = 4,
+
+    /// <summary>
+    /// Değiştirildi. Müşteri rezervasyonunu yeni bir tarih/saate taşıdı.
+    /// Orijinal rezervasyon bu duruma geçer, yeni rezervasyon oluşturulur.
+    /// </summary>
+    Modified = 5
 }

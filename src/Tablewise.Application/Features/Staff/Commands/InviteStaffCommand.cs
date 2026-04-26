@@ -5,9 +5,7 @@ namespace Tablewise.Application.Features.Staff.Commands;
 
 /// <summary>
 /// Personel davet komutu.
-/// Sadece Owner rol
-
-ü kullanabilir.
+/// Sadece Owner rolü kullanabilir.
 /// </summary>
 public sealed record InviteStaffCommand : IRequest<Guid>
 {
