@@ -72,6 +72,9 @@ public static class DependencyInjection
         // Repository Pattern & Unit of Work
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
+        // Application Services
+        services.AddScoped<IPlanLimitService, Tablewise.Application.Services.PlanLimitService>();
+
         // Auth Services
         AddAuthServices(services, configuration);
 
