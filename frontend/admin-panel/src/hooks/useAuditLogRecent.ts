@@ -1,4 +1,4 @@
-import { useQuery } from '@tantml:react-query'
+import { useQuery } from '@tanstack/react-query'
 import api from '@/lib/api'
 import type { AuditLogEntry, ApiResponse } from '@/types/api'
 

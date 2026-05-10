@@ -18,6 +18,8 @@ const loginSchema = z.object({
 
 type LoginForm = z.infer<typeof loginSchema>
 
+const isDevelopment = import.meta.env.DEV
+
 export function LoginPage() {
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
@@ -31,6 +33,26 @@ export function LoginPage() {
   } = useForm<LoginForm>({
     resolver: zodResolver(loginSchema),
   })
+
+  const handleDevLogin = () => {
+    login(
+      {
+        id: 'dev-user-1',
+        email: 'demo@tablewise.com.tr',
+        name: 'Demo Kullanıcı',
+        role: 'Owner',
+        tenantId: 'dev-tenant-1',
+        tenantName: 'Demo Restoran',
+        planName: 'Pro',
+        planStatus: 'Active',
+      },
+      'dev-access-token',
+      'dev-refresh-token'
+    )
+    toast.success('Development mode - Giriş yapıldı')
+    const redirect = searchParams.get('redirect') || '/dashboard'
+    navigate(redirect)
+  }
 
   const onSubmit = async (data: LoginForm) => {
     setIsLoading(true)
@@ -96,6 +118,30 @@ export function LoginPage() {
             <Button type="submit" className="w-full" disabled={isLoading}>
               {isLoading ? 'Giriş yapılıyor...' : 'Giriş Yap'}
             </Button>
+
+            {isDevelopment && (
+              <>
+                <div className="relative my-4">
+                  <div className="absolute inset-0 flex items-center">
+                    <span className="w-full border-t" />
+                  </div>
+                  <div className="relative flex justify-center text-xs uppercase">
+                    <span className="bg-background px-2 text-muted-foreground">
+                      Development Mode
+                    </span>
+                  </div>
+                </div>
+                
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="w-full border-amber-500 text-amber-500 hover:bg-amber-500 hover:text-white"
+                  onClick={handleDevLogin}
+                >
+                  🚀 Dev Login (Backend API Olmadan Test)
+                </Button>
+              </>
+            )}
 
             <p className="text-center text-sm text-muted-foreground">
               Hesabınız yok mu?{' '}
