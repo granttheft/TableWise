@@ -215,28 +215,24 @@ export type ReservationStatus =
 
 export interface Reservation {
   id: string
-  tenueId: string
+  venueId: string
   tableId: string
-  tableName: string
-  customerId: string
-  customerName: string
-  customerEmail: string
-  customerPhone: string
-  customerTier: 'Regular' | 'Vip' | 'Blacklisted'
+  customerId?: string
   guestName: string
+  guestEmail?: string
   guestPhone?: string
-  partySize: number
-  reservedFor: string
-  durationMinutes: number
+  guestCount: number
+  date: string
+  timeSlot: string
+  slotDuration?: number
   status: ReservationStatus
   confirmCode: string
-  specialRequests?: string
+  specialRequest?: string
   internalNotes?: string
-  appliedRules: string[]
+  appliedRules?: string[]
   discountPercent?: number
   depositAmount?: number
-  depositPaid: boolean
-  depositRefunded: boolean
+  depositStatus?: 'NotRequired' | 'Pending' | 'Paid' | 'Refunded'
   createdAt: string
   updatedAt: string
 }
@@ -252,16 +248,22 @@ export interface ReservationStatusLog {
   timestamp: string
 }
 
+export type CustomerTier = 'VIP' | 'Regular' | 'New'
+
 export interface Customer {
   id: string
   tenantId: string
-  name: string
-  email: string
-  phone: string
-  tier: 'Regular' | 'Vip' | 'Blacklisted'
-  totalReservations: number
-  totalNoShows: number
+  fullName: string
+  email?: string
+  phone?: string
+  tier: CustomerTier
+  totalVisits?: number
+  lastReservationDate?: string
+  isBlacklisted: boolean
+  blacklistReason?: string
+  notes?: string
   createdAt: string
+  updatedAt: string
 }
 
 export interface TimeSlot {
@@ -282,12 +284,35 @@ export interface VenueCustomField {
 }
 
 export interface ReservationEvaluationResult {
-  canProceed: boolean
-  warnings: string[]
-  blocks: string[]
-  suggestedTables?: string[]
+  isAllowed: boolean
+  warnings?: { message: string; ruleId: string }[]
+  blockers?: { message: string; ruleId: string }[]
+  suggestedTableIds?: string[]
   discountPercent?: number
   depositRequired?: boolean
   depositAmount?: number
-  appliedRules: string[]
+  appliedRules?: string[]
+}
+
+// Staff Types
+export interface StaffMember {
+  id: string
+  tenantId: string
+  fullName: string
+  email: string
+  role: 'Owner' | 'Staff'
+  isActive: boolean
+  lastLoginAt?: string
+  createdAt: string
+  updatedAt: string
+}
+
+export interface StaffInvite {
+  id: string
+  tenantId: string
+  email: string
+  role: 'Owner' | 'Staff'
+  token: string
+  expiresAt: string
+  createdAt: string
 }

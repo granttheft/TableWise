@@ -16,7 +16,7 @@ import { InvitePage } from '@/features/auth/InvitePage'
 // Dashboard
 import { DashboardPage } from '@/features/dashboard/DashboardPage'
 
-// Feature pages (placeholder imports)
+// Feature pages
 import { TablesPage } from '@/features/tables/TablesPage'
 import { RulesPage } from '@/features/rules/RulesPage'
 import { ReservationsPage } from '@/features/reservations/ReservationsPage'
@@ -24,6 +24,7 @@ import { CustomersPage } from '@/features/customers/CustomersPage'
 import { StaffPage } from '@/features/staff/StaffPage'
 import { SettingsPage } from '@/features/settings/SettingsPage'
 import { SubscriptionPage } from '@/features/subscription/SubscriptionPage'
+import { OnboardingPage } from '@/features/onboarding/OnboardingPage'
 
 interface ProtectedRouteProps {
   children: React.ReactNode
@@ -56,6 +57,7 @@ export function AppRouter() {
       <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
       <Route path="/verify-email/:token" element={<VerifyEmailPage />} />
       <Route path="/invite/:token" element={<InvitePage />} />
+      <Route path="/onboarding" element={<OnboardingPage />} />
 
       {/* Protected routes */}
       <Route

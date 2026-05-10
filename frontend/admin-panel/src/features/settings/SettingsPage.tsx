@@ -1,34 +1,53 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { GeneralSettings } from './components/GeneralSettings'
+import { WorkingHoursSettings } from './components/WorkingHoursSettings'
+import { NotificationSettings } from './components/NotificationSettings'
+import { DepositSettings } from './components/DepositSettings'
+import { BookingSettings } from './components/BookingSettings'
+import { IntegrationSettings } from './components/IntegrationSettings'
 
 export function SettingsPage() {
   return (
     <div className="space-y-6">
       <div>
         <h1 className="text-3xl font-bold">Ayarlar</h1>
-        <p className="text-muted-foreground">Mekan ve hesap ayarlarınızı yapılandırın</p>
+        <p className="text-muted-foreground">Mekan ve sistem ayarlarını yönetin</p>
       </div>
 
-      <div className="grid gap-4">
-        <Card>
-          <CardHeader>
-            <CardTitle>Mekan Bilgileri</CardTitle>
-            <CardDescription>Adres, çalışma saatleri ve iletişim bilgileri</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <p className="text-sm text-muted-foreground">Mekan ayarları gelecek...</p>
-          </CardContent>
-        </Card>
+      <Tabs defaultValue="general" className="space-y-4">
+        <TabsList>
+          <TabsTrigger value="general">Genel</TabsTrigger>
+          <TabsTrigger value="working-hours">Çalışma Saatleri</TabsTrigger>
+          <TabsTrigger value="notifications">Bildirimler</TabsTrigger>
+          <TabsTrigger value="deposit">Kapora</TabsTrigger>
+          <TabsTrigger value="booking">Booking</TabsTrigger>
+          <TabsTrigger value="integration">Entegrasyon</TabsTrigger>
+        </TabsList>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Hesap Ayarları</CardTitle>
-            <CardDescription>Email, şifre ve bildirim tercihleri</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <p className="text-sm text-muted-foreground">Hesap ayarları gelecek...</p>
-          </CardContent>
-        </Card>
-      </div>
+        <TabsContent value="general">
+          <GeneralSettings />
+        </TabsContent>
+
+        <TabsContent value="working-hours">
+          <WorkingHoursSettings />
+        </TabsContent>
+
+        <TabsContent value="notifications">
+          <NotificationSettings />
+        </TabsContent>
+
+        <TabsContent value="deposit">
+          <DepositSettings />
+        </TabsContent>
+
+        <TabsContent value="booking">
+          <BookingSettings />
+        </TabsContent>
+
+        <TabsContent value="integration">
+          <IntegrationSettings />
+        </TabsContent>
+      </Tabs>
     </div>
   )
 }
