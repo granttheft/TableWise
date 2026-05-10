@@ -1,5 +1,6 @@
 using FluentValidation;
 using Tablewise.Application.DTOs.Rule;
+using Tablewise.Application.Services;
 
 namespace Tablewise.Application.Validators.Rule;
 
@@ -10,6 +11,8 @@ public sealed class TestRuleRequestDtoValidator : AbstractValidator<TestRuleRequ
 {
     private const int MinPartySize = 1;
     private const int MaxPartySize = 50;
+    private const int MinHour = 0;
+    private const int MaxHour = 23;
 
     /// <summary>
     /// TestRuleRequestDtoValidator constructor.
@@ -20,22 +23,50 @@ public sealed class TestRuleRequestDtoValidator : AbstractValidator<TestRuleRequ
             .InclusiveBetween(MinPartySize, MaxPartySize)
             .WithMessage($"Kişi sayısı {MinPartySize}-{MaxPartySize} arasında olmalıdır.");
 
-        RuleFor(x => x.ReservedFor)
-            .NotEmpty().WithMessage("Rezervasyon tarihi zorunludur.")
-            .GreaterThan(DateTime.UtcNow.AddMinutes(-1))
-            .WithMessage("Rezervasyon tarihi geçmiş olamaz.");
+        RuleFor(x => x.DaysInAdvance)
+            .GreaterThanOrEqualTo(0)
+            .WithMessage("Gün sayısı 0 veya daha büyük olmalıdır.");
 
-        RuleFor(x => x.TableId)
-            .NotEqual(Guid.Empty).WithMessage("Geçersiz masa ID.")
-            .When(x => x.TableId.HasValue);
+        RuleFor(x => x.Hour)
+            .InclusiveBetween(MinHour, MaxHour)
+            .WithMessage($"Saat {MinHour}-{MaxHour} arasında olmalıdır.");
 
-        RuleFor(x => x.CustomerEmail)
-            .EmailAddress().WithMessage("Geçerli bir email adresi giriniz.")
-            .MaximumLength(255).WithMessage("Email en fazla 255 karakter olabilir.")
-            .When(x => !string.IsNullOrEmpty(x.CustomerEmail));
+        RuleFor(x => x.VenueOccupancy)
+            .InclusiveBetween(0.0, 1.0)
+            .WithMessage("Doluluk oranı 0.0-1.0 arasında olmalıdır.");
 
-        RuleFor(x => x.CustomerPhone)
-            .Matches(@"^(\+90|0)?[0-9]{10,15}$").WithMessage("Geçerli bir telefon numarası giriniz.")
-            .When(x => !string.IsNullOrEmpty(x.CustomerPhone));
+        RuleFor(x => x.CustomerTier)
+            .Must(tier => tier == null || RuleSchemaValidator.ValidCustomerTiers.Contains(tier))
+            .WithMessage($"Geçersiz müşteri tier. Geçerli değerler: {string.Join(", ", RuleSchemaValidator.ValidCustomerTiers)}");
+
+        RuleFor(x => x.DayOfWeek)
+            .Must(day => day == null || RuleSchemaValidator.ValidDayOfWeek.Contains(day))
+            .WithMessage($"Geçersiz gün. Geçerli değerler: {string.Join(", ", RuleSchemaValidator.ValidDayOfWeek)}");
+
+        RuleFor(x => x.GroupComposition)
+            .Must(gc => gc == null || RuleSchemaValidator.ValidGroupCompositions.Contains(gc))
+            .WithMessage($"Geçersiz grup kompozisyonu. Geçerli değerler: {string.Join(", ", RuleSchemaValidator.ValidGroupCompositions)}");
+
+        RuleFor(x => x.TableCapacity)
+            .GreaterThan(0).WithMessage("Masa kapasitesi 0'dan büyük olmalıdır.")
+            .When(x => x.TableCapacity.HasValue);
+
+        RuleFor(x => x.MaleCount)
+            .GreaterThanOrEqualTo(0).WithMessage("Erkek sayısı 0 veya daha büyük olmalıdır.")
+            .When(x => x.MaleCount.HasValue);
+
+        RuleFor(x => x.FemaleCount)
+            .GreaterThanOrEqualTo(0).WithMessage("Kadın sayısı 0 veya daha büyük olmalıdır.")
+            .When(x => x.FemaleCount.HasValue);
+
+        // MaleCount + FemaleCount <= PartySize kontrolü
+        RuleFor(x => x)
+            .Must(dto =>
+            {
+                var totalGender = (dto.MaleCount ?? 0) + (dto.FemaleCount ?? 0);
+                return totalGender <= dto.PartySize;
+            })
+            .WithMessage("Erkek ve kadın sayısı toplamı kişi sayısını geçemez.")
+            .When(x => x.MaleCount.HasValue || x.FemaleCount.HasValue);
     }
 }

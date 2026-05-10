@@ -14,8 +14,8 @@ public interface IRuleTestService
     /// <param name="ruleId">Kural ID</param>
     /// <param name="request">Test parametreleri</param>
     /// <param name="cancellationToken">İptal token'ı</param>
-    /// <returns>Kural değerlendirme sonucu</returns>
-    Task<RuleEvaluationResult> TestRuleAsync(
+    /// <returns>Kural test sonucu</returns>
+    Task<RuleTestResultDto> TestRuleAsync(
         Guid ruleId,
         TestRuleRequestDto request,
         CancellationToken cancellationToken = default);

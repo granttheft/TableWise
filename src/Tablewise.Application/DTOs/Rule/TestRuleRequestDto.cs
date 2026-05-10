@@ -2,6 +2,7 @@ namespace Tablewise.Application.DTOs.Rule;
 
 /// <summary>
 /// Kural test istek DTO.
+/// Kural testleri için simüle edilmiş context bilgileri içerir.
 /// </summary>
 public sealed record TestRuleRequestDto
 {
@@ -11,22 +12,60 @@ public sealed record TestRuleRequestDto
     public int PartySize { get; init; }
 
     /// <summary>
-    /// Rezervasyon tarihi/saati.
+    /// Rezervasyon kaç gün öncesinden yapılıyor.
     /// </summary>
-    public DateTime ReservedFor { get; init; }
+    public int DaysInAdvance { get; init; }
 
     /// <summary>
-    /// Masa ID (opsiyonel).
+    /// Müşteri tier seviyesi (opsiyonel).
+    /// Geçerli değerler: "Regular", "Gold", "VIP", "Blacklisted"
     /// </summary>
-    public Guid? TableId { get; init; }
+    public string? CustomerTier { get; init; }
 
     /// <summary>
-    /// Müşteri email (opsiyonel).
+    /// Müşteri toplam ziyaret sayısı (opsiyonel).
     /// </summary>
-    public string? CustomerEmail { get; init; }
+    public int? CustomerTotalVisits { get; init; }
 
     /// <summary>
-    /// Müşteri telefon (opsiyonel).
+    /// Rezervasyon günü (opsiyonel).
+    /// Geçerli değerler: "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"
     /// </summary>
-    public string? CustomerPhone { get; init; }
+    public string? DayOfWeek { get; init; }
+
+    /// <summary>
+    /// Rezervasyon saati (0-23).
+    /// </summary>
+    public int Hour { get; init; }
+
+    /// <summary>
+    /// Mekan doluluk oranı (0.0-1.0).
+    /// </summary>
+    public double VenueOccupancy { get; init; }
+
+    /// <summary>
+    /// Masa kapasitesi (opsiyonel).
+    /// </summary>
+    public int? TableCapacity { get; init; }
+
+    /// <summary>
+    /// Masa lokasyonu (opsiyonel).
+    /// </summary>
+    public string? TableLocation { get; init; }
+
+    /// <summary>
+    /// Grup kompozisyonu (opsiyonel).
+    /// Geçerli değerler: "Mixed", "AllMale", "AllFemale", "Family"
+    /// </summary>
+    public string? GroupComposition { get; init; }
+
+    /// <summary>
+    /// Gruptaki erkek sayısı (opsiyonel).
+    /// </summary>
+    public int? MaleCount { get; init; }
+
+    /// <summary>
+    /// Gruptaki kadın sayısı (opsiyonel).
+    /// </summary>
+    public int? FemaleCount { get; init; }
 }

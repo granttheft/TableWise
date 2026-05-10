@@ -2,6 +2,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Tablewise.Application\Tablewise.Application.csproj" />
+    <ProjectReference Include="..\Tablewise.RuleEngine\Tablewise.RuleEngine.csproj" />
   </ItemGroup>
 
   <!-- IHttpContextAccessor, AddHttpContextAccessor ve ASP.NET Core HTTP tipleri için -->

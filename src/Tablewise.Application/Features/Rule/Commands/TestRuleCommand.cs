@@ -1,13 +1,12 @@
 using MediatR;
 using Tablewise.Application.DTOs.Rule;
-using Tablewise.Application.Interfaces;
 
 namespace Tablewise.Application.Features.Rule.Commands;
 
 /// <summary>
 /// Kural test komutu.
 /// </summary>
-public sealed record TestRuleCommand : IRequest<RuleEvaluationResult>
+public sealed record TestRuleCommand : IRequest<RuleTestResultDto>
 {
     /// <summary>
     /// Kural ID.

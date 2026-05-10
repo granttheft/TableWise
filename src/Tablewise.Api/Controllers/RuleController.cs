@@ -222,7 +222,8 @@ public sealed class RuleController : ControllerBase
     }
 
     /// <summary>
-    /// Kuralı test eder (simüle eder - Faz 3'te gerçek motor).
+    /// Kuralı test eder.
+    /// Gerçek kural motorunu kullanarak sonuç döner.
     /// </summary>
     /// <param name="id">Kural ID</param>
     /// <param name="dto">Test parametreleri</param>
@@ -234,7 +235,7 @@ public sealed class RuleController : ControllerBase
     /// <response code="403">Owner yetkisi gerekli</response>
     /// <response code="404">Kural bulunamadı</response>
     [HttpPost("{id:guid}/test")]
-    [ProducesResponseType(typeof(RuleEvaluationResult), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(RuleTestResultDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]

@@ -1,6 +1,7 @@
 using System.Text.Json;
 using FluentValidation;
 using Tablewise.Application.DTOs.Rule;
+using Tablewise.Application.Services;
 
 namespace Tablewise.Application.Validators.Rule;
 
@@ -31,7 +32,8 @@ public sealed class UpdateRuleDtoValidator : AbstractValidator<UpdateRuleDto>
         RuleFor(x => x.ConditionsJson)
             .NotEmpty().WithMessage("Koşullar zorunludur.")
             .Must(BeValidJson).WithMessage("Koşullar geçersiz JSON formatında.")
-            .Must(HaveVersionField).WithMessage("Koşullar JSON'unda 'version' alanı zorunludur.");
+            .Must(HaveVersionField).WithMessage("Koşullar JSON'unda 'version' alanı zorunludur.")
+            .Must(BeValidConditionsSchema).WithMessage(GetConditionsSchemaError);
 
         RuleFor(x => x.ActionsJson)
             .NotEmpty().WithMessage("Aksiyonlar zorunludur.")
@@ -87,5 +89,30 @@ public sealed class UpdateRuleDtoValidator : AbstractValidator<UpdateRuleDto>
         {
             return false;
         }
+    }
+
+    /// <summary>
+    /// ConditionsJson şema validasyonu.
+    /// Field ve operator whitelist kontrolü yapar.
+    /// </summary>
+    private static bool BeValidConditionsSchema(string? json)
+    {
+        if (string.IsNullOrWhiteSpace(json))
+            return true; // Diğer validator'lar zaten kontrol ediyor
+
+        var result = RuleSchemaValidator.ValidateConditions(json);
+        return result.IsValid;
+    }
+
+    /// <summary>
+    /// ConditionsJson şema validasyonu hata mesajını döner.
+    /// </summary>
+    private static string GetConditionsSchemaError(UpdateRuleDto dto)
+    {
+        if (string.IsNullOrWhiteSpace(dto.ConditionsJson))
+            return "Koşullar zorunludur.";
+
+        var result = RuleSchemaValidator.ValidateConditions(dto.ConditionsJson);
+        return result.ErrorMessage ?? "Koşullar şeması geçersiz.";
     }
 }

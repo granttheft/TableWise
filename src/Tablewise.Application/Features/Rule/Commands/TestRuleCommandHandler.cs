@@ -1,6 +1,7 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Tablewise.Application.DTOs.Rule;
 using Tablewise.Application.Interfaces;
 using Tablewise.Domain.Enums;
 using Tablewise.Domain.Exceptions;
@@ -11,7 +12,7 @@ namespace Tablewise.Application.Features.Rule.Commands;
 /// <summary>
 /// Kural test komutu handler'ı.
 /// </summary>
-public sealed class TestRuleCommandHandler : IRequestHandler<TestRuleCommand, RuleEvaluationResult>
+public sealed class TestRuleCommandHandler : IRequestHandler<TestRuleCommand, RuleTestResultDto>
 {
     private readonly IApplicationDbContext _dbContext;
     private readonly ITenantContext _tenantContext;
@@ -33,7 +34,7 @@ public sealed class TestRuleCommandHandler : IRequestHandler<TestRuleCommand, Ru
         _logger = logger;
     }
 
-    public async Task<RuleEvaluationResult> Handle(TestRuleCommand request, CancellationToken cancellationToken)
+    public async Task<RuleTestResultDto> Handle(TestRuleCommand request, CancellationToken cancellationToken)
     {
         var tenantId = _tenantContext.TenantId;
 
@@ -53,13 +54,13 @@ public sealed class TestRuleCommandHandler : IRequestHandler<TestRuleCommand, Ru
             throw new NotFoundException("Rule", request.RuleId);
         }
 
-        // Test servisi çağır (Faz 3'te gerçek motor ile çalışacak)
+        // Test servisi çağır
         var result = await _ruleTestService.TestRuleAsync(request.RuleId, request.Dto, cancellationToken)
             .ConfigureAwait(false);
 
         _logger.LogInformation(
-            "Kural test edildi: RuleId={RuleId}",
-            request.RuleId);
+            "Kural test edildi: RuleId={RuleId}, Triggered={Triggered}",
+            request.RuleId, result.Triggered);
 
         return result;
     }
