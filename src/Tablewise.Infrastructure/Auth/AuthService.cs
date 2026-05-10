@@ -68,6 +68,7 @@ public sealed class AuthService : IAuthService
         }
 
         var userEmailExists = await _dbContext.Users
+            .IgnoreQueryFilters()
             .AnyAsync(u => u.Email.ToLower() == emailLower, cancellationToken)
             .ConfigureAwait(false);
 
@@ -208,6 +209,7 @@ public sealed class AuthService : IAuthService
 
         // Kullanıcıyı bul
         var user = await _dbContext.Users
+            .IgnoreQueryFilters()
             .Include(u => u.Tenant)
                 .ThenInclude(t => t!.Plan)
             .FirstOrDefaultAsync(u => u.Email.ToLower() == emailLower && !u.IsDeleted, cancellationToken)
@@ -315,6 +317,7 @@ public sealed class AuthService : IAuthService
         CancellationToken cancellationToken = default)
     {
         var existingToken = await _dbContext.Set<RevocableRefreshToken>()
+            .IgnoreQueryFilters()
             .Include(rt => rt.User)
                 .ThenInclude(u => u!.Tenant)
                     .ThenInclude(t => t!.Plan)
@@ -389,6 +392,7 @@ public sealed class AuthService : IAuthService
         CancellationToken cancellationToken = default)
     {
         var existingToken = await _dbContext.Set<RevocableRefreshToken>()
+            .IgnoreQueryFilters()
             .FirstOrDefaultAsync(rt => rt.Token == refreshToken && !rt.IsDeleted, cancellationToken)
             .ConfigureAwait(false);
 
@@ -413,6 +417,7 @@ public sealed class AuthService : IAuthService
         CancellationToken cancellationToken = default)
     {
         var user = await _dbContext.Users
+            .IgnoreQueryFilters()
             .Include(u => u.Tenant)
             .FirstOrDefaultAsync(
                 u => u.EmailVerificationToken == token && !u.IsDeleted,
@@ -482,6 +487,7 @@ public sealed class AuthService : IAuthService
         var emailLower = email.ToLowerInvariant();
 
         var user = await _dbContext.Users
+            .IgnoreQueryFilters()
             .FirstOrDefaultAsync(u => u.Email.ToLower() == emailLower && !u.IsDeleted, cancellationToken)
             .ConfigureAwait(false);
 
@@ -514,6 +520,7 @@ public sealed class AuthService : IAuthService
         CancellationToken cancellationToken = default)
     {
         var user = await _dbContext.Users
+            .IgnoreQueryFilters()
             .FirstOrDefaultAsync(u => u.PasswordResetToken == token && !u.IsDeleted, cancellationToken)
             .ConfigureAwait(false);
 
@@ -636,6 +643,7 @@ public sealed class AuthService : IAuthService
         CancellationToken cancellationToken)
     {
         var tokens = await _dbContext.Set<RevocableRefreshToken>()
+            .IgnoreQueryFilters()
             .Where(rt => rt.UserId == userId && !rt.IsRevoked && !rt.IsDeleted)
             .ToListAsync(cancellationToken)
             .ConfigureAwait(false);

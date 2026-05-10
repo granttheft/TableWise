@@ -7,6 +7,12 @@ namespace Tablewise.Domain.Interfaces;
 public interface ITenantContext
 {
     /// <summary>
+    /// Tenant middleware çalıştıysa aktif tenant ID; aksi halde null.
+    /// Global query filter ve design-time/migration senaryolarında exception üretmez.
+    /// </summary>
+    Guid? OptionalTenantId { get; }
+
+    /// <summary>
     /// Aktif tenant ID. Nullable DEĞİL — her zaman set edilmiş olmalı.
     /// Set edilmemişse exception fırlatır.
     /// </summary>

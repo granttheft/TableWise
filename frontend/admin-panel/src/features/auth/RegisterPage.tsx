@@ -48,10 +48,25 @@ export function RegisterPage() {
     submitLockRef.current = true
     setIsLoading(true)
     try {
+      const business = data.tenantName.trim()
+      const spaceIdx = business.indexOf(' ')
+      let firstName =
+        spaceIdx > 0 ? business.slice(0, spaceIdx).slice(0, 50) : business.slice(0, 50)
+      if (firstName.length < 2) {
+        firstName = 'Yönetici'
+      }
+      const lastNameRaw =
+        spaceIdx > 0 ? business.slice(spaceIdx + 1).trim() : 'Yetkilisi'
+      const lastName = lastNameRaw.length >= 2 ? lastNameRaw.slice(0, 50) : 'Yetkilisi'
+
       await api.post('/api/v1/auth/register', {
-        tenantName: data.tenantName,
+        businessName: business,
         email: data.email,
         password: data.password,
+        confirmPassword: data.confirmPassword,
+        firstName,
+        lastName,
+        acceptTerms: data.acceptTerms,
       })
 
       toast.success('Kayıt başarılı! Email doğrulama linki gönderildi.')

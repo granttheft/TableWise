@@ -1,3 +1,4 @@
+using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using Tablewise.Application.Interfaces;
 using Tablewise.Domain.Common;
@@ -32,6 +33,11 @@ public class TablewiseDbContext : DbContext, IApplicationDbContext
         _currentUser = currentUser;
     }
 
+    /// <summary>
+    /// Global query filter tarafından okunur; EF her LINQ sorgusunda güncel değeri kullanır.
+    /// </summary>
+    public Guid? TenantFilterId => _tenantContext.OptionalTenantId;
+
     // DbSets
     public DbSet<Tenant> Tenants => Set<Tenant>();
     public DbSet<User> Users => Set<User>();
@@ -65,31 +71,14 @@ public class TablewiseDbContext : DbContext, IApplicationDbContext
         // Assembly'den tüm IEntityTypeConfiguration'ları uygula
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(TablewiseDbContext).Assembly);
 
-        // Global Query Filter - TenantScopedEntity için
+        ConfigureTenantQueryFilters(modelBuilder);
+
+        // Global Query Filter - TenantScopedEntity olmayan BaseEntity türevleri (Plan vb.) için soft delete
         foreach (var entityType in modelBuilder.Model.GetEntityTypes())
         {
-            // TenantScopedEntity'den türeyen entity'ler için TenantId ve Soft Delete filter
-            if (typeof(TenantScopedEntity).IsAssignableFrom(entityType.ClrType))
-            {
-                var parameter = System.Linq.Expressions.Expression.Parameter(entityType.ClrType, "e");
-                var tenantIdProperty = System.Linq.Expressions.Expression.Property(parameter, nameof(TenantScopedEntity.TenantId));
-                var isDeletedProperty = System.Linq.Expressions.Expression.Property(parameter, nameof(TenantScopedEntity.IsDeleted));
-
-                var tenantIdEquals = System.Linq.Expressions.Expression.Equal(
-                    tenantIdProperty,
-                    System.Linq.Expressions.Expression.Constant(_tenantContext.TenantId));
-
-                var notDeleted = System.Linq.Expressions.Expression.Equal(
-                    isDeletedProperty,
-                    System.Linq.Expressions.Expression.Constant(false));
-
-                var combinedFilter = System.Linq.Expressions.Expression.AndAlso(tenantIdEquals, notDeleted);
-                var lambda = System.Linq.Expressions.Expression.Lambda(combinedFilter, parameter);
-
-                modelBuilder.Entity(entityType.ClrType).HasQueryFilter(lambda);
-            }
             // BaseEntity'den türeyen ama TenantScopedEntity olmayan (Plan gibi) - sadece Soft Delete
-            else if (typeof(BaseEntity).IsAssignableFrom(entityType.ClrType) &&
+            if (typeof(BaseEntity).IsAssignableFrom(entityType.ClrType) &&
+                     !typeof(TenantScopedEntity).IsAssignableFrom(entityType.ClrType) &&
                      entityType.ClrType != typeof(TenantScopedEntity))
             {
                 var parameter = System.Linq.Expressions.Expression.Parameter(entityType.ClrType, "e");
@@ -116,6 +105,40 @@ public class TablewiseDbContext : DbContext, IApplicationDbContext
                 }
             }
         }
+    }
+
+    /// <summary>
+    /// TenantScopedEntity türleri için EF uyumlu global tenant + soft delete filtresi uygular.
+    /// </summary>
+    /// <param name="modelBuilder">Model builder.</param>
+    private void ConfigureTenantQueryFilters(ModelBuilder modelBuilder)
+    {
+        var method = typeof(TablewiseDbContext).GetMethod(
+            nameof(SetTenantQueryFilter),
+            BindingFlags.Instance | BindingFlags.NonPublic);
+
+        foreach (var entityType in modelBuilder.Model.GetEntityTypes())
+        {
+            var clrType = entityType.ClrType;
+            if (clrType == null || clrType.IsAbstract || !typeof(TenantScopedEntity).IsAssignableFrom(clrType))
+            {
+                continue;
+            }
+
+            method!.MakeGenericMethod(clrType).Invoke(this, new object[] { modelBuilder });
+        }
+    }
+
+    /// <summary>
+    /// Tek bir tenant-scoped entity için global query filter tanımlar.
+    /// </summary>
+    /// <typeparam name="T">Entity CLR tipi.</typeparam>
+    /// <param name="modelBuilder">Model builder.</param>
+    private void SetTenantQueryFilter<T>(ModelBuilder modelBuilder)
+        where T : TenantScopedEntity
+    {
+        modelBuilder.Entity<T>().HasQueryFilter(
+            e => TenantFilterId != null && e.TenantId == TenantFilterId.Value && !e.IsDeleted);
     }
 
     /// <summary>

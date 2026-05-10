@@ -11,6 +11,9 @@ public class TenantContext : ITenantContext
     private Guid? _tenantId;
 
     /// <inheritdoc />
+    public Guid? OptionalTenantId => _tenantId;
+
+    /// <inheritdoc />
     public Guid TenantId
     {
         get

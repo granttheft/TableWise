@@ -23,6 +23,9 @@ public class DesignTimeTenantContext : ITenantContext
 {
     private Guid _tenantId = Guid.Empty;
 
+    /// <inheritdoc />
+    public Guid? OptionalTenantId => _tenantId == Guid.Empty ? null : _tenantId;
+
     public Guid TenantId => _tenantId;
 
     public void SetTenant(Guid tenantId)
