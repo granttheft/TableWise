@@ -24,14 +24,14 @@ export function ReservationsPage() {
   const [isManualDialogOpen, setIsManualDialogOpen] = useState(false)
   const [presetSlot, setPresetSlot] = useState<{ tableId: string; timeSlot: string } | null>(null)
 
-  const { data: reservations, isLoading } = useReservations({
+  const { data: reservations = [], isLoading } = useReservations({
     date: format(selectedDate, 'yyyy-MM-dd'),
     venueId: selectedVenue !== 'all' ? selectedVenue : undefined,
     tableId: selectedTable !== 'all' ? selectedTable : undefined,
     status: selectedStatus !== 'all' ? selectedStatus : undefined,
   })
 
-  const { data: tables } = useTables(selectedVenue !== 'all' ? selectedVenue : undefined)
+  const { data: tables = [] } = useTables(selectedVenue !== 'all' ? selectedVenue : undefined)
   const exportReservations = useExportReservations()
 
   const timeSlots = generateTimeSlots('10:00', '23:00', 30)
@@ -170,7 +170,7 @@ export function ReservationsPage() {
 
             {/* Table Rows */}
             {tables.map((table) => {
-              const tableReservations = reservations?.filter((r) => r.tableId === table.id) || []
+              const tableReservations = reservations.filter((r) => r.tableId === table.id)
               
               return (
                 <div key={table.id} className="flex border-b hover:bg-muted/50 transition-colors">
@@ -227,7 +227,7 @@ export function ReservationsPage() {
       {/* Mobile List View (Responsive) */}
       <div className="lg:hidden">
         <Card>
-          {reservations && reservations.length > 0 ? (
+          {reservations.length > 0 ? (
             <div className="divide-y">
               {reservations.map((reservation) => {
                 const table = tables?.find((t) => t.id === reservation.tableId)
@@ -241,7 +241,7 @@ export function ReservationsPage() {
                       <div>
                         <div className="font-medium">{reservation.guestName}</div>
                         <div className="text-sm text-muted-foreground">
-                          {reservation.timeSlot} • {table?.name} • {reservation.guestCount} kişi
+                          {reservation.timeSlot} • {reservation.guestCount} kişi
                         </div>
                       </div>
                       <Badge variant="secondary" className={getStatusColor(reservation.status)}>

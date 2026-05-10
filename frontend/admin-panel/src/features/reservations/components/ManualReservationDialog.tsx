@@ -67,7 +67,6 @@ export function ManualReservationDialog({
   const [evaluationResult, setEvaluationResult] = useState<any>(null)
 
   const { data: searchResults, isLoading: isSearching } = useSearchCustomers(
-    venueId,
     customerSearchTerm,
     { enabled: customerSearchTerm.length >= 2 }
   )

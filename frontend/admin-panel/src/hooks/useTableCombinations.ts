@@ -3,6 +3,9 @@ import api from '@/lib/api'
 import { toast } from 'sonner'
 import type { TableCombination, ApiResponse } from '@/types/api'
 
+/**
+ * Venue'ye ait masa birleşimlerini getirir
+ */
 export function useTableCombinations(venueId?: string) {
   return useQuery({
     queryKey: ['table-combinations', venueId],
@@ -17,17 +20,26 @@ export function useTableCombinations(venueId?: string) {
   })
 }
 
+/**
+ * Yeni masa birleşimi oluşturur
+ */
 export function useCreateTableCombination() {
   const queryClient = useQueryClient()
 
   return useMutation({
     mutationFn: async (data: {
       venueId: string
-      combination: { name: string; tableIds: string[]; combinedCapacity: number }
+      name: string
+      tableIds: string[]
+      combinedCapacity: number
     }) => {
       const response = await api.post<ApiResponse<TableCombination>>(
         `/api/v1/venues/${data.venueId}/table-combinations`,
-        data.combination
+        {
+          name: data.name,
+          tableIds: data.tableIds,
+          combinedCapacity: data.combinedCapacity,
+        }
       )
       return response.data.data
     },
@@ -36,26 +48,27 @@ export function useCreateTableCombination() {
       toast.success('Masa birleşimi oluşturuldu')
     },
     onError: (error: any) => {
-      toast.error(error.response?.data?.message || 'Birleşim oluşturulamadı')
+      toast.error(error.response?.data?.message || 'Masa birleşimi oluşturulamadı')
     },
   })
 }
 
+/**
+ * Masa birleşimini siler
+ */
 export function useDeleteTableCombination() {
   const queryClient = useQueryClient()
 
   return useMutation({
     mutationFn: async (data: { venueId: string; combinationId: string }) => {
-      await api.delete(
-        `/api/v1/venues/${data.venueId}/table-combinations/${data.combinationId}`
-      )
+      await api.delete(`/api/v1/table-combinations/${data.combinationId}`)
     },
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ['table-combinations', variables.venueId] })
       toast.success('Masa birleşimi silindi')
     },
     onError: (error: any) => {
-      toast.error(error.response?.data?.message || 'Birleşim silinemedi')
+      toast.error(error.response?.data?.message || 'Masa birleşimi silinemedi')
     },
   })
 }

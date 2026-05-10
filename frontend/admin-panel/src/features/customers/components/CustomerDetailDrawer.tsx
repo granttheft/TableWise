@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import {
   Sheet,
   SheetContent,
@@ -15,9 +15,15 @@ import { Switch } from '@/components/ui/switch'
 import { Label } from '@/components/ui/label'
 import { Separator } from '@/components/ui/separator'
 import { Mail, Phone, Calendar, MapPin, Shield } from 'lucide-react'
-import { toast } from 'sonner'
+import { 
+  useCustomer, 
+  useUpdateCustomerTier, 
+  useUpdateCustomerBlacklist, 
+  useUpdateCustomerNotes 
+} from '@/hooks/useCustomers'
+import { useReservations } from '@/hooks/useReservations'
 import { getTierLabel, getTierColor, getStatusLabel, getStatusColor } from '@/features/reservations/utils/reservationHelpers'
-import type { Customer, Reservation } from '@/types/api'
+import type { CustomerTier } from '@/types/api'
 
 interface CustomerDetailDrawerProps {
   open: boolean
@@ -26,19 +32,52 @@ interface CustomerDetailDrawerProps {
 }
 
 export function CustomerDetailDrawer({ open, onOpenChange, customerId }: CustomerDetailDrawerProps) {
-  // TODO: Fetch customer details and reservations
-  const customer: Customer | null = null
-  const reservations: Reservation[] = []
-  const isLoading = false
+  const { data: customer, isLoading } = useCustomer(customerId)
+  const { data: reservations = [] } = useReservations({})
+  
+  const updateTier = useUpdateCustomerTier()
+  const updateBlacklist = useUpdateCustomerBlacklist()
+  const updateNotes = useUpdateCustomerNotes()
 
-  const [tier, setTier] = useState(customer?.tier || 'Regular')
-  const [isBlacklisted, setIsBlacklisted] = useState(customer?.isBlacklisted || false)
-  const [blacklistReason, setBlacklistReason] = useState(customer?.blacklistReason || '')
-  const [notes, setNotes] = useState(customer?.notes || '')
+  const [tier, setTier] = useState<CustomerTier>('Regular')
+  const [isBlacklisted, setIsBlacklisted] = useState(false)
+  const [blacklistReason, setBlacklistReason] = useState('')
+  const [notes, setNotes] = useState('')
 
-  const handleSave = () => {
-    console.log('Updating customer:', { tier, isBlacklisted, blacklistReason, notes })
-    toast.success('Müşteri bilgileri güncellendi')
+  useEffect(() => {
+    if (customer) {
+      setTier(customer.tier)
+      setIsBlacklisted(customer.isBlacklisted)
+      setBlacklistReason(customer.blacklistReason || '')
+      setNotes(customer.notes || '')
+    }
+  }, [customer])
+
+  const handleSave = async () => {
+    if (!customer) return
+
+    try {
+      // Update tier if changed
+      if (tier !== customer.tier) {
+        await updateTier.mutateAsync({ customerId: customer.id, tier })
+      }
+
+      // Update blacklist if changed
+      if (isBlacklisted !== customer.isBlacklisted || blacklistReason !== (customer.blacklistReason || '')) {
+        await updateBlacklist.mutateAsync({
+          customerId: customer.id,
+          isBlacklisted,
+          blacklistReason,
+        })
+      }
+
+      // Update notes if changed
+      if (notes !== (customer.notes || '')) {
+        await updateNotes.mutateAsync({ customerId: customer.id, notes })
+      }
+    } catch (error) {
+      // Errors are handled in mutation hooks
+    }
   }
 
   if (isLoading) {
@@ -177,21 +216,24 @@ export function CustomerDetailDrawer({ open, onOpenChange, customerId }: Custome
                 </p>
               ) : (
                 <div className="space-y-3">
-                  {reservations.slice(0, 10).map((reservation) => (
-                    <div key={reservation.id} className="flex items-start justify-between border-b pb-3 last:border-0">
-                      <div className="space-y-1">
-                        <div className="text-sm font-medium">
-                          {new Date(reservation.date).toLocaleDateString('tr-TR')} • {reservation.timeSlot}
+                  {reservations
+                    .filter((r) => r.customerId === customerId)
+                    .slice(0, 10)
+                    .map((reservation) => (
+                      <div key={reservation.id} className="flex items-start justify-between border-b pb-3 last:border-0">
+                        <div className="space-y-1">
+                          <div className="text-sm font-medium">
+                            {new Date(reservation.date).toLocaleDateString('tr-TR')} • {reservation.timeSlot}
+                          </div>
+                          <div className="text-sm text-muted-foreground">
+                            {reservation.guestCount} kişi
+                          </div>
                         </div>
-                        <div className="text-sm text-muted-foreground">
-                          {reservation.guestCount} kişi • Masa {reservation.tableId}
-                        </div>
+                        <Badge variant="secondary" className={getStatusColor(reservation.status)}>
+                          {getStatusLabel(reservation.status)}
+                        </Badge>
                       </div>
-                      <Badge variant="secondary" className={getStatusColor(reservation.status)}>
-                        {getStatusLabel(reservation.status)}
-                      </Badge>
-                    </div>
-                  ))}
+                    ))}
                 </div>
               )}
             </CardContent>

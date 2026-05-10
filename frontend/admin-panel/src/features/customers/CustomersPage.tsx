@@ -6,8 +6,8 @@ import { Badge } from '@/components/ui/badge'
 import { Card } from '@/components/ui/card'
 import { Search, UserX } from 'lucide-react'
 import { CustomerDetailDrawer } from './components/CustomerDetailDrawer'
+import { useCustomers } from '@/hooks/useCustomers'
 import { getTierLabel, getTierColor } from '@/features/reservations/utils/reservationHelpers'
-import type { Customer } from '@/types/api'
 
 export function CustomersPage() {
   const [searchTerm, setSearchTerm] = useState('')
@@ -16,32 +16,16 @@ export function CustomersPage() {
   const [selectedCustomerId, setSelectedCustomerId] = useState<string | null>(null)
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
 
-  // TODO: Fetch customers with useCustomers hook
-  const customers: Customer[] = []
-  const isLoading = false
+  const { data: customers = [], isLoading } = useCustomers({
+    searchTerm: searchTerm || undefined,
+    tier: tierFilter !== 'all' ? tierFilter : undefined,
+    isBlacklisted: blacklistFilter === 'all' ? undefined : blacklistFilter === 'true',
+  })
 
   const handleCustomerClick = (customerId: string) => {
     setSelectedCustomerId(customerId)
     setIsDrawerOpen(true)
   }
-
-  const filteredCustomers = customers.filter((customer) => {
-    if (searchTerm && !customer.fullName.toLowerCase().includes(searchTerm.toLowerCase()) &&
-        !customer.email?.toLowerCase().includes(searchTerm.toLowerCase()) &&
-        !customer.phone?.includes(searchTerm)) {
-      return false
-    }
-    if (tierFilter !== 'all' && customer.tier !== tierFilter) {
-      return false
-    }
-    if (blacklistFilter === 'true' && !customer.isBlacklisted) {
-      return false
-    }
-    if (blacklistFilter === 'false' && customer.isBlacklisted) {
-      return false
-    }
-    return true
-  })
 
   return (
     <div className="space-y-6">
@@ -93,7 +77,7 @@ export function CustomersPage() {
         <Card className="flex items-center justify-center py-12">
           <div className="text-muted-foreground">Yükleniyor...</div>
         </Card>
-      ) : filteredCustomers.length === 0 ? (
+      ) : customers.length === 0 ? (
         <Card className="flex flex-col items-center justify-center py-12">
           <UserX className="mb-4 h-12 w-12 text-muted-foreground" />
           <p className="text-muted-foreground">
@@ -117,7 +101,7 @@ export function CustomersPage() {
                 </tr>
               </thead>
               <tbody className="divide-y">
-                {filteredCustomers.map((customer) => (
+                {customers.map((customer) => (
                   <tr
                     key={customer.id}
                     onClick={() => handleCustomerClick(customer.id)}

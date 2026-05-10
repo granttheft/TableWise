@@ -10,19 +10,29 @@ import type {
   ApiResponse 
 } from '@/types/api'
 
-export function useReservations(venueId?: string, date?: string) {
+interface ReservationsFilters {
+  date?: string
+  venueId?: string
+  tableId?: string
+  status?: ReservationStatus | 'all'
+}
+
+export function useReservations(filters?: ReservationsFilters) {
   return useQuery({
-    queryKey: ['reservations', venueId, date],
+    queryKey: ['reservations', filters],
     queryFn: async () => {
-      if (!venueId) return []
       const params = new URLSearchParams()
-      if (date) params.append('date', date)
+      
+      if (filters?.date) params.append('date', filters.date)
+      if (filters?.venueId) params.append('venueId', filters.venueId)
+      if (filters?.tableId && filters.tableId !== 'all') params.append('tableId', filters.tableId)
+      if (filters?.status && filters.status !== 'all') params.append('status', filters.status)
+
       const response = await api.get<ApiResponse<Reservation[]>>(
-        `/api/v1/venues/${venueId}/reservations?${params.toString()}`
+        `/api/v1/reservations?${params.toString()}`
       )
       return response.data.data
     },
-    enabled: !!venueId,
     refetchInterval: 30000, // 30 seconds
   })
 }
@@ -59,22 +69,15 @@ export function useCreateReservation() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: async (data: {
-      venueId: string
-      reservation: Partial<Reservation>
-      overrideRules?: boolean
-    }) => {
+    mutationFn: async (data: any) => {
       const response = await api.post<ApiResponse<Reservation>>(
-        `/api/v1/venues/${data.venueId}/reservations`,
-        {
-          ...data.reservation,
-          overrideRules: data.overrideRules,
-        }
+        '/api/v1/reservations',
+        data
       )
       return response.data.data
     },
-    onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({ queryKey: ['reservations', variables.venueId] })
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['reservations'] })
       toast.success('Rezervasyon oluşturuldu')
     },
     onError: (error: any) => {
@@ -89,7 +92,6 @@ export function useUpdateReservation() {
   return useMutation({
     mutationFn: async (data: {
       reservationId: string
-      venueId: string
       updates: Partial<Reservation>
     }) => {
       const response = await api.put<ApiResponse<Reservation>>(
@@ -99,7 +101,7 @@ export function useUpdateReservation() {
       return response.data.data
     },
     onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({ queryKey: ['reservations', variables.venueId] })
+      queryClient.invalidateQueries({ queryKey: ['reservations'] })
       queryClient.invalidateQueries({ queryKey: ['reservation', variables.reservationId] })
       toast.success('Rezervasyon güncellendi')
     },
@@ -115,7 +117,6 @@ export function useUpdateReservationStatus() {
   return useMutation({
     mutationFn: async (data: {
       reservationId: string
-      venueId: string
       status: ReservationStatus
       reason?: string
     }) => {
@@ -129,7 +130,7 @@ export function useUpdateReservationStatus() {
       return response.data.data
     },
     onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({ queryKey: ['reservations', variables.venueId] })
+      queryClient.invalidateQueries({ queryKey: ['reservations'] })
       queryClient.invalidateQueries({ queryKey: ['reservation', variables.reservationId] })
       queryClient.invalidateQueries({ queryKey: ['reservation-status-log', variables.reservationId] })
       toast.success('Rezervasyon durumu güncellendi')
@@ -145,12 +146,13 @@ export function useEvaluateReservation() {
     mutationFn: async (data: {
       venueId: string
       tableId: string
-      reservedFor: string
-      partySize: number
+      date: string
+      timeSlot: string
+      guestCount: number
       customerId?: string
     }) => {
       const response = await api.post<ApiResponse<ReservationEvaluationResult>>(
-        `/api/v1/venues/${data.venueId}/reservations/evaluate`,
+        `/api/v1/reservations/evaluate`,
         data
       )
       return response.data.data
@@ -161,25 +163,29 @@ export function useEvaluateReservation() {
   })
 }
 
-export function useSearchCustomers(venueId?: string, searchTerm?: string) {
+export function useSearchCustomers(searchTerm?: string, options?: { enabled?: boolean }) {
   return useQuery({
-    queryKey: ['customers', venueId, searchTerm],
+    queryKey: ['customers-search', searchTerm],
     queryFn: async () => {
-      if (!venueId || !searchTerm || searchTerm.length < 2) return []
+      if (!searchTerm || searchTerm.length < 2) return []
       const response = await api.get<ApiResponse<Customer[]>>(
-        `/api/v1/venues/${venueId}/customers/search?q=${encodeURIComponent(searchTerm)}`
+        `/api/v1/customers/search?q=${encodeURIComponent(searchTerm)}`
       )
       return response.data.data
     },
-    enabled: !!venueId && !!searchTerm && searchTerm.length >= 2,
+    enabled: options?.enabled !== false && !!searchTerm && searchTerm.length >= 2,
   })
 }
 
 export function useExportReservations() {
   return useMutation({
-    mutationFn: async (data: { venueId: string; date: string }) => {
+    mutationFn: async (data: { date: string; venueId?: string }) => {
+      const params = new URLSearchParams()
+      params.append('date', data.date)
+      if (data.venueId) params.append('venueId', data.venueId)
+
       const response = await api.get(
-        `/api/v1/venues/${data.venueId}/reservations/export?date=${data.date}`,
+        `/api/v1/reservations/export?${params.toString()}`,
         { responseType: 'blob' }
       )
       
