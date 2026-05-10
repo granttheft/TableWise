@@ -16,7 +16,7 @@ namespace Tablewise.Infrastructure.Storage;
 /// ve <see cref="R2StorageOptions.GeneralMaxUploadBytes"/> değerleri uygulama katmanında doğrulanmalıdır.
 /// Logo yüklemeleri için anahtarda <c>/{LogoFolderSegment}/</c> segmenti kullanılması önerilir.
 /// </remarks>
-public sealed class R2FileStorageService : IFileStorageService
+public sealed class R2FileStorageService : IFileStorageService, IStorageService
 {
     private readonly IAmazonS3 _s3;
     private readonly R2StorageOptions _options;
@@ -123,6 +123,46 @@ public sealed class R2FileStorageService : IFileStorageService
         var safeFileName = SanitizeFileName(filename);
 
         return string.Format(CultureInfo.InvariantCulture, "{0}{1:D}/{2}/{3}", FileStorageConstants.TenantsKeyPrefix, tenantId, normalizedFolder, safeFileName);
+    }
+
+    // IStorageService implementation (wrapper methods)
+
+    /// <inheritdoc />
+    Task<string> IStorageService.GeneratePresignedUploadUrlAsync(
+        string key,
+        string contentType,
+        int expiryMinutes,
+        CancellationToken cancellationToken)
+    {
+        return GeneratePresignedUploadUrlAsync(key, contentType, TimeSpan.FromMinutes(expiryMinutes));
+    }
+
+    /// <inheritdoc />
+    string IStorageService.GetPublicUrl(string key)
+    {
+        EnsureConfigured();
+        ValidateKey(key);
+
+        // R2 public URL formatı (custom domain kullanılıyorsa o kullanılmalı)
+        if (!string.IsNullOrWhiteSpace(_options.PublicUrlBase))
+        {
+            return $"{_options.PublicUrlBase.TrimEnd('/')}/{key}";
+        }
+
+        // Fallback: R2 default URL
+        return $"https://{_options.BucketName}.{_options.AccountId}.r2.cloudflarestorage.com/{key}";
+    }
+
+    /// <inheritdoc />
+    Task IStorageService.DeleteFileAsync(string key, CancellationToken cancellationToken)
+    {
+        return DeleteAsync(key);
+    }
+
+    /// <inheritdoc />
+    Task<bool> IStorageService.FileExistsAsync(string key, CancellationToken cancellationToken)
+    {
+        return ExistsAsync(key);
     }
 
     private void EnsureConfigured()

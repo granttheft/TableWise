@@ -1,4 +1,4 @@
-import { useQuery, useMutation, useQueryClient } from '@tantml:function_calls>
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import api from '@/lib/api'
 import { toast } from 'sonner'
 import type { 

@@ -162,7 +162,11 @@ public static class DependencyInjection
         });
 
         services.AddSingleton<IAmazonS3>(sp => sp.GetRequiredService<AmazonS3Client>());
-        services.AddScoped<IFileStorageService, R2FileStorageService>();
+        
+        // R2FileStorageService hem IFileStorageService hem IStorageService implement eder
+        services.AddScoped<R2FileStorageService>();
+        services.AddScoped<IFileStorageService>(sp => sp.GetRequiredService<R2FileStorageService>());
+        services.AddScoped<IStorageService>(sp => sp.GetRequiredService<R2FileStorageService>());
     }
 
     /// <summary>
