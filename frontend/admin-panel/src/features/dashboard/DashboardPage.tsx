@@ -1,34 +1,26 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Calendar, Users, TableProperties, TrendingUp } from 'lucide-react'
-
-const stats = [
-  {
-    title: 'Toplam Rezervasyon',
-    value: '156',
-    change: '+12%',
-    icon: Calendar,
-  },
-  {
-    title: 'Bugünkü Rezervasyonlar',
-    value: '24',
-    change: '+5%',
-    icon: Calendar,
-  },
-  {
-    title: 'Aktif Müşteriler',
-    value: '342',
-    change: '+18%',
-    icon: Users,
-  },
-  {
-    title: 'Doluluk Oranı',
-    value: '87%',
-    change: '+3%',
-    icon: TrendingUp,
-  },
-]
+import { Calendar, Percent, FileCheck, Zap } from 'lucide-react'
+import { useDashboardStats } from '@/hooks/useDashboardStats'
+import { useTodayReservations } from '@/hooks/useTodayReservations'
+import { useWeeklyData } from '@/hooks/useWeeklyData'
+import { useAuditLogRecent } from '@/hooks/useAuditLogRecent'
+import { useRuleStats } from '@/hooks/useRuleStats'
+import { StatCard } from './components/StatCard'
+import { WeeklyChart } from './components/WeeklyChart'
+import { TodayReservationsList } from './components/TodayReservationsList'
+import { RecentActivity } from './components/RecentActivity'
+import { TopRules } from './components/TopRules'
 
 export function DashboardPage() {
+  const { data: stats, isLoading: statsLoading } = useDashboardStats()
+  const { data: todayReservations, isLoading: todayLoading } = useTodayReservations()
+  const { data: weeklyData, isLoading: weeklyLoading } = useWeeklyData()
+  const { data: auditLogs, isLoading: auditLoading } = useAuditLogRecent()
+  const { data: ruleStats, isLoading: rulesLoading } = useRuleStats()
+
+  const monthProgress = stats?.monthReservationsLimit
+    ? (stats.monthReservations / stats.monthReservationsLimit) * 100
+    : undefined
+
   return (
     <div className="space-y-6">
       <div>
@@ -36,43 +28,54 @@ export function DashboardPage() {
         <p className="text-muted-foreground">Mekanınızın genel durumunu görüntüleyin</p>
       </div>
 
+      {/* Stat Cards */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        {stats.map((stat) => (
-          <Card key={stat.title}>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">{stat.title}</CardTitle>
-              <stat.icon className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{stat.value}</div>
-              <p className="text-xs text-muted-foreground">
-                <span className="text-green-500">{stat.change}</span> geçen aya göre
-              </p>
-            </CardContent>
-          </Card>
-        ))}
+        <StatCard
+          title="Bugünkü Rezervasyonlar"
+          value={stats?.todayReservations || 0}
+          change={stats?.todayReservationsChange}
+          icon={Calendar}
+          isLoading={statsLoading}
+        />
+        <StatCard
+          title="Bu Hafta Doluluk"
+          value={stats ? `${stats.weekOccupancyRate}%` : '0%'}
+          change={stats?.weekOccupancyRateChange}
+          icon={Percent}
+          isLoading={statsLoading}
+        />
+        <StatCard
+          title="Bu Ay Rezervasyon"
+          value={
+            stats
+              ? stats.monthReservationsLimit
+                ? `${stats.monthReservations} / ${stats.monthReservationsLimit}`
+                : stats.monthReservations.toString()
+              : '0'
+          }
+          icon={FileCheck}
+          isLoading={statsLoading}
+          showProgress={!!stats?.monthReservationsLimit}
+          progress={monthProgress}
+        />
+        <StatCard
+          title="Aktif Kurallar"
+          value={stats?.activeRulesCount || 0}
+          icon={Zap}
+          isLoading={statsLoading}
+        />
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2">
-        <Card>
-          <CardHeader>
-            <CardTitle>Son Rezervasyonlar</CardTitle>
-            <CardDescription>En son eklenen rezervasyonlar</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <p className="text-sm text-muted-foreground">Rezervasyon listesi gelecek...</p>
-          </CardContent>
-        </Card>
+      {/* Weekly Chart + Today's Reservations */}
+      <div className="grid gap-4 md:grid-cols-3">
+        <WeeklyChart data={weeklyData} isLoading={weeklyLoading} />
+        <TodayReservationsList data={todayReservations} isLoading={todayLoading} />
+      </div>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Masa Durumu</CardTitle>
-            <CardDescription>Masaların anlık durumu</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <p className="text-sm text-muted-foreground">Masa durumları gelecek...</p>
-          </CardContent>
-        </Card>
+      {/* Recent Activity + Top Rules */}
+      <div className="grid gap-4 md:grid-cols-2">
+        <RecentActivity data={auditLogs} isLoading={auditLoading} />
+        <TopRules data={ruleStats} isLoading={rulesLoading} />
       </div>
     </div>
   )

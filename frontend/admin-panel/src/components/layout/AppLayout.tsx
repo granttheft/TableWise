@@ -1,6 +1,7 @@
 import { Outlet } from 'react-router-dom'
 import { Sidebar } from './Sidebar'
 import { TopBar } from './TopBar'
+import { TrialBanner } from '@/components/common/TrialBanner'
 import { useUIStore } from '@/stores/uiStore'
 import { useCurrentTenant } from '@/hooks/useCurrentTenant'
 import { Alert, AlertDescription } from '@/components/ui/alert'
@@ -19,6 +20,9 @@ export function AppLayout() {
         <TopBar />
         
         <main className="flex-1 overflow-y-auto">
+          {/* Trial active banner */}
+          <TrialBanner />
+          
           {/* Trial expired banner */}
           {tenant?.isTrialExpired && (
             <div className="border-b border-amber-500/20 bg-amber-500/10 px-4 py-3">
