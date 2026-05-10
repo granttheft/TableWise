@@ -33,6 +33,8 @@ try
     Log.Information("Tablewise API başlatılıyor...");
 
     var builder = WebApplication.CreateBuilder(args);
+    // Optional local overrides (gitignored). Use for Postgres/Redis credentials that differ from appsettings.Development.json.
+    builder.Configuration.AddJsonFile("appsettings.Local.json", optional: true, reloadOnChange: true);
 
     // Serilog configuration
     builder.Host.UseSerilog((context, services, configuration) => configuration
@@ -298,11 +300,11 @@ try
         };
     });
 
-    // 3. HTTPS Redirection
-    app.UseHttpsRedirection();
-
-    // 4. CORS
+    // 3. CORS (UseHttpsRedirection'dan ÖNCE — aksi halde OPTIONS preflight HTTP→HTTPS redirect alır; tarayıcı CORS'u reddeder.)
     app.UseCors();
+
+    // 4. HTTPS Redirection
+    app.UseHttpsRedirection();
 
     // 5. Rate Limiting
     app.UseRateLimiter();

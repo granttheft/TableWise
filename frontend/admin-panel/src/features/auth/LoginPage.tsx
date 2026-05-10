@@ -10,6 +10,7 @@ import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { useAuthStore } from '@/stores/authStore'
 import api from '@/lib/api'
+import { getApiErrorMessage, mapAuthResultToUser, type AuthResultPayload } from '@/lib/mapAuthResult'
 
 const loginSchema = z.object({
   email: z.string().email('Geçerli bir email adresi girin'),
@@ -57,18 +58,22 @@ export function LoginPage() {
   const onSubmit = async (data: LoginForm) => {
     setIsLoading(true)
     try {
-      const response = await api.post('/api/v1/auth/login', data)
-      const { user, accessToken, refreshToken } = response.data
+      const response = await api.post<AuthResultPayload>('/api/v1/auth/login', {
+        email: data.email,
+        password: data.password,
+        rememberMe: false,
+      })
+      const payload = response.data
+      const storeUser = mapAuthResultToUser(payload)
 
-      login(user, accessToken, refreshToken)
-      
+      login(storeUser, payload.tokens.accessToken, payload.tokens.refreshToken)
+
       const redirect = searchParams.get('redirect') || '/dashboard'
       navigate(redirect)
-      
+
       toast.success('Giriş başarılı')
-    } catch (error: any) {
-      const message = error.response?.data?.message || 'Giriş başarısız'
-      toast.error(message)
+    } catch (error: unknown) {
+      toast.error(getApiErrorMessage(error, 'Giriş başarısız'))
     } finally {
       setIsLoading(false)
     }

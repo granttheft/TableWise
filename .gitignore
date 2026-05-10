@@ -403,6 +403,9 @@ FodyWeavers.xsd
 .env.*
 !.env.example
 
+# API: machine-specific connection strings (copy appsettings.Local.json.example)
+src/Tablewise.Api/appsettings.Local.json
+
 # User-specific files
 *.user
 
