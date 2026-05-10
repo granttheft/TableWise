@@ -145,13 +145,18 @@ try
     {
         options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
 
-        // Auth endpoint'leri: 10 req/dakika (IP bazlı)
+        var isDevelopment = builder.Environment.IsDevelopment();
+        // Development: SPA + HMR ve tekrarlı denemeler; Production: sıkı limit
+        var authPermitsPerMinute = isDevelopment ? 300 : 10;
+        var globalPermitsPerMinute = isDevelopment ? 800 : 100;
+
+        // Auth endpoint'leri (register/login/refresh vb. aynı kovayı paylaşır): IP bazlı
         options.AddPolicy("auth", httpContext =>
             RateLimitPartition.GetFixedWindowLimiter(
                 partitionKey: GetClientIpAddress(httpContext),
                 factory: _ => new FixedWindowRateLimiterOptions
                 {
-                    PermitLimit = 10,
+                    PermitLimit = authPermitsPerMinute,
                     Window = TimeSpan.FromMinutes(1),
                     QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
                     QueueLimit = 0
@@ -220,13 +225,13 @@ try
                 });
         });
 
-        // Global fallback
+        // Global fallback (tüm uçlar + policy limitleri birlikte uygulanır)
         options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(httpContext =>
             RateLimitPartition.GetFixedWindowLimiter(
                 partitionKey: GetClientIpAddress(httpContext),
                 factory: _ => new FixedWindowRateLimiterOptions
                 {
-                    PermitLimit = 100,
+                    PermitLimit = globalPermitsPerMinute,
                     Window = TimeSpan.FromMinutes(1),
                     QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
                     QueueLimit = 5

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -33,6 +33,7 @@ type RegisterForm = z.infer<typeof registerSchema>
 export function RegisterPage() {
   const navigate = useNavigate()
   const [isLoading, setIsLoading] = useState(false)
+  const submitLockRef = useRef(false)
 
   const {
     register,
@@ -43,6 +44,8 @@ export function RegisterPage() {
   })
 
   const onSubmit = async (data: RegisterForm) => {
+    if (submitLockRef.current) return
+    submitLockRef.current = true
     setIsLoading(true)
     try {
       await api.post('/api/v1/auth/register', {
@@ -53,11 +56,24 @@ export function RegisterPage() {
 
       toast.success('Kayıt başarılı! Email doğrulama linki gönderildi.')
       navigate('/login')
-    } catch (error: any) {
-      const message = error.response?.data?.message || 'Kayıt başarısız'
+    } catch (error: unknown) {
+      const status = (error as { response?: { status?: number; data?: { detail?: string; message?: string } } })
+        ?.response?.status
+      if (status === 429) {
+        toast.error(
+          'Çok fazla istek gönderildi. Lütfen yaklaşık bir dakika bekleyip tekrar deneyin.'
+        )
+        return
+      }
+      const message =
+        (error as { response?: { data?: { detail?: string; message?: string } } })?.response?.data
+          ?.detail ||
+        (error as { response?: { data?: { message?: string } } })?.response?.data?.message ||
+        'Kayıt başarısız'
       toast.error(message)
     } finally {
       setIsLoading(false)
+      submitLockRef.current = false
     }
   }
 
