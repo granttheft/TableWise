@@ -103,6 +103,40 @@ public sealed class TenantController : ControllerBase
     }
 
     /// <summary>
+    /// Tenant plan limitlerini ve mevcut kullanımını getirir.
+    /// </summary>
+    /// <param name="cancellationToken">İptal token'ı</param>
+    /// <returns>Plan limitleri</returns>
+    /// <response code="200">Limitler başarıyla getirildi</response>
+    /// <response code="401">Yetkisiz</response>
+    [HttpGet("me/plan-limits")]
+    [ProducesResponseType(typeof(PlanLimitsDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+    public async Task<IActionResult> GetPlanLimits(CancellationToken cancellationToken)
+    {
+        var query = new GetPlanLimitsQuery();
+        var result = await _mediator.Send(query, cancellationToken);
+        return Ok(result);
+    }
+
+    /// <summary>
+    /// Tenant venue listesini getirir.
+    /// </summary>
+    /// <param name="cancellationToken">İptal token'ı</param>
+    /// <returns>Venue listesi</returns>
+    /// <response code="200">Liste başarıyla getirildi</response>
+    /// <response code="401">Yetkisiz</response>
+    [HttpGet("me/venues")]
+    [ProducesResponseType(typeof(List<TenantVenueDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+    public async Task<IActionResult> GetVenues(CancellationToken cancellationToken)
+    {
+        var query = new GetTenantVenuesQuery();
+        var result = await _mediator.Send(query, cancellationToken);
+        return Ok(result);
+    }
+
+    /// <summary>
     /// Tenant audit log'larını getirir (sayfalı).
     /// Sadece Owner rolü erişebilir.
     /// </summary>

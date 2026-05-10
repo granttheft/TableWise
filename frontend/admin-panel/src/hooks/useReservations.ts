@@ -1,4 +1,4 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { useQuery, useMutation, useQueryClient } from '@tantml:function_calls>
 import api from '@/lib/api'
 import { toast } from 'sonner'
 import type { 
@@ -6,8 +6,7 @@ import type {
   ReservationStatus, 
   ReservationStatusLog,
   ReservationEvaluationResult,
-  Customer,
-  ApiResponse 
+  Customer
 } from '@/types/api'
 
 interface ReservationsFilters {
@@ -168,10 +167,10 @@ export function useSearchCustomers(searchTerm?: string, options?: { enabled?: bo
     queryKey: ['customers-search', searchTerm],
     queryFn: async () => {
       if (!searchTerm || searchTerm.length < 2) return []
-      const response = await api.get<ApiResponse<Customer[]>>(
-        `/api/v1/customers/search?q=${encodeURIComponent(searchTerm)}`
+      const response = await api.get<Customer[]>(
+        `/api/v1/customer/search?q=${encodeURIComponent(searchTerm)}`
       )
-      return response.data.data
+      return response.data
     },
     enabled: options?.enabled !== false && !!searchTerm && searchTerm.length >= 2,
   })

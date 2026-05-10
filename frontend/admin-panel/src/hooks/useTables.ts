@@ -1,15 +1,15 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import api from '@/lib/api'
 import { toast } from 'sonner'
-import type { Table, ApiResponse } from '@/types/api'
+import type { Table } from '@/types/api'
 
 export function useTables(venueId?: string) {
   return useQuery({
     queryKey: ['tables', venueId],
     queryFn: async () => {
       if (!venueId) return []
-      const response = await api.get<ApiResponse<Table[]>>(`/api/v1/venues/${venueId}/tables`)
-      return response.data.data
+      const response = await api.get<Table[]>(`/api/v1/table/venue/${venueId}`)
+      return response.data
     },
     enabled: !!venueId,
   })
@@ -20,11 +20,11 @@ export function useCreateTable() {
 
   return useMutation({
     mutationFn: async (data: { venueId: string; table: Omit<Table, 'id' | 'createdAt' | 'updatedAt' | 'venueId' | 'displayOrder'> }) => {
-      const response = await api.post<ApiResponse<Table>>(
-        `/api/v1/venues/${data.venueId}/tables`,
+      const response = await api.post<string>(
+        `/api/v1/table/venue/${data.venueId}`,
         data.table
       )
-      return response.data.data
+      return response.data
     },
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ['tables', variables.venueId] })
@@ -32,7 +32,7 @@ export function useCreateTable() {
       toast.success('Masa başarıyla oluşturuldu')
     },
     onError: (error: any) => {
-      toast.error(error.response?.data?.message || 'Masa oluşturulamadı')
+      toast.error(error.response?.data?.title || 'Masa oluşturulamadı')
     },
   })
 }
@@ -42,18 +42,14 @@ export function useUpdateTable() {
 
   return useMutation({
     mutationFn: async (data: { venueId: string; tableId: string; table: Partial<Table> }) => {
-      const response = await api.put<ApiResponse<Table>>(
-        `/api/v1/venues/${data.venueId}/tables/${data.tableId}`,
-        data.table
-      )
-      return response.data.data
+      await api.put(`/api/v1/table/${data.tableId}`, data.table)
     },
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ['tables', variables.venueId] })
       toast.success('Masa başarıyla güncellendi')
     },
     onError: (error: any) => {
-      toast.error(error.response?.data?.message || 'Masa güncellenemedi')
+      toast.error(error.response?.data?.title || 'Masa güncellenemedi')
     },
   })
 }
@@ -63,7 +59,7 @@ export function useDeleteTable() {
 
   return useMutation({
     mutationFn: async (data: { venueId: string; tableId: string }) => {
-      await api.delete(`/api/v1/venues/${data.venueId}/tables/${data.tableId}`)
+      await api.delete(`/api/v1/table/${data.tableId}`)
     },
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ['tables', variables.venueId] })
@@ -71,7 +67,7 @@ export function useDeleteTable() {
       toast.success('Masa başarıyla silindi')
     },
     onError: (error: any) => {
-      toast.error(error.response?.data?.message || 'Masa silinemedi')
+      toast.error(error.response?.data?.title || 'Masa silinemedi')
     },
   })
 }
@@ -81,7 +77,7 @@ export function useReorderTables() {
 
   return useMutation({
     mutationFn: async (data: { venueId: string; tableIds: string[] }) => {
-      await api.post(`/api/v1/venues/${data.venueId}/tables/reorder`, {
+      await api.post(`/api/v1/table/venue/${data.venueId}/reorder`, {
         tableIds: data.tableIds,
       })
     },
@@ -89,7 +85,7 @@ export function useReorderTables() {
       queryClient.invalidateQueries({ queryKey: ['tables', variables.venueId] })
     },
     onError: (error: any) => {
-      toast.error(error.response?.data?.message || 'Sıralama güncellenemedi')
+      toast.error(error.response?.data?.title || 'Sıralama güncellenemedi')
     },
   })
 }

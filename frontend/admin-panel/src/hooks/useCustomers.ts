@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import api from '@/lib/api'
 import { toast } from 'sonner'
-import type { Customer, CustomerTier, ApiResponse } from '@/types/api'
+import type { Customer, CustomerTier } from '@/types/api'
 
 interface CustomersFilters {
   searchTerm?: string
@@ -28,10 +28,10 @@ export function useCustomers(filters?: CustomersFilters) {
         params.append('isBlacklisted', filters.isBlacklisted.toString())
       }
 
-      const response = await api.get<ApiResponse<Customer[]>>(
-        `/api/v1/customers?${params.toString()}`
+      const response = await api.get<Customer[]>(
+        `/api/v1/customer?${params.toString()}`
       )
-      return response.data.data
+      return response.data
     },
   })
 }
@@ -44,8 +44,8 @@ export function useCustomer(customerId?: string) {
     queryKey: ['customer', customerId],
     queryFn: async () => {
       if (!customerId) return null
-      const response = await api.get<ApiResponse<Customer>>(`/api/v1/customers/${customerId}`)
-      return response.data.data
+      const response = await api.get<Customer>(`/api/v1/customer/${customerId}`)
+      return response.data
     },
     enabled: !!customerId,
   })
@@ -59,11 +59,11 @@ export function useUpdateCustomerTier() {
 
   return useMutation({
     mutationFn: async (data: { customerId: string; tier: CustomerTier }) => {
-      const response = await api.patch<ApiResponse<Customer>>(
-        `/api/v1/customers/${data.customerId}/tier`,
+      const response = await api.patch<Customer>(
+        `/api/v1/customer/${data.customerId}/tier`,
         { tier: data.tier }
       )
-      return response.data.data
+      return response.data
     },
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ['customer', variables.customerId] })
@@ -71,7 +71,7 @@ export function useUpdateCustomerTier() {
       toast.success('Müşteri tier güncellendi')
     },
     onError: (error: any) => {
-      toast.error(error.response?.data?.message || 'Tier güncellenemedi')
+      toast.error(error.response?.data?.title || 'Tier güncellenemedi')
     },
   })
 }
@@ -88,14 +88,14 @@ export function useUpdateCustomerBlacklist() {
       isBlacklisted: boolean
       blacklistReason?: string
     }) => {
-      const response = await api.patch<ApiResponse<Customer>>(
-        `/api/v1/customers/${data.customerId}/blacklist`,
+      const response = await api.patch<Customer>(
+        `/api/v1/customer/${data.customerId}/blacklist`,
         {
           isBlacklisted: data.isBlacklisted,
           blacklistReason: data.blacklistReason,
         }
       )
-      return response.data.data
+      return response.data
     },
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ['customer', variables.customerId] })
@@ -105,7 +105,7 @@ export function useUpdateCustomerBlacklist() {
       )
     },
     onError: (error: any) => {
-      toast.error(error.response?.data?.message || 'İşlem başarısız')
+      toast.error(error.response?.data?.title || 'İşlem başarısız')
     },
   })
 }
@@ -118,18 +118,18 @@ export function useUpdateCustomerNotes() {
 
   return useMutation({
     mutationFn: async (data: { customerId: string; notes: string }) => {
-      const response = await api.patch<ApiResponse<Customer>>(
-        `/api/v1/customers/${data.customerId}/notes`,
+      const response = await api.patch<Customer>(
+        `/api/v1/customer/${data.customerId}/notes`,
         { notes: data.notes }
       )
-      return response.data.data
+      return response.data
     },
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ['customer', variables.customerId] })
       toast.success('Notlar kaydedildi')
     },
     onError: (error: any) => {
-      toast.error(error.response?.data?.message || 'Notlar kaydedilemedi')
+      toast.error(error.response?.data?.title || 'Notlar kaydedilemedi')
     },
   })
 }

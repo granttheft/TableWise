@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import api from '@/lib/api'
 import { toast } from 'sonner'
-import type { Venue, ApiResponse } from '@/types/api'
+import type { Venue } from '@/types/api'
 
 /**
  * Tenant'a ait tüm venue'leri getirir

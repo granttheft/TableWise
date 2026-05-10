@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import api from '@/lib/api'
 import { toast } from 'sonner'
-import type { TableCombination, ApiResponse } from '@/types/api'
+import type { TableCombination } from '@/types/api'
 
 /**
  * Venue'ye ait masa birleşimlerini getirir
@@ -11,10 +11,10 @@ export function useTableCombinations(venueId?: string) {
     queryKey: ['table-combinations', venueId],
     queryFn: async () => {
       if (!venueId) return []
-      const response = await api.get<ApiResponse<TableCombination[]>>(
-        `/api/v1/venues/${venueId}/table-combinations`
+      const response = await api.get<TableCombination[]>(
+        `/api/v1/table-combination/venue/${venueId}`
       )
-      return response.data.data
+      return response.data
     },
     enabled: !!venueId,
   })
@@ -33,22 +33,22 @@ export function useCreateTableCombination() {
       tableIds: string[]
       combinedCapacity: number
     }) => {
-      const response = await api.post<ApiResponse<TableCombination>>(
-        `/api/v1/venues/${data.venueId}/table-combinations`,
+      const response = await api.post<string>(
+        `/api/v1/table-combination/venue/${data.venueId}`,
         {
           name: data.name,
           tableIds: data.tableIds,
           combinedCapacity: data.combinedCapacity,
         }
       )
-      return response.data.data
+      return response.data
     },
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ['table-combinations', variables.venueId] })
       toast.success('Masa birleşimi oluşturuldu')
     },
     onError: (error: any) => {
-      toast.error(error.response?.data?.message || 'Masa birleşimi oluşturulamadı')
+      toast.error(error.response?.data?.title || 'Masa birleşimi oluşturulamadı')
     },
   })
 }
@@ -61,14 +61,14 @@ export function useDeleteTableCombination() {
 
   return useMutation({
     mutationFn: async (data: { venueId: string; combinationId: string }) => {
-      await api.delete(`/api/v1/table-combinations/${data.combinationId}`)
+      await api.delete(`/api/v1/table-combination/${data.combinationId}`)
     },
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ['table-combinations', variables.venueId] })
       toast.success('Masa birleşimi silindi')
     },
     onError: (error: any) => {
-      toast.error(error.response?.data?.message || 'Masa birleşimi silinemedi')
+      toast.error(error.response?.data?.title || 'Masa birleşimi silinemedi')
     },
   })
 }
