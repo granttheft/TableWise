@@ -137,6 +137,36 @@ public sealed class TenantController : ControllerBase
     }
 
     /// <summary>
+    /// Dashboard üst istatistik kartları için özet verileri getirir.
+    /// </summary>
+    /// <param name="cancellationToken">İptal token'ı</param>
+    /// <returns>İstatistik özeti</returns>
+    [HttpGet("me/stats")]
+    [ProducesResponseType(typeof(TenantDashboardStatsDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+    public async Task<IActionResult> GetDashboardStats(CancellationToken cancellationToken = default)
+    {
+        var query = new GetTenantDashboardStatsQuery();
+        var result = await _mediator.Send(query, cancellationToken);
+        return Ok(result);
+    }
+
+    /// <summary>
+    /// Dashboard haftalık grafik için son 7 günün günlük verilerini getirir (UTC).
+    /// </summary>
+    /// <param name="cancellationToken">İptal token'ı</param>
+    /// <returns>Günlük grafik noktaları</returns>
+    [HttpGet("me/dashboard-weekly")]
+    [ProducesResponseType(typeof(List<WeeklyChartPointDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+    public async Task<IActionResult> GetDashboardWeekly(CancellationToken cancellationToken = default)
+    {
+        var query = new GetTenantWeeklyChartQuery();
+        var result = await _mediator.Send(query, cancellationToken);
+        return Ok(result);
+    }
+
+    /// <summary>
     /// Tenant audit log'larını getirir (sayfalı).
     /// Sadece Owner rolü erişebilir.
     /// </summary>

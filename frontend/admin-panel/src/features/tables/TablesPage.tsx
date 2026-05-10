@@ -14,7 +14,8 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Card, CardContent } from '@/components/ui/card'
-import { useVenues, usePlanLimits } from '@/hooks/useVenues'
+import { useVenues } from '@/hooks/useVenues'
+import { usePlanLimits } from '@/hooks/usePlanLimits'
 import { useTables, useCreateTable, useUpdateTable, useDeleteTable, useReorderTables } from '@/hooks/useTables'
 import { useTableCombinations, useCreateTableCombination, useDeleteTableCombination } from '@/hooks/useTableCombinations'
 import { TableCard } from './components/TableCard'

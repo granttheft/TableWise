@@ -1,16 +1,19 @@
 import { useQuery } from '@tanstack/react-query'
 import api from '@/lib/api'
-import type { WeeklyReservationData, ApiResponse } from '@/types/api'
+import type { WeeklyReservationData } from '@/types/api'
 
+/**
+ * Son 7 gün grafik verisi (backend: GET /api/v1/tenant/me/dashboard-weekly).
+ */
 export function useWeeklyData() {
   return useQuery({
     queryKey: ['dashboard', 'weekly'],
     queryFn: async () => {
-      const response = await api.get<ApiResponse<WeeklyReservationData[]>>(
-        '/api/v1/dashboard/weekly-data'
+      const { data } = await api.get<WeeklyReservationData[]>(
+        '/api/v1/tenant/me/dashboard-weekly'
       )
-      return response.data.data
+      return data
     },
-    refetchInterval: 60000, // 60 seconds
+    refetchInterval: 60000,
   })
 }

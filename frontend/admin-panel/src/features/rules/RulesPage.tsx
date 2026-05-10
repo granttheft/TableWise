@@ -33,7 +33,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { useVenues, usePlanLimits } from '@/hooks/useVenues'
+import { useVenues } from '@/hooks/useVenues'
+import { usePlanLimits } from '@/hooks/usePlanLimits'
 import {
   useRules,
   useCreateRule,
