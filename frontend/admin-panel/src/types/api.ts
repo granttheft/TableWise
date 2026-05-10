@@ -88,4 +88,118 @@ export interface Venue {
 export interface PlanLimits {
   maxTables: number | null
   currentTableCount: number
+  maxRules: number | null
+  currentRuleCount: number
+}
+
+// Rule Types
+export type RuleType = 
+  | 'EarlyBooking'
+  | 'VipPriority'
+  | 'LargeGroup'
+  | 'DepositRequired'
+  | 'PeakHour'
+  | 'TableCooldown'
+  | 'GroupComposition'
+  | 'CustomCondition'
+
+export type RuleTrigger = 'OnReservation' | 'OnSeating' | 'OnModification' | 'OnCancellation'
+
+export type ActionType = 'Block' | 'Warn' | 'Suggest' | 'Discount' | 'Deposit' | 'Redirect'
+
+export type ConditionOperator = 
+  | 'Equals' 
+  | 'NotEquals' 
+  | 'GreaterThan' 
+  | 'GreaterThanOrEquals' 
+  | 'LessThan' 
+  | 'LessThanOrEquals'
+  | 'Contains'
+  | 'In'
+  | 'Between'
+
+export type LogicalOperator = 'And' | 'Or'
+
+export interface RuleCondition {
+  field: string
+  operator: ConditionOperator
+  value: string | number | boolean | string[]
+  logicalOperator?: LogicalOperator
+}
+
+export interface RuleConditionGroup {
+  conditions: RuleCondition[]
+  logicalOperator: LogicalOperator
+}
+
+export interface RuleAction {
+  type: ActionType
+  message?: string
+  discountPercent?: number
+  depositAmount?: number
+  depositPerPerson?: boolean
+  useVenueDefault?: boolean
+  redirectUrl?: string
+  suggestedTableIds?: string[]
+}
+
+export interface Rule {
+  id: string
+  venueId: string
+  name: string
+  description?: string
+  ruleType: RuleType
+  trigger: RuleTrigger
+  priority: number
+  isActive: boolean
+  conditions: RuleConditionGroup
+  actions: RuleAction[]
+  timesTriggered: number
+  lastTriggeredAt?: string
+  createdAt: string
+  updatedAt: string
+}
+
+export interface RuleTemplate {
+  id: string
+  name: string
+  description: string
+  ruleType: RuleType
+  icon: string
+  defaultConditions: Partial<RuleConditionGroup>
+  defaultActions: Partial<RuleAction>[]
+  parameters: RuleTemplateParameter[]
+}
+
+export interface RuleTemplateParameter {
+  name: string
+  label: string
+  type: 'number' | 'text' | 'select' | 'boolean' | 'time' | 'days'
+  defaultValue: any
+  options?: { value: string; label: string }[]
+  min?: number
+  max?: number
+  required?: boolean
+}
+
+export interface RuleTestContext {
+  partySize: number
+  daysInAdvance: number
+  customerTier: 'Regular' | 'Vip' | 'Blacklisted'
+  dayOfWeek: number
+  hour: number
+  occupancyPercent: number
+  hasChildren?: boolean
+  childCount?: number
+}
+
+export interface RuleTestResult {
+  triggered: boolean
+  outcome?: {
+    action: ActionType
+    message?: string
+    payload?: Record<string, any>
+  }
+  executionTimeMs: number
+  evaluationPath?: string[]
 }
