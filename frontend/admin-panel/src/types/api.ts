@@ -203,3 +203,91 @@ export interface RuleTestResult {
   executionTimeMs: number
   evaluationPath?: string[]
 }
+
+// Reservation Types
+export type ReservationStatus = 
+  | 'Pending' 
+  | 'Confirmed' 
+  | 'Seated' 
+  | 'Completed' 
+  | 'Cancelled' 
+  | 'NoShow'
+
+export interface Reservation {
+  id: string
+  tenueId: string
+  tableId: string
+  tableName: string
+  customerId: string
+  customerName: string
+  customerEmail: string
+  customerPhone: string
+  customerTier: 'Regular' | 'Vip' | 'Blacklisted'
+  guestName: string
+  guestPhone?: string
+  partySize: number
+  reservedFor: string
+  durationMinutes: number
+  status: ReservationStatus
+  confirmCode: string
+  specialRequests?: string
+  internalNotes?: string
+  appliedRules: string[]
+  discountPercent?: number
+  depositAmount?: number
+  depositPaid: boolean
+  depositRefunded: boolean
+  createdAt: string
+  updatedAt: string
+}
+
+export interface ReservationStatusLog {
+  id: string
+  reservationId: string
+  fromStatus: ReservationStatus | null
+  toStatus: ReservationStatus
+  userId: string
+  userName: string
+  reason?: string
+  timestamp: string
+}
+
+export interface Customer {
+  id: string
+  tenantId: string
+  name: string
+  email: string
+  phone: string
+  tier: 'Regular' | 'Vip' | 'Blacklisted'
+  totalReservations: number
+  totalNoShows: number
+  createdAt: string
+}
+
+export interface TimeSlot {
+  time: string
+  tableId: string
+  tableName: string
+  isAvailable: boolean
+  existingReservation?: Reservation
+}
+
+export interface VenueCustomField {
+  id: string
+  name: string
+  label: string
+  type: 'text' | 'number' | 'boolean' | 'select' | 'textarea'
+  required: boolean
+  options?: string[]
+}
+
+export interface ReservationEvaluationResult {
+  canProceed: boolean
+  warnings: string[]
+  blocks: string[]
+  suggestedTables?: string[]
+  discountPercent?: number
+  depositRequired?: boolean
+  depositAmount?: number
+  appliedRules: string[]
+}
