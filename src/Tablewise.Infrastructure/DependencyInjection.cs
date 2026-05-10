@@ -97,6 +97,9 @@ public static class DependencyInjection
         services.AddScoped<IDistributedLockService, DistributedLockService>();
         services.AddScoped<IRuleEvaluator, StubRuleEvaluator>();
 
+        // Rule Services (Faz 2.3)
+        services.AddScoped<IRuleTestService, RuleTestService>();
+
         return services;
     }
 
