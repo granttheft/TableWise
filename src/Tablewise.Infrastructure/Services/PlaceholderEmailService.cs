@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Logging;
 using Tablewise.Application.Interfaces;
+using Tablewise.Domain.Enums;
 
 namespace Tablewise.Infrastructure.Services;
 
@@ -138,6 +139,145 @@ public sealed class PlaceholderEmailService : IEmailService
         _logger.LogInformation(
             "[EMAIL] Rezervasyon hatırlatma: To={Email}, Guest={GuestName}, Venue={VenueName}, Address={Address}, Date={Date}, Code={Code}",
             toEmail, guestName, venueName, venueAddress, reservedFor, confirmCode);
+
+        return Task.CompletedTask;
+    }
+
+    /// <inheritdoc />
+    public Task SendAsync(
+        string to,
+        string subject,
+        string htmlBody,
+        string? plainTextBody = null,
+        CancellationToken cancellationToken = default)
+    {
+        _logger.LogInformation(
+            "[EMAIL] Ham email: To={Email}, Subject={Subject}",
+            to, subject);
+
+        return Task.CompletedTask;
+    }
+
+    /// <inheritdoc />
+    public Task SendTemplatedAsync(
+        string to,
+        EmailTemplate template,
+        Dictionary<string, object> data,
+        CancellationToken cancellationToken = default)
+    {
+        _logger.LogInformation(
+            "[EMAIL] Şablonlu email: To={Email}, Template={Template}",
+            to, template);
+
+        return Task.CompletedTask;
+    }
+
+    /// <inheritdoc />
+    public Task SendTrialExpiryReminderAsync(
+        string toEmail,
+        string tenantName,
+        int daysLeft,
+        string upgradeUrl,
+        CancellationToken cancellationToken = default)
+    {
+        _logger.LogInformation(
+            "[EMAIL] Deneme süresi bitiş hatırlatma: To={Email}, Tenant={TenantName}, DaysLeft={DaysLeft}",
+            toEmail, tenantName, daysLeft);
+
+        return Task.CompletedTask;
+    }
+
+    /// <inheritdoc />
+    public Task SendNewReservationToOwnerAsync(
+        string toEmail,
+        string ownerName,
+        string guestName,
+        DateTime reservedFor,
+        int partySize,
+        string venueName,
+        string adminUrl,
+        CancellationToken cancellationToken = default)
+    {
+        _logger.LogInformation(
+            "[EMAIL] Yeni rezervasyon (owner): To={Email}, Owner={OwnerName}, Guest={GuestName}, Date={Date}, PartySize={PartySize}",
+            toEmail, ownerName, guestName, reservedFor, partySize);
+
+        return Task.CompletedTask;
+    }
+
+    /// <inheritdoc />
+    public Task SendNoShowNotificationAsync(
+        string toEmail,
+        string guestName,
+        string venueName,
+        DateTime reservedFor,
+        CancellationToken cancellationToken = default)
+    {
+        _logger.LogInformation(
+            "[EMAIL] No-show bildirimi: To={Email}, Guest={GuestName}, Venue={VenueName}, Date={Date}",
+            toEmail, guestName, venueName, reservedFor);
+
+        return Task.CompletedTask;
+    }
+
+    /// <inheritdoc />
+    public Task SendPlanUpgradedAsync(
+        string toEmail,
+        string tenantName,
+        string newPlan,
+        CancellationToken cancellationToken = default)
+    {
+        _logger.LogInformation(
+            "[EMAIL] Plan yükseltme: To={Email}, Tenant={TenantName}, NewPlan={NewPlan}",
+            toEmail, tenantName, newPlan);
+
+        return Task.CompletedTask;
+    }
+
+    /// <inheritdoc />
+    public Task SendPlanPaymentFailedAsync(
+        string toEmail,
+        string tenantName,
+        string planName,
+        DateTime dueDate,
+        string paymentUrl,
+        CancellationToken cancellationToken = default)
+    {
+        _logger.LogInformation(
+            "[EMAIL] Ödeme başarısız: To={Email}, Tenant={TenantName}, Plan={PlanName}, DueDate={DueDate}",
+            toEmail, tenantName, planName, dueDate);
+
+        return Task.CompletedTask;
+    }
+
+    /// <inheritdoc />
+    public Task SendDepositPaidAsync(
+        string toEmail,
+        string guestName,
+        decimal amount,
+        string venueName,
+        DateTime reservedFor,
+        CancellationToken cancellationToken = default)
+    {
+        _logger.LogInformation(
+            "[EMAIL] Kapora ödendi: To={Email}, Guest={GuestName}, Amount={Amount}, Venue={VenueName}",
+            toEmail, guestName, amount, venueName);
+
+        return Task.CompletedTask;
+    }
+
+    /// <inheritdoc />
+    public Task SendDepositRefundedAsync(
+        string toEmail,
+        string guestName,
+        decimal amount,
+        string venueName,
+        string reason,
+        CancellationToken cancellationToken = default)
+    {
+        _logger.LogInformation(
+            "[EMAIL] Kapora iade: To={Email}, Guest={GuestName}, Amount={Amount}, Venue={VenueName}, Reason={Reason}",
+            toEmail, guestName, amount, venueName, reason);
 
         return Task.CompletedTask;
     }

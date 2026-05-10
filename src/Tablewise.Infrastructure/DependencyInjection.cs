@@ -88,8 +88,8 @@ public static class DependencyInjection
         // R2 File Storage
         AddR2FileStorage(services, configuration);
 
-        // Email Service (placeholder - SendGrid implementation sonraki fazda)
-        services.AddScoped<IEmailService, PlaceholderEmailService>();
+        // Email Services (Faz 4.1)
+        AddEmailServices(services, configuration);
 
         // Booking Services (Faz 2.2)
         services.AddScoped<IIdempotencyService, IdempotencyService>();
@@ -162,5 +162,20 @@ public static class DependencyInjection
 
         services.AddSingleton<IAmazonS3>(sp => sp.GetRequiredService<AmazonS3Client>());
         services.AddScoped<IFileStorageService, R2FileStorageService>();
+    }
+
+    /// <summary>
+    /// Email servislerini kaydeder (SendGrid, queue, worker).
+    /// </summary>
+    private static void AddEmailServices(IServiceCollection services, IConfiguration configuration)
+    {
+        services.Configure<SendGridSettings>(configuration.GetSection(SendGridSettings.SectionName));
+
+        services.AddSingleton<Tablewise.Infrastructure.Email.Services.EmailTemplateRenderer>();
+        services.AddScoped<Tablewise.Infrastructure.Email.Services.SendGridEmailService>();
+        services.AddScoped<Tablewise.Infrastructure.Email.Services.EmailQueueService>();
+        services.AddScoped<IEmailService, Tablewise.Infrastructure.Email.Services.QueuedEmailService>();
+
+        services.AddHostedService<Tablewise.Infrastructure.HostedServices.EmailWorkerService>();
     }
 }

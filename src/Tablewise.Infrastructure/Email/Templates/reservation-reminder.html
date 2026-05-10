@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yarın Rezervasyonunuz Var</title>
+</head>
+<body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: #f3f4f6;">
+    <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f3f4f6; padding: 20px 0;">
+        <tr>
+            <td align="center">
+                <table width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                    <tr>
+                        <td style="background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); padding: 40px 30px; text-align: center;">
+                            <h1 style="margin: 0; color: #ffffff; font-size: 32px; font-weight: 700;">Tablewise</h1>
+                            <p style="margin: 10px 0 0 0; color: #fbbf24; font-size: 18px; font-weight: 500;">Rezervasyon Yönetimi</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 40px 30px;">
+                            <div style="text-align: center; margin-bottom: 20px;">
+                                <span style="font-size: 48px;">🍽</span>
+                            </div>
+                            <h2 style="margin: 0 0 20px 0; color: #1e3a8a; font-size: 24px; font-weight: 600; text-align: center;">Rezervasyon Hatırlatma</h2>
+                            <p style="margin: 0 0 16px 0; color: #374151; font-size: 16px; line-height: 24px;">
+                                Sayın <strong>{{guestName}}</strong>,
+                            </p>
+                            <p style="margin: 0 0 24px 0; color: #374151; font-size: 16px; line-height: 24px;">
+                                <strong>{{venueName}}</strong> için rezervasyonunuzu hatırlatmak isteriz.
+                            </p>
+                            <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #dbeafe; border-radius: 6px; padding: 20px; margin: 20px 0;">
+                                <tr>
+                                    <td>
+                                        <p style="margin: 0 0 12px 0; color: #1e3a8a; font-size: 16px; font-weight: 600;">📅 Rezervasyon Bilgileri:</p>
+                                        <table style="width: 100%; color: #1e3a8a; font-size: 14px; line-height: 22px;">
+                                            <tr>
+                                                <td style="padding: 4px 0;"><strong>Tarih & Saat:</strong></td>
+                                                <td style="padding: 4px 0;">{{reservedFor}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="padding: 4px 0;"><strong>Adres:</strong></td>
+                                                <td style="padding: 4px 0;">{{venueAddress}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="padding: 4px 0;"><strong>Onay Kodu:</strong></td>
+                                                <td style="padding: 4px 0;"><strong style="font-size: 16px;">{{confirmCode}}</strong></td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                            <p style="margin: 0 0 16px 0; color: #6b7280; font-size: 14px; line-height: 20px;">
+                                Sizi aramızda görmek için sabırsızlanıyoruz! Planlarınız değiştiyse, lütfen rezervasyonunuzu iptal edin ki yerinizi başkalarına verelim.
+                            </p>
+                            <table width="100%" cellpadding="0" cellspacing="0">
+                                <tr>
+                                    <td align="center" style="padding: 10px 0;">
+                                        <a href="{{manageUrl}}" style="display: inline-block; background-color: #1e3a8a; color: #ffffff; text-decoration: none; font-weight: 500; font-size: 15px; padding: 12px 28px; border-radius: 6px;">
+                                            Rezervasyonu Yönet
+                                        </a>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="background-color: #f9fafb; padding: 30px; text-align: center; border-top: 1px solid #e5e7eb;">
+                            <p style="margin: 0 0 8px 0; color: #6b7280; font-size: 14px;">
+                                Sorularınız için: <a href="mailto:destek@tablewise.com.tr" style="color: #1e3a8a; text-decoration: none; font-weight: 500;">destek@tablewise.com.tr</a>
+                            </p>
+                            <p style="margin: 0; color: #9ca3af; font-size: 12px;">
+                                © 2026 Tablewise. Tüm hakları saklıdır.
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>
