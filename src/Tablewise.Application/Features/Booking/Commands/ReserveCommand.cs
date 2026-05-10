@@ -62,4 +62,9 @@ public sealed record ReserveCommand : IRequest<ReserveResponseDto>
     /// Custom field yanıtları.
     /// </summary>
     public Dictionary<string, string>? CustomFieldAnswers { get; init; }
+
+    /// <summary>
+    /// Kural motorunu atla (sadece Owner/Staff için).
+    /// </summary>
+    public bool OverrideRules { get; init; }
 }

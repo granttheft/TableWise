@@ -228,15 +228,22 @@ public sealed class ModifyReservationCommandHandler : IRequestHandler<ModifyRese
             };
             await _unitOfWork.AuditLogs.AddAsync(auditLog, cancellationToken).ConfigureAwait(false);
 
+            // 13. Update rule trigger counts
+            if (ruleResult.AppliedRules.Count > 0)
+            {
+                var ruleIds = ruleResult.AppliedRules.Select(r => r.RuleId).ToList();
+                await UpdateRuleTriggersAsync(ruleIds, cancellationToken).ConfigureAwait(false);
+            }
+
             await _unitOfWork.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
-            // 13. Cache invalidate (her iki tarih için)
+            // 14. Cache invalidate (her iki tarih için)
             await _slotService.InvalidateCacheAsync(venue.Id, existingReservation.ReservedFor.Date, cancellationToken)
                 .ConfigureAwait(false);
             await _slotService.InvalidateCacheAsync(venue.Id, newDateTime.Date, cancellationToken)
                 .ConfigureAwait(false);
 
-            // 14. Email gönder
+            // 15. Email gönder
             _ = SendModificationEmailAsync(newReservation, venue.Name, existingReservation);
 
             _logger.LogInformation(
@@ -337,6 +344,23 @@ public sealed class ModifyReservationCommandHandler : IRequestHandler<ModifyRese
         catch (Exception ex)
         {
             _logger.LogError(ex, "Değişiklik email'i gönderilemedi. ReservationId: {ReservationId}", newReservation.Id);
+        }
+    }
+
+    /// <summary>
+    /// Kuralların TimesTriggered sayaçlarını artırır.
+    /// </summary>
+    private async Task UpdateRuleTriggersAsync(List<Guid> ruleIds, CancellationToken cancellationToken)
+    {
+        var rules = await _unitOfWork.Rules
+            .Query()
+            .Where(r => ruleIds.Contains(r.Id))
+            .ToListAsync(cancellationToken)
+            .ConfigureAwait(false);
+
+        foreach (var rule in rules)
+        {
+            rule.TimesTriggered++;
         }
     }
 

@@ -15,6 +15,7 @@ using Tablewise.Application.Settings;
 using Tablewise.Infrastructure.Auth;
 using Tablewise.Infrastructure.Persistence;
 using Tablewise.Infrastructure.Persistence.SeedData;
+using Tablewise.RuleEngine;
 
 // Serilog early initialization
 Log.Logger = new LoggerConfiguration()
@@ -64,6 +65,9 @@ try
 
     // Infrastructure (DbContext, Repositories, Redis, R2, Context Services)
     builder.Services.AddInfrastructure(builder.Configuration);
+    
+    // Rule Engine
+    builder.Services.AddRuleEngine();
 
     // JWT Settings
     builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection(JwtSettings.SectionName));

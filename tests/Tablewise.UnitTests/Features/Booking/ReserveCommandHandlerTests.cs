@@ -22,6 +22,7 @@ public class ReserveCommandHandlerTests
     private readonly Mock<IDistributedLockService> _lockServiceMock;
     private readonly Mock<ICacheService> _cacheServiceMock;
     private readonly Mock<IEmailService> _emailServiceMock;
+    private readonly Mock<ICurrentUser> _currentUserMock;
     private readonly Mock<ILogger<ReserveCommandHandler>> _loggerMock;
 
     public ReserveCommandHandlerTests()
@@ -32,6 +33,7 @@ public class ReserveCommandHandlerTests
         _lockServiceMock = new Mock<IDistributedLockService>();
         _cacheServiceMock = new Mock<ICacheService>();
         _emailServiceMock = new Mock<IEmailService>();
+        _currentUserMock = new Mock<ICurrentUser>();
         _loggerMock = new Mock<ILogger<ReserveCommandHandler>>();
     }
 
@@ -248,6 +250,7 @@ public class ReserveCommandHandlerTests
             _lockServiceMock.Object,
             _cacheServiceMock.Object,
             _emailServiceMock.Object,
+            _currentUserMock.Object,
             _loggerMock.Object);
     }
 

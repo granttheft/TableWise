@@ -41,6 +41,9 @@ internal static class SeedIds
     public static readonly Guid CustomField1Id = Guid.Parse("e0000030-0000-0000-0000-000000000030");
     public static readonly Guid CustomField2Id = Guid.Parse("e0000031-0000-0000-0000-000000000031");
     public static readonly Guid CustomField3Id = Guid.Parse("e0000032-0000-0000-0000-000000000032");
+    public static readonly Guid CustomField4Id = Guid.Parse("e0000033-0000-0000-0000-000000000033");
+    public static readonly Guid CustomField5Id = Guid.Parse("e0000034-0000-0000-0000-000000000034");
+    public static readonly Guid CustomField6Id = Guid.Parse("e0000035-0000-0000-0000-000000000035");
 
     // Rules
     public static readonly Guid Rule1Id = Guid.Parse("e0000040-0000-0000-0000-000000000040");

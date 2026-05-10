@@ -70,6 +70,11 @@ public sealed record ReserveRequestDto
     /// </summary>
     [Required(ErrorMessage = "Gizlilik politikası onayı zorunludur.")]
     public bool PrivacyPolicyAccepted { get; init; }
+
+    /// <summary>
+    /// Kural motorunu atla (sadece Owner/Staff için).
+    /// </summary>
+    public bool OverrideRules { get; init; }
 }
 
 /// <summary>

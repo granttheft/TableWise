@@ -482,11 +482,47 @@ public class DbSeeder
                 IsRequired = false,
                 SortOrder = 3,
                 CreatedAt = DateTime.UtcNow.AddMonths(-1)
+            },
+            new()
+            {
+                Id = SeedIds.CustomField4Id,
+                TenantId = SeedIds.DemoTenantId,
+                VenueId = SeedIds.DemoVenueId,
+                Label = "Grup Kompozisyonu",
+                FieldType = CustomFieldType.Select,
+                IsRequired = false,
+                Options = """["Karma (Kadın+Erkek)","Sadece Erkek","Sadece Kadın","Aile"]""",
+                SortOrder = 4,
+                CreatedAt = DateTime.UtcNow.AddMonths(-1)
+            },
+            new()
+            {
+                Id = SeedIds.CustomField5Id,
+                TenantId = SeedIds.DemoTenantId,
+                VenueId = SeedIds.DemoVenueId,
+                Label = "Erkek Misafir Sayısı",
+                FieldType = CustomFieldType.Number,
+                IsRequired = false,
+                Placeholder = "Örn: 2",
+                SortOrder = 5,
+                CreatedAt = DateTime.UtcNow.AddMonths(-1)
+            },
+            new()
+            {
+                Id = SeedIds.CustomField6Id,
+                TenantId = SeedIds.DemoTenantId,
+                VenueId = SeedIds.DemoVenueId,
+                Label = "Kadın Misafir Sayısı",
+                FieldType = CustomFieldType.Number,
+                IsRequired = false,
+                Placeholder = "Örn: 2",
+                SortOrder = 6,
+                CreatedAt = DateTime.UtcNow.AddMonths(-1)
             }
         };
 
         await _context.VenueCustomFields.AddRangeAsync(customFields);
-        _logger.LogInformation("3 custom field eklendi.");
+        _logger.LogInformation("6 custom field eklendi.");
     }
 
     private async Task SeedRulesAsync()
@@ -696,11 +732,47 @@ public class DbSeeder
                 }
                 """,
                 CreatedAt = DateTime.UtcNow.AddMonths(-1)
+            },
+            new()
+            {
+                Id = Guid.Parse("d0000004-0000-0000-0000-000000000004"),
+                TenantId = SeedIds.DemoTenantId,
+                VenueId = SeedIds.DemoVenueId,
+                Name = "Sadece Erkek Grup Kısıtlaması",
+                Description = "4 ve üzeri kişilik sadece erkek gruplar için rezervasyon kısıtlaması",
+                RuleType = "group_composition",
+                TriggerType = RuleTrigger.OnReservationCreate,
+                Priority = 2,
+                IsActive = false,
+                ConditionsJson = """
+                {
+                    "version": 1,
+                    "operator": "and",
+                    "rules": [
+                        {
+                            "type": "composition",
+                            "blockedCompositions": ["AllMale"]
+                        },
+                        {
+                            "type": "ratio",
+                            "minPartySize": 4
+                        }
+                    ]
+                }
+                """,
+                ActionsJson = """
+                {
+                    "version": 1,
+                    "block": true,
+                    "message": "4 ve üzeri kişilik sadece erkek gruplar için rezervasyon kabul edilmemektedir."
+                }
+                """,
+                CreatedAt = DateTime.UtcNow.AddDays(-20)
             }
         };
 
         await _context.Rules.AddRangeAsync(rules);
-        _logger.LogInformation("5 kural eklendi.");
+        _logger.LogInformation("6 kural eklendi.");
     }
 
     private async Task SeedCustomersAsync()

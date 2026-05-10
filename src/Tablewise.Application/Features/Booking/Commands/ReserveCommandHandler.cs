@@ -24,6 +24,7 @@ public sealed class ReserveCommandHandler : IRequestHandler<ReserveCommand, Rese
     private readonly IDistributedLockService _lockService;
     private readonly ICacheService _cacheService;
     private readonly IEmailService _emailService;
+    private readonly ICurrentUser _currentUser;
     private readonly ILogger<ReserveCommandHandler> _logger;
 
     private const int ConfirmCodeLength = 8;
@@ -42,6 +43,7 @@ public sealed class ReserveCommandHandler : IRequestHandler<ReserveCommand, Rese
         IDistributedLockService lockService,
         ICacheService cacheService,
         IEmailService emailService,
+        ICurrentUser currentUser,
         ILogger<ReserveCommandHandler> logger)
     {
         _unitOfWork = unitOfWork;
@@ -50,6 +52,7 @@ public sealed class ReserveCommandHandler : IRequestHandler<ReserveCommand, Rese
         _lockService = lockService;
         _cacheService = cacheService;
         _emailService = emailService;
+        _currentUser = currentUser;
         _logger = logger;
     }
 
@@ -109,7 +112,7 @@ public sealed class ReserveCommandHandler : IRequestHandler<ReserveCommand, Rese
                 throw new ConflictException(availability.UnavailabilityReason ?? "Seçilen slot müsait değil.");
             }
 
-            // 4. Kural motoru değerlendir (Faz 3'te gerçek implementasyon)
+            // 4. Kural motoru değerlendir
             var ruleContext = new RuleEvaluationContext
             {
                 VenueId = venue.Id,
@@ -123,12 +126,26 @@ public sealed class ReserveCommandHandler : IRequestHandler<ReserveCommand, Rese
                 Source = "BookingUI"
             };
 
-            var ruleResult = await _ruleEvaluator.EvaluateAsync(ruleContext, cancellationToken)
-                .ConfigureAwait(false);
+            RuleEvaluationResult ruleResult;
 
-            if (!ruleResult.IsAllowed)
+            if (request.OverrideRules && IsStaffRequest())
             {
-                throw new BusinessRuleException(ruleResult.BlockReason ?? "Kural ihlali nedeniyle rezervasyon reddedildi.");
+                _logger.LogWarning(
+                    "Kurallar atlandı. User: {UserId}, Venue: {VenueId}",
+                    _currentUser.UserId, venue.Id);
+
+                await LogRuleOverrideAsync(tenantId, Guid.NewGuid(), cancellationToken).ConfigureAwait(false);
+                ruleResult = RuleEvaluationResult.Allow();
+            }
+            else
+            {
+                ruleResult = await _ruleEvaluator.EvaluateAsync(ruleContext, cancellationToken)
+                    .ConfigureAwait(false);
+
+                if (!ruleResult.IsAllowed)
+                {
+                    throw new BusinessRuleException(ruleResult.BlockReason ?? "Kural ihlali nedeniyle rezervasyon reddedildi.");
+                }
             }
 
             // 5. Customer bul veya oluştur
@@ -199,26 +216,33 @@ public sealed class ReserveCommandHandler : IRequestHandler<ReserveCommand, Rese
             };
             await _unitOfWork.AuditLogs.AddAsync(auditLog, cancellationToken).ConfigureAwait(false);
 
-            // 11. Save
+            // 11. Update rule trigger counts
+            if (ruleResult.AppliedRules.Count > 0)
+            {
+                var ruleIds = ruleResult.AppliedRules.Select(r => r.RuleId).ToList();
+                await UpdateRuleTriggersAsync(ruleIds, cancellationToken).ConfigureAwait(false);
+            }
+
+            // 12. Save
             await _unitOfWork.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
             // Cache invalidate
             await _slotService.InvalidateCacheAsync(venue.Id, request.ReservedFor.Date, cancellationToken)
                 .ConfigureAwait(false);
 
-            // 12. Reservation count artır (Redis atomic)
+            // 13. Reservation count artır (Redis atomic)
             var countKey = $"tenant:{tenantId}:reservations:{DateTime.UtcNow:yyyyMM}";
             await _cacheService.IncrementAsync(countKey, TimeSpan.FromDays(35), cancellationToken)
                 .ConfigureAwait(false);
 
-            // 13. Email kuyruğa at (async fire-and-forget)
+            // 14. Email kuyruğa at (async fire-and-forget)
             _ = SendConfirmationEmailAsync(reservation, venue.Name);
 
             _logger.LogInformation(
                 "Rezervasyon oluşturuldu. Id: {ReservationId}, ConfirmCode: {ConfirmCode}, Venue: {VenueName}",
                 reservation.Id, confirmCode, venue.Name);
 
-            // 14. Response döndür
+            // 15. Response döndür
             return new ReserveResponseDto
             {
                 ReservationId = reservation.Id,
@@ -413,6 +437,50 @@ public sealed class ReserveCommandHandler : IRequestHandler<ReserveCommand, Rese
         catch (Exception ex)
         {
             _logger.LogError(ex, "Onay email'i gönderilemedi. ReservationId: {ReservationId}", reservation.Id);
+        }
+    }
+
+    /// <summary>
+    /// Staff veya Owner yetkisi kontrolü.
+    /// </summary>
+    private bool IsStaffRequest()
+    {
+        return _currentUser.Role == UserRole.Owner || _currentUser.Role == UserRole.Staff;
+    }
+
+    /// <summary>
+    /// Kural atlatma audit log kaydı.
+    /// </summary>
+    private async Task LogRuleOverrideAsync(Guid tenantId, Guid reservationId, CancellationToken cancellationToken)
+    {
+        var auditLog = new AuditLog
+        {
+            TenantId = tenantId,
+            EntityType = "Reservation",
+            EntityId = reservationId.ToString(),
+            Action = "RULES_OVERRIDDEN",
+            PerformedBy = _currentUser.UserId?.ToString() ?? "Staff",
+            NewValue = "Kural motoru manuel olarak atlandı",
+            CreatedAt = DateTime.UtcNow
+        };
+
+        await _unitOfWork.AuditLogs.AddAsync(auditLog, cancellationToken).ConfigureAwait(false);
+    }
+
+    /// <summary>
+    /// Kuralların TimesTriggered sayaçlarını artırır.
+    /// </summary>
+    private async Task UpdateRuleTriggersAsync(List<Guid> ruleIds, CancellationToken cancellationToken)
+    {
+        var rules = await _unitOfWork.Rules
+            .Query()
+            .Where(r => ruleIds.Contains(r.Id))
+            .ToListAsync(cancellationToken)
+            .ConfigureAwait(false);
+
+        foreach (var rule in rules)
+        {
+            rule.TimesTriggered++;
         }
     }
 
