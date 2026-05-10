@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Tablewise.Application.DTOs.Customer;
 using Tablewise.Application.Exceptions;
 using Tablewise.Application.Interfaces;
+using Tablewise.Domain.Enums;
 
 namespace Tablewise.Application.Features.Customer.Commands;
 
@@ -44,7 +45,13 @@ public sealed class UpdateCustomerTierCommandHandler : IRequestHandler<UpdateCus
             throw new NotFoundException(nameof(Domain.Entities.Customer), request.CustomerId);
         }
 
-        customer.Tier = request.Tier;
+        // Tier string'ini enum'a parse et
+        if (!Enum.TryParse<CustomerTier>(request.Tier, out var tierEnum))
+        {
+            throw new ArgumentException($"Geçersiz tier: {request.Tier}");
+        }
+
+        customer.Tier = tierEnum;
         customer.UpdatedAt = DateTime.UtcNow;
 
         await _context.SaveChangesAsync(cancellationToken);
@@ -56,9 +63,9 @@ public sealed class UpdateCustomerTierCommandHandler : IRequestHandler<UpdateCus
             FullName = customer.FullName,
             Email = customer.Email,
             Phone = customer.Phone,
-            Tier = customer.Tier,
+            Tier = customer.Tier.ToString(),
             TotalVisits = customer.TotalVisits,
-            LastReservationDate = customer.LastReservationDate,
+            LastReservationDate = customer.LastReservationAt,
             IsBlacklisted = customer.IsBlacklisted,
             BlacklistReason = customer.BlacklistReason,
             Notes = customer.Notes,

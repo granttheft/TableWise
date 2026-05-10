@@ -55,9 +55,9 @@ public sealed class SearchCustomersQueryHandler : IRequestHandler<SearchCustomer
                 FullName = c.FullName,
                 Email = c.Email,
                 Phone = c.Phone,
-                Tier = c.Tier,
+                Tier = c.Tier.ToString(),
                 TotalVisits = c.TotalVisits,
-                LastReservationDate = c.LastReservationDate,
+                LastReservationDate = c.LastReservationAt,
                 IsBlacklisted = c.IsBlacklisted,
                 CreatedAt = c.CreatedAt,
                 UpdatedAt = c.UpdatedAt

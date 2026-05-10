@@ -2,6 +2,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Tablewise.Application.DTOs.Customer;
 using Tablewise.Application.Interfaces;
+using Tablewise.Domain.Enums;
 
 namespace Tablewise.Application.Features.Customer.Queries;
 
@@ -50,9 +51,9 @@ public sealed class GetCustomersQueryHandler : IRequestHandler<GetCustomersQuery
         }
 
         // Tier filtresi
-        if (!string.IsNullOrWhiteSpace(request.Tier))
+        if (!string.IsNullOrWhiteSpace(request.Tier) && Enum.TryParse<CustomerTier>(request.Tier, out var tierEnum))
         {
-            query = query.Where(c => c.Tier == request.Tier);
+            query = query.Where(c => c.Tier == tierEnum);
         }
 
         // Blacklist filtresi
@@ -70,9 +71,9 @@ public sealed class GetCustomersQueryHandler : IRequestHandler<GetCustomersQuery
                 FullName = c.FullName,
                 Email = c.Email,
                 Phone = c.Phone,
-                Tier = c.Tier,
+                Tier = c.Tier.ToString(),
                 TotalVisits = c.TotalVisits,
-                LastReservationDate = c.LastReservationDate,
+                LastReservationDate = c.LastReservationAt,
                 IsBlacklisted = c.IsBlacklisted,
                 BlacklistReason = c.BlacklistReason,
                 Notes = c.Notes,

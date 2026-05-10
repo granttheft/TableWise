@@ -9,6 +9,7 @@ using Tablewise.Domain.Entities;
 using Tablewise.Domain.Enums;
 using Tablewise.Domain.Exceptions;
 using Tablewise.Domain.Interfaces;
+using CustomerEntity = Tablewise.Domain.Entities.Customer;
 
 namespace Tablewise.Application.Features.Booking.Commands;
 
@@ -268,7 +269,7 @@ public sealed class ReserveCommandHandler : IRequestHandler<ReserveCommand, Rese
 
     #region Private Helpers
 
-    private async Task<Customer?> FindOrCreateCustomerAsync(
+    private async Task<CustomerEntity?> FindOrCreateCustomerAsync(
         Guid tenantId,
         string name,
         string phone,
@@ -300,7 +301,7 @@ public sealed class ReserveCommandHandler : IRequestHandler<ReserveCommand, Rese
         }
 
         // Yeni müşteri oluştur
-        var newCustomer = new Customer
+        var newCustomer = new CustomerEntity
         {
             TenantId = tenantId,
             FullName = name,

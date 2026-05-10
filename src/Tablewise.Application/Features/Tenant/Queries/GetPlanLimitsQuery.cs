@@ -47,34 +47,34 @@ public sealed class GetPlanLimitsQueryHandler : IRequestHandler<GetPlanLimitsQue
             .CountAsync(cancellationToken);
 
         var tableCount = await _context.Tables
-            .Where(t => t.Venue.TenantId == tenantId && !t.IsDeleted)
+            .Where(t => t.Venue != null && t.Venue.TenantId == tenantId && !t.IsDeleted)
             .CountAsync(cancellationToken);
 
         var ruleCount = await _context.Rules
-            .Where(r => r.Venue.TenantId == tenantId && !r.IsDeleted)
+            .Where(r => r.Venue != null && r.Venue.TenantId == tenantId && !r.IsDeleted)
             .CountAsync(cancellationToken);
 
         // Bu ay rezervasyon sayısı
         var monthStart = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, 1);
         var reservationCount = await _context.Reservations
-            .Where(r => r.Table.Venue.TenantId == tenantId && 
+            .Where(r => r.Table != null && r.Table.Venue != null && r.Table.Venue.TenantId == tenantId && 
                        r.CreatedAt >= monthStart && 
                        !r.IsDeleted)
             .CountAsync(cancellationToken);
 
-        var planLimits = tenant.Plan?.FeatureFlagsJson != null
-            ? System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, object>>(tenant.Plan.FeatureFlagsJson)
+        var planLimits = !string.IsNullOrEmpty(tenant.Plan?.LimitsJson)
+            ? System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, object>>(tenant.Plan.LimitsJson)
             : new Dictionary<string, object>();
 
         return new PlanLimitsDto
         {
-            MaxVenues = GetLimitFromFlags(planLimits, "maxVenues"),
+            MaxVenues = GetLimitFromFlags(planLimits ?? new Dictionary<string, object>(), "maxVenues"),
             CurrentVenueCount = venueCount,
-            MaxTables = GetLimitFromFlags(planLimits, "maxTables"),
+            MaxTables = GetLimitFromFlags(planLimits ?? new Dictionary<string, object>(), "maxTables"),
             CurrentTableCount = tableCount,
-            MaxRules = GetLimitFromFlags(planLimits, "maxRules"),
+            MaxRules = GetLimitFromFlags(planLimits ?? new Dictionary<string, object>(), "maxRules"),
             CurrentRuleCount = ruleCount,
-            MaxReservationsPerMonth = GetLimitFromFlags(planLimits, "maxReservationsPerMonth"),
+            MaxReservationsPerMonth = GetLimitFromFlags(planLimits ?? new Dictionary<string, object>(), "maxReservationsPerMonth"),
             CurrentReservationCount = reservationCount
         };
     }

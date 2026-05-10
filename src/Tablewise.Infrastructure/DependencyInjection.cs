@@ -38,6 +38,7 @@ public static class DependencyInjection
         // Context Services
         services.AddScoped<ITenantContext, TenantContext>();
         services.AddScoped<ICurrentUser, CurrentUserService>();
+        services.AddScoped<ITenantService, TenantService>();
 
         // Interceptors
         services.AddScoped<AuditSaveChangesInterceptor>();

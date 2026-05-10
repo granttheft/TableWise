@@ -38,8 +38,8 @@ public sealed class GetTenantVenuesQueryHandler : IRequestHandler<GetTenantVenue
             {
                 Id = v.Id,
                 Name = v.Name,
-                Slug = v.Slug,
-                IsActive = v.IsActive,
+                Slug = v.Name.ToLower().Replace(" ", "-"), // Slug generate (geçici)
+                IsActive = true, // Şimdilik tüm venue'ler aktif
                 TableCount = v.Tables.Count(t => !t.IsDeleted)
             })
             .OrderBy(v => v.Name)
