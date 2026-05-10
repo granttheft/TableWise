@@ -1298,7 +1298,8 @@ Tüm kodu diff olarak ver.
 ```
 [GENEL BAĞLAMI YAPISTIR]
 
-FAZ 3.1 — Custom Kural Motoru (NRules KULLANMIYORUZ — v1.1 kararı).
+MEVCUT FAZ: Faz 3.1 — Custom Kural Motoru Pipeline Temeli
+NRules KULLANMIYORUZ — Custom IRuleEvaluator pipeline.
 
 Tablewise.RuleEngine projesinde:
 
@@ -1307,18 +1308,34 @@ Tablewise.RuleEngine projesinde:
    - Tenant (snapshot, readonly)
    - Venue
    - Reservation (draft — henüz kaydedilmedi)
-   - Table / TableCombination
-   - List<GuestProfile> Guests (v1.1 dokümanda fiili bir yapı yok, dahil edip edilmeyeceği tartışmalı — biz şimdilik opsiyonel tutalım)
-   - Customer (varsa, yoksa null)
-   - CurrentOccupancyRate (double, bu slot için)
-   - DaysInAdvance (int)
-   - IsEarlyBooking, IsPeakHour (computed)
+   - Table (nullable)
+   - TableCombination (nullable)
+   - Customer (nullable — misafir kayıtsız rezervasyon yapabilir)
+   - CurrentOccupancyRate (double) — bu slot için doluluk oranı
+   - DaysInAdvance (int) — rezervasyon kaç gün öncesinden yapılıyor
+   - IsEarlyBooking (bool, computed)
+   - IsPeakHour (bool, computed)
    - EvaluatedAt (DateTime)
+
+   Grup Kompozisyonu alanları (tümü opsiyonel — müşteri doldurmadıysa null):
+   - MaleCount (int?)
+   - FemaleCount (int?)
+   - GroupComposition (string?)
+     Geçerli değerler: "Mixed", "AllMale", "AllFemale", "Family"
+   - FemaleRatio (double?, computed) → FemaleCount / PartySize
+   - MaleRatio (double?, computed) → MaleCount / PartySize
+   
+   NOT: GuestProfile listesi şimdilik ekleme — v1.1'de tanımlı değil,
+   ilerde eklenebilir. Şimdi context sade kalsın.
 
 2. Results/RuleEvaluationResult.cs:
    - IsBlocked (bool)
    - List<RuleOutcome> Outcomes:
-     * RuleId, RuleName, ActionType, Message, Payload (JSON)
+     * RuleId (Guid)
+     * RuleName (string)
+     * ActionType (RuleActionType enum)
+     * Message (string?)
+     * Payload (string?, JSON)
    - PreferredPosition (string?)
    - TotalDiscountPercent (decimal)
    - RequiresDeposit (bool)
@@ -1326,55 +1343,68 @@ Tablewise.RuleEngine projesinde:
    - List<Table> SuggestedAlternatives
    - List<string> Warnings
    - List<string> Infos
-   - AppliedRulesSnapshotJson (string) — Reservation'a kaydedilecek
+   - AppliedRulesSnapshotJson (string) — Reservation.AppliedRulesSnapshot'a yazılacak
 
 3. Core interfaces:
-   
+
    IRuleEvaluator:
      - string RuleType { get; }
      - Task<RuleOutcome?> EvaluateAsync(Rule rule, ReservationContext ctx, CancellationToken ct)
-     - Null dönerse kural tetiklenmedi demektir.
-   
+     - Null dönerse kural bu context için tetiklenmedi demektir.
+
    IRuleEnginePipeline:
      - Task<RuleEvaluationResult> ExecuteAsync(ReservationContext ctx, CancellationToken ct)
 
 4. RuleEnginePipeline implementation (Services/RuleEnginePipeline.cs):
-   
-   Algoritma:
-   a. DB'den aktif kuralları çek (tenant + venue scope, priority desc)
-   b. Her kural için RuleType'a göre doğru IRuleEvaluator'ı bul (DI registry)
-   c. Evaluator.EvaluateAsync çağır
-   d. Outcome null ise skip
-   e. Outcome.ActionType = Block → pipeline'ı durdur, IsBlocked=true döndür
-   f. Diğer Action'lar için Result'a ekle, devam
-   g. Sonuç döndür
-   
-   Performance: Paralel değil — Priority önemli, sırayla.
-   Cache: Rule list'i Redis "rules:{tenantId}:{venueId}" TTL 5 dk
-     * Rule CRUD → invalidate
 
-5. RuleEvaluator Registry:
-   - RuleType → IRuleEvaluator mapping
-   - DI: services.AddScoped<IRuleEvaluator, EarlyBookingRuleEvaluator>()
-     services.AddScoped<IRuleEvaluator, VipPriorityRuleEvaluator>()
-     ... vb
-   - Factory pattern: IRuleEvaluatorFactory.GetFor(ruleType)
+   Algoritma (sıra kritik):
+   a. Redis cache'te "rules:{tenantId}:{venueId}" var mı? → var ise kullan
+   b. Yoksa DB'den aktif kuralları çek:
+      WHERE TenantId = ctx.Tenant.Id
+        AND (VenueId = ctx.Venue.Id OR VenueId IS NULL)  ← tenant-wide kurallar da dahil
+        AND IsActive = true
+        AND IsDeleted = false
+      ORDER BY Priority ASC (1 = en yüksek öncelik)
+   c. Redis'e yaz, TTL 5 dk
+   d. Her kural için:
+      - IRuleEvaluatorFactory.GetFor(rule.RuleType)
+      - Evaluator null ise → log warning, skip (exception değil)
+      - EvaluateAsync çağır
+      - Outcome null ise → skip
+      - Outcome.ActionType == Block → pipeline durdur, IsBlocked = true
+      - Diğer aksiyonlar → Result'a ekle, devam
+   e. RuleEvaluationResult döndür
 
-6. Her evaluator için base class: RuleEvaluatorBase
-   - Protected: ParseConditions<T>() — ConditionsJson'ı typed DTO'ya parse et
-   - Protected: ParseActions<T>()
-   - Version kontrolü: schemaVersion mismatch ise warning log
+   Performans: Paralel değil — Priority sırası korunmalı.
 
-7. Tablewise.Api/DependencyInjection içine AddRuleEngine() extension:
-   - Tüm IRuleEvaluator'ları otomatik register et (assembly scan)
+5. IRuleEvaluatorFactory + Registry:
+   - GetFor(string ruleType) → IRuleEvaluator?
+   - IEnumerable<IRuleEvaluator> inject et, dictionary'e map et
+   - Bilinmeyen type → null döndür (factory exception atmamalı)
 
-8. Unit test (UnitTests/RuleEngine/):
-   - Mock Rule + Context ile pipeline çalışıyor mu
-   - Block encountered → kesiliyor mu
-   - Priority sırası doğru mu
-   - Evaluator bulunamıyor → log warning, skip
+6. RuleEvaluatorBase (abstract):
+   - Protected ParseConditions<T>(): ConditionsJson → T deserialize
+   - Protected ParseActions<T>(): ActionsJson → T deserialize
+   - Version kontrolü:
+     parsed.version != beklenen → Sentry'ye warning log at, devam et
+   - Her iki metod null-safe olsun
 
-Tüm kodu tam halde ver. Bu temel — üzerine 10+ evaluator inşa edeceğiz.
+7. AddRuleEngine() DI extension (Tablewise.Api'den çağrılır):
+   - Tablewise.RuleEngine assembly'sini tara
+   - IRuleEvaluator implement eden tüm sınıfları Scoped olarak register et
+   - IRuleEvaluatorFactory Scoped register
+   - IRuleEnginePipeline Scoped register
+
+8. Unit testler (UnitTests/RuleEngine/PipelineTests.cs):
+   - Block outcome → pipeline durur, sonraki evaluator çalışmaz
+   - Null outcome → skip, devam eder
+   - Priority sırası: priority=1 evaluator önce çalışır
+   - Bilinmeyen RuleType → log warning, skip, exception yok
+   - Tenant-wide kural (VenueId null) → context'e uygulanır
+   - Venue-specific kural → doğru venue'da uygulanır
+
+Tüm kodu tam halde ver. Bu temel — üzerine 7+ evaluator inşa edeceğiz.
+GroupComposition alanlarını ReservationContext'e ekle, diğer evaluator'lar bunları kullanacak.
 ```
 
 ---
@@ -1386,87 +1416,198 @@ Tüm kodu tam halde ver. Bu temel — üzerine 10+ evaluator inşa edeceğiz.
 ```
 [GENEL BAĞLAMI YAPISTIR]
 
-FAZ 3.2 — Hazır kural şablonları için 6 evaluator.
-
+MEVCUT FAZ: Faz 3.2 — Temel Kural Evaluator'ları
 Her evaluator Tablewise.RuleEngine/Evaluators/ altında.
+Her biri RuleEvaluatorBase'den türer.
 
-1. EarlyBookingRuleEvaluator:
+1. EarlyBookingRuleEvaluator
    RuleType = "early_booking"
-   Condition schema:
-     { version: 1, minDaysInAdvance: int, maxDaysInAdvance?: int }
-   Action schema:
-     { version: 1, discountPercent?: decimal, priorityBoost?: bool, label?: string }
-   
-   Logic:
-     if ctx.DaysInAdvance >= minDays [and <= maxDays if set]:
-       outcome Discount dönmek istiyorsa → ActionType = Discount
-       Payload = { discountPercent }
-   
-2. VipPriorityRuleEvaluator:
-   RuleType = "vip_priority"
-   Condition: { version: 1, minTier: "VIP" | "Gold" }
-   Action: { version: 1, suggestBestTable: bool, allowOverbook: bool }
-   
-   Logic:
-     if ctx.Customer?.Tier >= minTier:
-       → Suggest en iyi (SortOrder=1) müsait masa
-       → Warnings'e "VIP misafiriniz için özel masa ayrıldı"
+   Condition: { version: 1, minDaysInAdvance: int, maxDaysInAdvance?: int }
+   Action: { version: 1, discountPercent?: decimal, label?: string }
 
-3. LargeGroupRuleEvaluator:
+   Logic:
+   ctx.DaysInAdvance >= minDaysInAdvance
+   [ve maxDaysInAdvance varsa <= maxDaysInAdvance]
+   → ActionType = Discount
+   → Payload = { discountPercent }
+   → Outcome.Message = label ?? "Erken rezervasyon indirimi uygulandı"
+
+2. VipPriorityRuleEvaluator
+   RuleType = "vip_priority"
+   Condition: { version: 1, minTier: "Gold" | "VIP" }
+   Action: { version: 1, suggestBestTable: bool }
+
+   Logic:
+   ctx.Customer null ise → null döndür (skip)
+   ctx.Customer.Tier >= minTier ise:
+   → SortOrder=1 olan müsait masayı SuggestedAlternatives'e ekle
+   → ActionType = Suggest
+   → Warnings'e "VIP misafiriniz için özel masa ayrıldı" ekle
+
+   NOT: CustomerTier enum sıralaması: Regular < Gold < VIP < Blacklisted
+   Blacklisted VIP'ten yüksek ama bu kuralda >= VIP yeterli.
+
+3. LargeGroupRuleEvaluator
    RuleType = "large_group"
    Condition: { version: 1, minPartySize: int }
-   Action: { version: 1, requireCombination: bool, warn: bool, message: string }
-   
-   Logic:
-     if ctx.Reservation.PartySize >= minPartySize:
-       Seçilen masa kapasitesi yetersizse:
-         TableCombination ara, uygun var mı
-         Yoksa Block + mesaj
-         Varsa Suggest
+   Action: { version: 1, requireCombination: bool, message: string }
 
-4. DepositRequiredRuleEvaluator:
+   Logic:
+   ctx.Reservation.PartySize < minPartySize → null (skip)
+   Seçilen masa kapasitesi yeterli ise → null (skip)
+   Yetersizse:
+   → ctx.Venue'deki aktif TableCombination'ları tara
+   → CombinedCapacity >= PartySize olan var mı?
+   → Varsa: ActionType = Suggest, SuggestedAlternatives'e ekle
+   → Yoksa: ActionType = Block, message döndür
+
+4. DepositRequiredRuleEvaluator
    RuleType = "deposit_required"
-   Condition: { 
-     version: 1, 
-     scopes?: { days?: string[], times?: string[], tableIds?: Guid[], minPartySize?: int }
+   Condition: {
+     version: 1,
+     scopes?: {
+       days?: string[],       // ["Friday","Saturday"]
+       times?: string[],      // ["19:00","20:00","21:00"]
+       tableIds?: string[],   // Guid string listesi
+       minPartySize?: int
+     }
    }
-   Action: { 
-     version: 1, 
-     amount?: decimal, 
+   Action: {
+     version: 1,
+     amount?: decimal,
      perPerson?: bool,
      useVenueDefault?: bool
    }
-   
-   Logic:
-     Venue.DepositEnabled kontrolü — değilse skip
-     Scope match ediyorsa:
-       → RequiresDeposit = true
-       → DepositAmount hesapla (useVenueDefault ise venue config'ten)
-       → ActionType = Deposit
 
-5. PeakHourRuleEvaluator:
+   Logic:
+   ctx.Venue.DepositEnabled == false → null döndür (skip)
+   
+   Scope kontrolü (tümü opsiyonel, doluysa kontrol et):
+   - days: ctx.Reservation.ReservedFor.DayOfWeek string'e çevir, listede var mı
+   - times: ctx.Reservation.ReservedFor.Hour slot'u, listede var mı
+   - tableIds: ctx.Table?.Id listede var mı
+   - minPartySize: ctx.Reservation.PartySize >= minPartySize
+   
+   Scope match ediyorsa:
+   → RequiresDeposit = true
+   → useVenueDefault ise ctx.Venue.DepositAmount kullan
+   → perPerson ise amount * PartySize
+   → ActionType = Deposit
+
+5. PeakHourRuleEvaluator
    RuleType = "peak_hour"
-   Condition: { 
-     version: 1, 
-     startTime: "19:00", endTime: "22:00",
-     minOccupancyPercent: 80,
+   Condition: {
+     version: 1,
+     startTime: "19:00",
+     endTime: "22:00",
+     minOccupancyPercent?: int,
      days?: string[]
    }
    Action: { version: 1, block?: bool, warn?: bool, message: string }
 
-6. TableCooldownRuleEvaluator:
+   Logic:
+   Saat aralığında mı? → değilse skip
+   days doluysa ve günü içermiyorsa → skip
+   minOccupancyPercent doluysa: ctx.CurrentOccupancyRate * 100 < minOccupancyPercent → skip
+   
+   Tüm koşullar sağlanıyorsa:
+   → block true ise: ActionType = Block
+   → warn true ise: ActionType = Warn
+
+6. TableCooldownRuleEvaluator
    RuleType = "table_cooldown"
    Condition: { version: 1, cooldownMinutes: int }
-   Action: { version: 1, block: true, message: string }
-   
+   Action: { version: 1, message: string }
+
    Logic:
-     Aynı masada önceki rezervasyon bitişi + cooldown > new start → Block
+   ctx.Table null ise → skip
+   DB'den aynı masanın o gün son rezervasyonunu çek:
+   Status IN (Confirmed, Completed) AND EndTime en yakın
+   
+   LastEndTime + cooldownMinutes > ctx.Reservation.ReservedFor
+   → ActionType = Block, message döndür
+   
+   NOT: Bu evaluator DB'ye erişmeli — IUnitOfWork inject et.
+
+7. GroupCompositionRuleEvaluator  ← YENİ
+   RuleType = "group_composition"
+   Condition: {
+     version: 1,
+     operator: "and" | "or",
+     rules: [
+       {
+         type: "composition",
+         blockedCompositions?: string[],  // ["AllMale","AllFemale"]
+         allowedCompositions?: string[]   // ["Mixed","Family"]
+       },
+       {
+         type: "ratio",
+         minFemaleRatio?: double,   // 0.30 → min %30 kadın zorunlu
+         maxMaleRatio?: double,     // 0.80 → max %80 erkek
+         minPartySize?: int         // sadece bu kişi sayısının üzerinde uygula
+       }
+     ]
+   }
+   Action: { version: 1, block?: bool, warn?: bool, message: string }
+
+   Logic:
+   ctx.GroupComposition null VE ctx.MaleCount null → null döndür
+   (Müşteri bu bilgiyi doldurmamışsa kural uygulanamaz — sessiz geç)
+   
+   Her rule için değerlendir:
+   
+   type="composition":
+   blockedCompositions doluysa ve ctx.GroupComposition listede → ihlal
+   allowedCompositions doluysa ve ctx.GroupComposition listede DEĞİL → ihlal
+   
+   type="ratio":
+   minPartySize doluysa ve ctx.Reservation.PartySize < minPartySize → skip
+   ctx.FemaleRatio null ise → skip (veri yok)
+   ctx.FemaleRatio < minFemaleRatio → ihlal
+   ctx.MaleRatio > maxMaleRatio → ihlal
+   
+   operator="and": tüm kurallar ihlal ederse → aksiyon uygula
+   operator="or": herhangi biri ihlal ederse → aksiyon uygula
+   
+   İhlal varsa:
+   → block true ise: ActionType = Block
+   → warn true ise: ActionType = Warn
+   → message döndür
+
+   Örnek seed kurallar (DbSeeder'a ekle, IsActive=false):
+   
+   Kural A — Sadece erkek büyük grup engeli:
+   {
+     operator: "and",
+     rules: [
+       { type: "composition", blockedCompositions: ["AllMale"] },
+       { type: "ratio", minPartySize: 4 }
+     ]
+   }
+   Action: { block: true, message: "4+ kişilik sadece erkek gruplar kabul edilmemektedir." }
+   
+   Kural B — Minimum kadın oranı uyarısı:
+   {
+     operator: "or",
+     rules: [
+       { type: "ratio", minFemaleRatio: 0.30, minPartySize: 6 }
+     ]
+   }
+   Action: { warn: true, message: "Grubunuzda en az %30 kadın misafir bulunması önerilmektedir." }
 
 Her evaluator için:
-- Unit test en az 3 senaryo (trigger eder, etmez, edge case)
-- XML doc comment
+- Unit test minimum 3 senaryo: tetiklenir / tetiklenmez / edge case
+- GroupCompositionRuleEvaluator için 5 senaryo:
+  * AllMale 4+ kişi → Block
+  * Mixed grup → Pass
+  * GroupComposition null → skip (veri yok)
+  * FemaleRatio 0.20, minPartySize 6 → Warn
+  * FemaleRatio 0.20, partySize 4, minPartySize 6 → skip (limit altı)
+- XML doc comment (Türkçe açıklama)
 
-İstersen bu prompt'u ikiye böl: 1-2 bir chat, 3-6 ikinci chat.
+Bu prompt büyük — şöyle böl:
+Chat 1 (Opus): EarlyBooking, VipPriority, LargeGroup (1-3)
+Chat 2 (Sonnet): Deposit, PeakHour, TableCooldown, GroupComposition (4-7)
 ```
 
 ---
@@ -1478,12 +1619,12 @@ Her evaluator için:
 ```
 [GENEL BAĞLAMI YAPISTIR]
 
-FAZ 3.3 — Özel kural (custom_condition) ve test modu.
+MEVCUT FAZ: Faz 3.3 — Özel Kural ve Test Modu
 
-1. CustomConditionRuleEvaluator:
+1. CustomConditionRuleEvaluator
    RuleType = "custom_condition"
-   İşletme "kendi kuralı"nı tanımlayabilsin.
-   
+   İşletme tamamen kendi mantığını tanımlayabilsin.
+
    Condition schema:
    {
      version: 1,
@@ -1491,50 +1632,101 @@ FAZ 3.3 — Özel kural (custom_condition) ve test modu.
      conditions: [
        { field: "partySize", op: ">=", value: 6 },
        { field: "customer.tier", op: "==", value: "VIP" },
-       { field: "reservation.reservedFor.dayOfWeek", op: "in", value: ["Friday","Saturday"] }
+       { field: "reservation.reservedFor.dayOfWeek", op: "in", value: ["Friday","Saturday"] },
+       { field: "groupComposition", op: "==", value: "AllMale" },
+       { field: "femaleRatio", op: "<", value: 0.3 },
+       { field: "maleRatio", op: ">", value: 0.7 },
+       { field: "maleCount", op: ">=", value: 4 }
      ]
    }
-   
-   Safe expression evaluator (DANGER: asla eval kullanma):
-   - Whitelist field'lar: 
-     "partySize", "daysInAdvance", "customer.tier", "customer.totalVisits",
-     "reservation.reservedFor.hour", "reservation.reservedFor.dayOfWeek",
-     "venue.currentOccupancy", "table.capacity", "table.location"
-   - Operators: ==, !=, <, <=, >, >=, in, contains
-   - ReservationContext'ten reflection ile oku
-   - Hata durumunda false döndür, Sentry'ye log
-   
-   Action schema: diğer kurallardakine benzer (block/warn/discount/suggest)
 
-2. RuleTestService implementation:
+   Whitelist field'lar (SADECE bunlar geçerli — injection önle):
+   "partySize"
+   "daysInAdvance"
+   "customer.tier"
+   "customer.totalVisits"
+   "reservation.reservedFor.hour"
+   "reservation.reservedFor.dayOfWeek"
+   "venue.currentOccupancy"
+   "table.capacity"
+   "table.location"
+   "groupComposition"       ← YENİ
+   "femaleRatio"            ← YENİ
+   "maleRatio"              ← YENİ
+   "maleCount"              ← YENİ
+   "femaleCount"            ← YENİ
+
+   Operators: ==, !=, <, <=, >, >=, in, contains
+
+   Değerlendirme mantığı:
+   - ReservationContext'ten field değerini al (reflection değil, switch/dictionary)
+   - Null değer döndürürse (örn: groupComposition null) → o condition false say
+   - Hata durumunda false döndür, Sentry'ye log at
+   - ASLA eval, Expression.Compile veya dynamic invoke kullanma
+   - Switch/dictionary bazlı güvenli field resolver yaz
+
+   Action schema: block/warn/discount/suggest/deposit
+
+2. RuleTestService
    TestRuleAsync(Rule rule, SampleContext sample):
-   - Sample context'ten ReservationContext üret (in-memory, DB'ye dokunma)
-   - Sadece bu tek kuralı evaluate et (pipeline değil)
-   - Outcome döndür + tetiklendi mi bilgisi
-   
-   SampleContext DTO'su:
+   - SampleContext → ReservationContext dönüşümü (in-memory, DB'ye dokunma)
+   - Sadece bu tek kuralı evaluate et (pipeline DEĞİL)
+   - Outcome + triggered + executionMs döndür
+
+   SampleContext DTO:
    {
      partySize: int,
      daysInAdvance: int,
-     customerTier: string,
-     dayOfWeek: string,
-     hour: int,
-     venueOccupancy: double,
-     tableCapacity: int
+     customerTier: string?,      // "Regular","Gold","VIP","Blacklisted"
+     dayOfWeek: string?,         // "Monday","Tuesday",...,"Sunday"
+     hour: int,                  // 0-23
+     venueOccupancy: double,     // 0.0-1.0
+     tableCapacity: int,
+     groupComposition: string?,  // "Mixed","AllMale","AllFemale","Family"
+     maleCount: int?,            // ← YENİ
+     femaleCount: int?           // ← YENİ
    }
 
-3. Test endpoint'i (daha önceki stub'u doldur):
+   SampleContext → ReservationContext build:
+   - maleCount ve femaleCount doluysa FemaleRatio ve MaleRatio compute et
+   - groupComposition null ise context'te null bırak
+
+3. Test endpoint (Faz 2.3 stub'ını doldur):
    POST /api/v1/rules/{id}/test
    Body: SampleContextDto
-   Response: { triggered: bool, outcome: {...}, executionMs: int }
+   Response:
+   {
+     triggered: bool,
+     outcome: { actionType, message, payload } | null,
+     executionMs: int,
+     conditionEvaluations: [    ← DEBUG için opsiyonel
+       { field, op, value, result: bool }
+     ]
+   }
 
 4. RuleSchemaValidator:
-   - Condition JSON'u parse et, version kontrol et
-   - Unknown field'lar → error
-   - Bu validator Rule CRUD'da da kullanılıyor (Faz 2.3'te ekledik)
-   - Kapsamlı test et
+   - ConditionsJson parse et, version alanı zorunlu
+   - Field whitelist kontrolü — bilinmeyen field → 422 ValidationError
+   - Operator whitelist kontrolü
+   - GroupComposition için geçerli değerler:
+     "Mixed", "AllMale", "AllFemale", "Family"
+   - Ratio değerleri 0.0-1.0 arasında olmalı
+   - Bu validator Rule CRUD'da da kullanılıyor (Faz 2.3)
 
-Tüm kodu ver. Güvenlik kritik — custom expression'da eval veya reflection injection olmasın.
+5. Unit test:
+   - partySize >= 6, partySize=7 → triggered
+   - partySize >= 6, partySize=4 → not triggered
+   - groupComposition == "AllMale", ctx.groupComposition=null → false (null safe)
+   - femaleRatio < 0.30, femaleRatio=0.20 → triggered
+   - Bilinmeyen field → false, Sentry log
+   - operator="and": tümü true olmalı
+   - operator="or": biri yeterli
+
+Güvenlik kritik:
+- eval kullanma
+- dynamic invoke kullanma
+- Field resolver switch/dictionary bazlı olsun
+- Bilinmeyen field → false, exception değil
 ```
 
 ---
@@ -1546,50 +1738,137 @@ Tüm kodu ver. Güvenlik kritik — custom expression'da eval veya reflection in
 ```
 [GENEL BAĞLAMI YAPISTIR]
 
-FAZ 3.4 — Rule engine'i rezervasyon akışına bağla.
+MEVCUT FAZ: Faz 3.4 — Grup Kompozisyonu Entegrasyonu + Rule Engine Bağlama
 
-Faz 2.2'de ReserveCommandHandler'a "kural motoru stub" koymuştuk:
-// var ruleResult = RuleResult.Allow(); // TODO Faz 3
+İKİ iş var bu fazda:
+A) Grup kompozisyonu verilerini ReservationContext'e besle
+B) Rule engine'i rezervasyon akışına bağla (Faz 2.2 stub'ı doldur)
 
-Şimdi gerçek bağlantıyı yap:
+=== KISIM A: GRUP KOMPOZİSYONU ENTEGRASYONU ===
 
-1. ReserveCommandHandler güncelle:
-   - IRuleEnginePipeline inject
-   - Müsaitlik kontrolünden sonra, kayıt öncesi:
-     ReservationContext context = BuildContext(dto, tenant, venue, table, customer);
-     RuleEvaluationResult result = await _pipeline.ExecuteAsync(context, ct);
-     
-     if (result.IsBlocked) return Result.Failure(...);
-     
-     reservation.DiscountPercent = result.TotalDiscountPercent > 0 ? result.TotalDiscountPercent : null;
-     reservation.AppliedRulesSnapshot = result.AppliedRulesSnapshotJson;
-     
-     if (result.RequiresDeposit) {
-       reservation.DepositStatus = DepositStatus.Pending;
-       reservation.DepositAmount = result.DepositAmount;
-       // Deposit ödeme akışı Faz 7'de tamamlanacak
+1. VenueCustomField seed data'ya ekle (DbSeeder.cs):
+   Mevcut custom field'lara şunları ekle:
+
+   {
+     Label: "Grup Kompozisyonu",
+     FieldType: Select,
+     IsRequired: false,
+     SortOrder: 4,
+     Options: ["Karma (Kadın+Erkek)","Sadece Erkek","Sadece Kadın","Aile"],
+     FieldKey: "group_composition"   // sabit — evaluator bunu okur
+   }
+   {
+     Label: "Erkek Misafir Sayısı",
+     FieldType: Number,
+     IsRequired: false,
+     SortOrder: 5,
+     FieldKey: "male_count"
+   }
+   {
+     Label: "Kadın Misafir Sayısı",
+     FieldType: Number,
+     IsRequired: false,
+     SortOrder: 6,
+     FieldKey: "female_count"
+   }
+
+2. ReserveCommand.Handler'da BuildContext metodu:
+   CustomFieldAnswers dict'inden şunları çek:
+
+   GroupComposition mapping:
+   "Karma (Kadın+Erkek)" → "Mixed"
+   "Sadece Erkek" → "AllMale"
+   "Sadece Kadın" → "AllFemale"
+   "Aile" → "Family"
+   null veya bilinmeyen → null
+
+   MaleCount: CustomFieldAnswers["male_count"] → int? parse
+   FemaleCount: CustomFieldAnswers["female_count"] → int? parse
+
+   Computed değerler:
+   if (MaleCount.HasValue && FemaleCount.HasValue && PartySize > 0)
+   {
+     FemaleRatio = (double)FemaleCount / PartySize;
+     MaleRatio = (double)MaleCount / PartySize;
+   }
+
+3. Rule seed data'ya GroupComposition örneği ekle (IsActive=false):
+   {
+     Name: "Sadece Erkek Grup Kısıtlaması",
+     RuleType: "group_composition",
+     Priority: 2,
+     IsActive: false,   // işletme isterse açar
+     ConditionsJson: {
+       version: 1,
+       operator: "and",
+       rules: [
+         { type: "composition", blockedCompositions: ["AllMale"] },
+         { type: "ratio", minPartySize: 4 }
+       ]
+     },
+     ActionsJson: {
+       version: 1,
+       block: true,
+       message: "4 ve üzeri kişilik sadece erkek gruplar için rezervasyon kabul edilmemektedir."
      }
+   }
 
-2. EvaluateCommandHandler (sadece preview, kayıt yok):
-   Aynı context build + pipeline execute, sonucu döndür.
+=== KISIM B: RULE ENGINE REZERVASYONA BAĞLAMA ===
 
-3. ModifyReservationCommand handler de aynı kural motoru akışından geçsin.
+4. ReserveCommandHandler güncelle:
+   IRuleEnginePipeline inject et.
+   Müsaitlik kontrolünden SONRA, kayıt öncesi:
 
-4. ManuelReservation (işletme tarafından) için özel flag:
-   - [Authorize] authenticated manuel rezervasyonda kural motoru OPSİYONEL
-   - Request body'de "overrideRules: true" varsa pipeline bypass
-   - Owner/Staff için izinli, audit log'a "RULES_OVERRIDDEN" yaz
+   var context = BuildContext(dto, tenant, venue, table, customer);
+   var result = await _pipeline.ExecuteAsync(context, ct);
 
-5. Rule TimesTriggered güncellemesi:
-   - Her outcome dönen kural için TimesTriggered++
-   - Performans için batch update (UnitOfWork sonunda)
-   - Veya Redis INCR + periyodik DB flush
+   if (result.IsBlocked)
+   {
+     var blockedOutcome = result.Outcomes.First(x => x.ActionType == RuleActionType.Block);
+     return Result.Failure(blockedOutcome.Message ?? "Rezervasyon kural ihlali nedeniyle oluşturulamadı.");
+   }
 
-6. Integration test:
-   - 5 kural seed'ten, bir rezervasyon yap
-   - AppliedRulesSnapshot dolmuş mu
-   - Discount doğru uygulanmış mı
-   - Block rule ile engelli → 422 mi
+   reservation.DiscountPercent = result.TotalDiscountPercent > 0
+     ? result.TotalDiscountPercent
+     : null;
+   reservation.AppliedRulesSnapshot = result.AppliedRulesSnapshotJson;
+
+   if (result.RequiresDeposit)
+   {
+     reservation.DepositStatus = DepositStatus.Pending;
+     reservation.DepositAmount = result.DepositAmount;
+     // Deposit ödeme akışı Faz 7'de tamamlanacak
+   }
+
+5. EvaluateCommand (preview, kayıt yok):
+   Aynı BuildContext + pipeline execute.
+   Response'a şunları dahil et:
+   - IsBlocked
+   - Warnings
+   - Infos
+   - SuggestedAlternatives
+   - TotalDiscountPercent
+   - RequiresDeposit, DepositAmount
+   - Outcomes (tüm tetiklenen kurallar)
+
+6. ModifyReservationCommand handler da pipeline'dan geçsin.
+
+7. Manuel rezervasyon bypass (işletme tarafından):
+   Request body'de overrideRules: true varsa → pipeline skip
+   Sadece Owner/Staff → izinli (yetki kontrolü)
+   AuditLog'a "RULES_OVERRIDDEN" yaz
+
+8. TimesTriggered güncellemesi:
+   Her outcome dönen kural için Rule.TimesTriggered++
+   UnitOfWork.SaveChanges sonunda toplu güncelle
+
+9. Integration testler:
+   - Erken rezervasyon (7+ gün öncesi) → DiscountPercent dolmuş mu?
+   - Block kuralı aktif → 422 dönüyor mu?
+   - AllMale grup, 4+ kişi, GroupComposition kuralı aktif → blocked mı?
+   - GroupComposition null → kural skip mi?
+   - AppliedRulesSnapshot dolmuş mu?
+   - overrideRules=true → pipeline atlandı mı, audit log yazıldı mı?
 
 Diff olarak ver.
 ```
