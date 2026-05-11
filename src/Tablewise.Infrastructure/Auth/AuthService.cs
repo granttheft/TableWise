@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Tablewise.Application.DTOs.Auth;
@@ -24,6 +25,7 @@ public sealed class AuthService : IAuthService
     private readonly ICacheService _cacheService;
     private readonly IEmailService _emailService;
     private readonly AuthSettings _authSettings;
+    private readonly IHostEnvironment _hostEnvironment;
     private readonly ILogger<AuthService> _logger;
 
     private const string LoginFailKeyPrefix = "login_fail";
@@ -31,12 +33,20 @@ public sealed class AuthService : IAuthService
     /// <summary>
     /// AuthService constructor.
     /// </summary>
+    /// <param name="dbContext">EF Core DbContext.</param>
+    /// <param name="jwtService">JWT token üretimi.</param>
+    /// <param name="cacheService">Brute-force / cache.</param>
+    /// <param name="emailService">Email gönderimi.</param>
+    /// <param name="authSettings">Auth ayarları.</param>
+    /// <param name="hostEnvironment">Ortam (Development'ta email doğrulama gevşetilir).</param>
+    /// <param name="logger">Logger.</param>
     public AuthService(
         TablewiseDbContext dbContext,
         IJwtTokenService jwtService,
         ICacheService cacheService,
         IEmailService emailService,
         IOptions<AuthSettings> authSettings,
+        IHostEnvironment hostEnvironment,
         ILogger<AuthService> logger)
     {
         _dbContext = dbContext;
@@ -44,6 +54,7 @@ public sealed class AuthService : IAuthService
         _cacheService = cacheService;
         _emailService = emailService;
         _authSettings = authSettings.Value;
+        _hostEnvironment = hostEnvironment;
         _logger = logger;
     }
 
@@ -145,6 +156,17 @@ public sealed class AuthService : IAuthService
             CreatedAt = DateTime.UtcNow
         };
 
+        if (_hostEnvironment.IsDevelopment())
+        {
+            tenant.IsEmailVerified = true;
+            tenant.EmailVerificationToken = null;
+            user.IsEmailVerified = true;
+            user.EmailVerificationToken = null;
+            user.EmailVerificationExpiry = null;
+            _logger.LogInformation(
+                "Development: kayıtta email doğrulama atlandı (SMTP/SendGrid olmadan yerel test).");
+        }
+
         _dbContext.Users.Add(user);
 
         // Audit log
@@ -240,8 +262,8 @@ public sealed class AuthService : IAuthService
                 "ACCOUNT_DISABLED");
         }
 
-        // Email doğrulandı mı?
-        if (!user.IsEmailVerified)
+        // Email doğrulandı mı? (Production zorunlu; Development'ta gönderilen mail olmayabilir.)
+        if (!_hostEnvironment.IsDevelopment() && !user.IsEmailVerified)
         {
             throw new BusinessRuleException(
                 "Email adresinizi doğrulamanız gerekiyor. Lütfen email kutunuzu kontrol edin.",

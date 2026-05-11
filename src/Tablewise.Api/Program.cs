@@ -86,6 +86,9 @@ try
     })
     .AddJwtBearer(options =>
     {
+        // JWT'deki kısa claim adlarını koru ("role", "tenant_id"). Aksi halde "role" → ClaimTypes.Role URI'ye map olur ve RequireOwner vb. FindFirst("role") bulamaz.
+        options.MapInboundClaims = false;
+
         options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuer = true,

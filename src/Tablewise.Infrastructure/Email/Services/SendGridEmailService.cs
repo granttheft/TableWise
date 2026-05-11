@@ -17,13 +17,16 @@ namespace Tablewise.Infrastructure.Email.Services;
 /// </summary>
 public sealed class SendGridEmailService
 {
-    private readonly SendGridClient _client;
+    private readonly SendGridClient? _client;
     private readonly EmailTemplateRenderer _renderer;
     private readonly IUnitOfWork _unitOfWork;
     private readonly ILogger<SendGridEmailService> _logger;
     private readonly SendGridSettings _settings;
     private readonly ResiliencePipeline _retryPipeline;
 
+    /// <summary>
+    /// SendGridEmailService constructor. ApiKey boşsa istemci oluşturulmaz; gönderimler no-op olur (yerel geliştirme).
+    /// </summary>
     public SendGridEmailService(
         IOptions<SendGridSettings> settings,
         EmailTemplateRenderer renderer,
@@ -31,10 +34,20 @@ public sealed class SendGridEmailService
         ILogger<SendGridEmailService> logger)
     {
         _settings = settings.Value;
-        _client = new SendGridClient(_settings.ApiKey);
         _renderer = renderer;
         _unitOfWork = unitOfWork;
         _logger = logger;
+
+        if (string.IsNullOrWhiteSpace(_settings.ApiKey))
+        {
+            _client = null;
+            _logger.LogWarning(
+                "SendGrid:ApiKey boş; email gönderimi devre dışı. Production öncesi anahtarı yapılandırın.");
+        }
+        else
+        {
+            _client = new SendGridClient(_settings.ApiKey);
+        }
 
         // Polly retry policy: 3 deneme, exponential backoff
         _retryPipeline = new ResiliencePipelineBuilder()
@@ -60,6 +73,12 @@ public sealed class SendGridEmailService
     /// </summary>
     public async Task<bool> SendAsync(EmailRequest request, CancellationToken ct = default)
     {
+        if (_client == null)
+        {
+            _logger.LogDebug("SendGrid yapılandırılmamış; email atlandı. To={To}", request.To);
+            return true;
+        }
+
         try
         {
             await _retryPipeline.ExecuteAsync(async token =>
