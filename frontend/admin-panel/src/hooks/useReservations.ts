@@ -16,21 +16,32 @@ interface ReservationsFilters {
   status?: ReservationStatus | 'all'
 }
 
+/** Backend GET /api/v1/reservations yanıtı (pagination). */
+interface ReservationListResponse {
+  items: Reservation[]
+  totalCount: number
+  page: number
+  pageSize: number
+}
+
 export function useReservations(filters?: ReservationsFilters) {
   return useQuery({
     queryKey: ['reservations', filters],
     queryFn: async () => {
       const params = new URLSearchParams()
-      
-      if (filters?.date) params.append('date', filters.date)
+
+      if (filters?.date) {
+        params.append('fromDate', `${filters.date}T00:00:00.000Z`)
+        params.append('toDate', `${filters.date}T23:59:59.999Z`)
+      }
       if (filters?.venueId) params.append('venueId', filters.venueId)
       if (filters?.tableId && filters.tableId !== 'all') params.append('tableId', filters.tableId)
       if (filters?.status && filters.status !== 'all') params.append('status', filters.status)
 
-      const response = await api.get<ApiResponse<Reservation[]>>(
+      const response = await api.get<ReservationListResponse>(
         `/api/v1/reservations?${params.toString()}`
       )
-      return response.data.data
+      return response.data.items ?? []
     },
     refetchInterval: 30000, // 30 seconds
   })
@@ -41,10 +52,8 @@ export function useReservation(reservationId?: string) {
     queryKey: ['reservation', reservationId],
     queryFn: async () => {
       if (!reservationId) return null
-      const response = await api.get<ApiResponse<Reservation>>(
-        `/api/v1/reservations/${reservationId}`
-      )
-      return response.data.data
+      const response = await api.get<Reservation>(`/api/v1/reservations/${reservationId}`)
+      return response.data
     },
     enabled: !!reservationId,
   })
@@ -55,10 +64,14 @@ export function useReservationStatusLog(reservationId?: string) {
     queryKey: ['reservation-status-log', reservationId],
     queryFn: async () => {
       if (!reservationId) return []
-      const response = await api.get<ApiResponse<ReservationStatusLog[]>>(
-        `/api/v1/reservations/${reservationId}/status-log`
-      )
-      return response.data.data
+      try {
+        const response = await api.get<ReservationStatusLog[]>(
+          `/api/v1/reservations/${reservationId}/status-log`
+        )
+        return Array.isArray(response.data) ? response.data : []
+      } catch {
+        return []
+      }
     },
     enabled: !!reservationId,
   })
@@ -68,12 +81,9 @@ export function useCreateReservation() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: async (data: any) => {
-      const response = await api.post<ApiResponse<Reservation>>(
-        '/api/v1/reservations',
-        data
-      )
-      return response.data.data
+    mutationFn: async (data: unknown) => {
+      const response = await api.post<Reservation>('/api/v1/reservations', data)
+      return response.data
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['reservations'] })
@@ -93,11 +103,11 @@ export function useUpdateReservation() {
       reservationId: string
       updates: Partial<Reservation>
     }) => {
-      const response = await api.put<ApiResponse<Reservation>>(
+      const response = await api.put<Reservation>(
         `/api/v1/reservations/${data.reservationId}`,
         data.updates
       )
-      return response.data.data
+      return response.data
     },
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ['reservations'] })
@@ -119,14 +129,11 @@ export function useUpdateReservationStatus() {
       status: ReservationStatus
       reason?: string
     }) => {
-      const response = await api.patch<ApiResponse<Reservation>>(
-        `/api/v1/reservations/${data.reservationId}/status`,
-        {
-          status: data.status,
-          reason: data.reason,
-        }
-      )
-      return response.data.data
+      await api.put(`/api/v1/reservations/${data.reservationId}/status`, {
+        status: data.status,
+        reason: data.reason,
+      })
+      return null
     },
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ['reservations'] })
@@ -150,11 +157,11 @@ export function useEvaluateReservation() {
       guestCount: number
       customerId?: string
     }) => {
-      const response = await api.post<ApiResponse<ReservationEvaluationResult>>(
+      const response = await api.post<ReservationEvaluationResult>(
         `/api/v1/reservations/evaluate`,
         data
       )
-      return response.data.data
+      return response.data
     },
     onError: (error: any) => {
       toast.error(error.response?.data?.message || 'Değerlendirme başarısız')
@@ -180,7 +187,8 @@ export function useExportReservations() {
   return useMutation({
     mutationFn: async (data: { date: string; venueId?: string }) => {
       const params = new URLSearchParams()
-      params.append('date', data.date)
+      params.append('fromDate', `${data.date}T00:00:00.000Z`)
+      params.append('toDate', `${data.date}T23:59:59.999Z`)
       if (data.venueId) params.append('venueId', data.venueId)
 
       const response = await api.get(

@@ -1,7 +1,9 @@
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 using Tablewise.Domain.Enums;
 using Tablewise.Domain.Interfaces;
+using Tablewise.Infrastructure.Auth;
 
 namespace Tablewise.Infrastructure.Services;
 
@@ -27,7 +29,7 @@ public class CurrentUserService : ICurrentUser
     {
         get
         {
-            var tenantIdClaim = _httpContextAccessor.HttpContext?.User?.FindFirst("TenantId")?.Value;
+            var tenantIdClaim = _httpContextAccessor.HttpContext?.User?.FindFirst(CustomClaimTypes.TenantId)?.Value;
             return string.IsNullOrWhiteSpace(tenantIdClaim) ? null : Guid.Parse(tenantIdClaim);
         }
     }
@@ -47,11 +49,14 @@ public class CurrentUserService : ICurrentUser
     {
         get
         {
-            var roleClaim = _httpContextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.Role)?.Value;
+            var roleClaim = _httpContextAccessor.HttpContext?.User?.FindFirst(CustomClaimTypes.Role)?.Value
+                ?? _httpContextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.Role)?.Value;
             return string.IsNullOrWhiteSpace(roleClaim) ? null : Enum.Parse<UserRole>(roleClaim);
         }
     }
 
     /// <inheritdoc />
-    public string? Email => _httpContextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.Email)?.Value;
+    public string? Email =>
+        _httpContextAccessor.HttpContext?.User?.FindFirst(JwtRegisteredClaimNames.Email)?.Value
+        ?? _httpContextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.Email)?.Value;
 }

@@ -1,6 +1,8 @@
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 using Tablewise.Application.Interfaces;
+using Tablewise.Infrastructure.Auth;
 
 namespace Tablewise.Infrastructure.Services;
 
@@ -23,7 +25,7 @@ public sealed class TenantService : ITenantService
     public Guid GetCurrentTenantId()
     {
         var tenantIdClaim = _httpContextAccessor.HttpContext?.User
-            .FindFirst("TenantId")?.Value;
+            .FindFirst(CustomClaimTypes.TenantId)?.Value;
 
         if (string.IsNullOrEmpty(tenantIdClaim))
         {
@@ -44,7 +46,8 @@ public sealed class TenantService : ITenantService
     public Guid GetCurrentUserId()
     {
         var userIdClaim = _httpContextAccessor.HttpContext?.User
-            .FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            .FindFirst(JwtRegisteredClaimNames.Sub)?.Value
+            ?? _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
         if (string.IsNullOrEmpty(userIdClaim))
         {
@@ -65,7 +68,8 @@ public sealed class TenantService : ITenantService
     public string GetCurrentUserRole()
     {
         var roleClaim = _httpContextAccessor.HttpContext?.User
-            .FindFirst(ClaimTypes.Role)?.Value;
+            .FindFirst(CustomClaimTypes.Role)?.Value
+            ?? _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.Role)?.Value;
 
         if (string.IsNullOrEmpty(roleClaim))
         {
