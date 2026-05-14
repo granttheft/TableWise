@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import api from '@/lib/api'
 import { toast } from 'sonner'
-import type { Venue } from '@/types/api'
+import type { CreateVenuePayload, Venue } from '@/types/api'
 
 /**
  * Tenant'a ait tüm venue'leri getirir
@@ -13,6 +13,9 @@ export function useVenues() {
       const response = await api.get<Venue[]>('/api/v1/venue')
       return response.data
     },
+    /** Masalar/Kurallar gibi sayfalara geçişte güncel liste; harici oluşturma sonrası 5 dk eski cache kalmasın. */
+    staleTime: 0,
+    refetchOnMount: 'always',
   })
 }
 
@@ -38,12 +41,21 @@ export function useCreateVenue() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: async (data: Omit<Venue, 'id' | 'tenantId' | 'tableCount'>) => {
-      const response = await api.post<string>('/api/v1/venue', data)
+    mutationFn: async (data: CreateVenuePayload) => {
+      const body: CreateVenuePayload = {
+        timeZone: 'Europe/Istanbul',
+        slotDurationMinutes: 90,
+        depositEnabled: false,
+        depositPerPerson: false,
+        depositRefundPolicy: 2,
+        ...data,
+      }
+      const response = await api.post<string>('/api/v1/venue', body)
       return response.data
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['venues'] })
+      void queryClient.invalidateQueries({ queryKey: ['venues'] })
+      void queryClient.invalidateQueries({ queryKey: ['plan-limits'] })
       toast.success('Mekan başarıyla oluşturuldu')
     },
     onError: (error: any) => {

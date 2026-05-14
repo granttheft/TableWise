@@ -1,5 +1,8 @@
 {
   "ConnectionStrings": {
     "DefaultConnection": "Host=localhost;Port=5433;Database=tablewise;Username=tablewise_user;Password=dev_password"
+  },
+  "Redis": {
+    "ConnectionString": "localhost:6379,password=dev_password"
   }
 }

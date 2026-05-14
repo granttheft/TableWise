@@ -5,6 +5,7 @@ import { NotificationSettings } from './components/NotificationSettings'
 import { DepositSettings } from './components/DepositSettings'
 import { BookingSettings } from './components/BookingSettings'
 import { IntegrationSettings } from './components/IntegrationSettings'
+import { VenueSettings } from './components/VenueSettings'
 
 export function SettingsPage() {
   return (
@@ -17,6 +18,7 @@ export function SettingsPage() {
       <Tabs defaultValue="general" className="space-y-4">
         <TabsList>
           <TabsTrigger value="general">Genel</TabsTrigger>
+          <TabsTrigger value="venues">Mekanlar</TabsTrigger>
           <TabsTrigger value="working-hours">Çalışma Saatleri</TabsTrigger>
           <TabsTrigger value="notifications">Bildirimler</TabsTrigger>
           <TabsTrigger value="deposit">Kapora</TabsTrigger>
@@ -26,6 +28,10 @@ export function SettingsPage() {
 
         <TabsContent value="general">
           <GeneralSettings />
+        </TabsContent>
+
+        <TabsContent value="venues">
+          <VenueSettings />
         </TabsContent>
 
         <TabsContent value="working-hours">

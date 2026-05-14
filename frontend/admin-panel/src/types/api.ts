@@ -85,6 +85,23 @@ export interface Venue {
   tableCount: number
 }
 
+/** POST /api/v1/venue — CreateVenueDto ile uyumlu gövde. */
+export interface CreateVenuePayload {
+  name: string
+  address?: string | null
+  phoneNumber?: string | null
+  description?: string | null
+  timeZone?: string
+  slotDurationMinutes?: number
+  depositEnabled?: boolean
+  depositPerPerson?: boolean
+  /** DepositRefundPolicy: NoRefund = 2 (varsayılan). */
+  depositRefundPolicy?: number
+  depositRefundHours?: number | null
+  depositPartialPercent?: number | null
+  workingHours?: string | null
+}
+
 export interface PlanLimits {
   maxTables: number | null
   currentTableCount: number
