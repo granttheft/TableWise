@@ -257,7 +257,7 @@ public class DbSeeder
             Slug = "demo-restoran",
             Email = "info@demo-restoran.com",
             PasswordHash = BCrypt.Net.BCrypt.HashPassword("TenantPortal-NotUsed-ChangeMe"),
-            PlanId = SeedIds.PlanProId,
+            PlanId = SeedIds.PlanBusinessId,
             PlanStatus = PlanStatus.Active,
             TrialEndsAt = DateTime.UtcNow.AddDays(-15),
             PlanRenewsAt = DateTime.UtcNow.AddMonths(11),
@@ -270,11 +270,11 @@ public class DbSeeder
         {
             Id = SeedIds.DemoSubscriptionId,
             TenantId = SeedIds.DemoTenantId,
-            PlanId = SeedIds.PlanProId,
+            PlanId = SeedIds.PlanBusinessId,
             Status = PlanStatus.Active,
             PeriodStart = DateTime.UtcNow.AddMonths(-1),
             PeriodEnd = DateTime.UtcNow.AddMonths(11),
-            Amount = 9900m,
+            Amount = 1990m,
             Currency = "TRY",
             NextBillingDate = DateTime.UtcNow.AddMonths(11),
             CreatedAt = DateTime.UtcNow.AddMonths(-1)

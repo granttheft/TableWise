@@ -2,6 +2,16 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import api from '@/lib/api'
 import { toast } from 'sonner'
 import type { Rule, RuleTestContext, RuleTestResult } from '@/types/api'
+import {
+  mapRuleFormToApiPayload,
+  type RuleBuilderSubmitPayload,
+} from '@/features/rules/utils/mapRuleFormToApiPayload'
+
+function ruleApiErrorMessage(error: unknown): string {
+  if (error instanceof Error && error.message) return error.message
+  const err = error as { response?: { data?: { title?: string; detail?: string } } }
+  return err.response?.data?.detail || err.response?.data?.title || 'İşlem başarısız'
+}
 
 const rulesBase = '/api/v1/rules'
 
@@ -42,10 +52,11 @@ export function useCreateRule() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: async (data: { venueId: string; rule: Record<string, unknown> }) => {
+    mutationFn: async (data: { venueId: string; rule: RuleBuilderSubmitPayload }) => {
+      const body = mapRuleFormToApiPayload(data.rule)
       const response = await api.post<string>(rulesBase, {
-        ...data.rule,
         venueId: data.venueId,
+        ...body,
       })
       return response.data
     },
@@ -54,8 +65,8 @@ export function useCreateRule() {
       void queryClient.invalidateQueries({ queryKey: ['plan-limits'] })
       toast.success('Kural başarıyla oluşturuldu')
     },
-    onError: (error: any) => {
-      toast.error(error.response?.data?.title || 'Kural oluşturulamadı')
+    onError: (error: unknown) => {
+      toast.error(ruleApiErrorMessage(error) || 'Kural oluşturulamadı')
     },
   })
 }
@@ -67,16 +78,17 @@ export function useUpdateRule() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: async (data: { ruleId: string; venueId: string; rule: Partial<Rule> }) => {
-      await api.put(`${rulesBase}/${data.ruleId}`, data.rule)
+    mutationFn: async (data: { ruleId: string; venueId: string; rule: RuleBuilderSubmitPayload }) => {
+      const body = mapRuleFormToApiPayload(data.rule)
+      await api.put(`${rulesBase}/${data.ruleId}`, body)
     },
     onSuccess: (_, variables) => {
       void queryClient.invalidateQueries({ queryKey: ['rules', variables.venueId] })
       void queryClient.invalidateQueries({ queryKey: ['rule', variables.ruleId] })
       toast.success('Kural başarıyla güncellendi')
     },
-    onError: (error: any) => {
-      toast.error(error.response?.data?.title || 'Kural güncellenemedi')
+    onError: (error: unknown) => {
+      toast.error(ruleApiErrorMessage(error) || 'Kural güncellenemedi')
     },
   })
 }
