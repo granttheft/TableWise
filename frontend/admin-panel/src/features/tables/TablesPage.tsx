@@ -16,7 +16,14 @@ import {
 import { Card, CardContent } from '@/components/ui/card'
 import { useVenues } from '@/hooks/useVenues'
 import { usePlanLimits } from '@/hooks/usePlanLimits'
-import { useTables, useCreateTable, useUpdateTable, useDeleteTable, useReorderTables } from '@/hooks/useTables'
+import {
+  useTables,
+  useCreateTable,
+  useUpdateTable,
+  useDeleteTable,
+  useReorderTables,
+  useToggleTableActive,
+} from '@/hooks/useTables'
 import { useTableCombinations, useCreateTableCombination, useDeleteTableCombination } from '@/hooks/useTableCombinations'
 import { TableCard } from './components/TableCard'
 import { TableFormDialog } from './components/TableFormDialog'
@@ -39,6 +46,7 @@ export function TablesPage() {
   const updateTableMutation = useUpdateTable()
   const deleteTableMutation = useDeleteTable()
   const reorderTablesMutation = useReorderTables()
+  const toggleTableActiveMutation = useToggleTableActive()
   const createCombinationMutation = useCreateTableCombination()
   const deleteCombinationMutation = useDeleteTableCombination()
 
@@ -101,6 +109,12 @@ export function TablesPage() {
       },
       {
         onSuccess: () => {
+          if (data.isActive !== editingTable.isActive) {
+            toggleTableActiveMutation.mutate({
+              venueId: selectedVenueId,
+              tableId: editingTable.id,
+            })
+          }
           setIsTableFormOpen(false)
           setEditingTable(null)
         },
@@ -117,19 +131,21 @@ export function TablesPage() {
     })
   }
 
-  const handleToggleActive = (tableId: string, isActive: boolean) => {
-    updateTableMutation.mutate({
-      venueId: selectedVenueId,
-      tableId,
-      table: { isActive },
-    })
+  const handleToggleActive = (tableId: string, checked: boolean) => {
+    const table = tables.find((t) => t.id === tableId)
+    if (!table || checked === table.isActive) {
+      return
+    }
+    toggleTableActiveMutation.mutate({ venueId: selectedVenueId, tableId })
   }
 
-  const handleCreateCombination = (data: any) => {
+  const handleCreateCombination = (data: { name: string; tableIds: string[]; combinedCapacity: number }) => {
     createCombinationMutation.mutate(
       {
         venueId: selectedVenueId,
-        combination: data,
+        name: data.name,
+        tableIds: data.tableIds,
+        combinedCapacity: data.combinedCapacity,
       },
       {
         onSuccess: () => {

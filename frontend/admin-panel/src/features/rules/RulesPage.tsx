@@ -139,11 +139,14 @@ export function RulesPage() {
     })
   }
 
-  const handleToggleActive = (ruleId: string, isActive: boolean) => {
+  const handleToggleActive = (ruleId: string, checked: boolean) => {
+    const rule = rules.find((r) => r.id === ruleId)
+    if (!rule || checked === rule.isActive) {
+      return
+    }
     toggleActiveMutation.mutate({
       ruleId,
       venueId: selectedVenueId,
-      isActive,
     })
   }
 

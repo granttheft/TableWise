@@ -3,44 +3,55 @@ import api from '@/lib/api'
 import { toast } from 'sonner'
 import type { Rule, RuleTestContext, RuleTestResult } from '@/types/api'
 
+const rulesBase = '/api/v1/rules'
+
+/**
+ * Mekana göre kural listesi (query: venueId).
+ */
 export function useRules(venueId?: string) {
   return useQuery({
     queryKey: ['rules', venueId],
     queryFn: async () => {
       if (!venueId) return []
-      const response = await api.get<Rule[]>(`/api/v1/rule/venue/${venueId}`)
+      const response = await api.get<Rule[]>(rulesBase, { params: { venueId } })
       return response.data
     },
     enabled: !!venueId,
   })
 }
 
+/**
+ * Tek kural detayı.
+ */
 export function useRule(ruleId?: string) {
   return useQuery({
     queryKey: ['rule', ruleId],
     queryFn: async () => {
       if (!ruleId) return null
-      const response = await api.get<Rule>(`/api/v1/rule/${ruleId}`)
+      const response = await api.get<Rule>(`${rulesBase}/${ruleId}`)
       return response.data
     },
     enabled: !!ruleId,
   })
 }
 
+/**
+ * Yeni kural oluşturur (CreateRuleDto; venueId gövdede).
+ */
 export function useCreateRule() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: async (data: { venueId: string; rule: Omit<Rule, 'id' | 'createdAt' | 'updatedAt' | 'timesTriggered' | 'lastTriggeredAt'> }) => {
-      const response = await api.post<string>(
-        `/api/v1/rule/venue/${data.venueId}`,
-        data.rule
-      )
+    mutationFn: async (data: { venueId: string; rule: Record<string, unknown> }) => {
+      const response = await api.post<string>(rulesBase, {
+        ...data.rule,
+        venueId: data.venueId,
+      })
       return response.data
     },
     onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({ queryKey: ['rules', variables.venueId] })
-      queryClient.invalidateQueries({ queryKey: ['plan-limits'] })
+      void queryClient.invalidateQueries({ queryKey: ['rules', variables.venueId] })
+      void queryClient.invalidateQueries({ queryKey: ['plan-limits'] })
       toast.success('Kural başarıyla oluşturuldu')
     },
     onError: (error: any) => {
@@ -49,16 +60,19 @@ export function useCreateRule() {
   })
 }
 
+/**
+ * Kural günceller.
+ */
 export function useUpdateRule() {
   const queryClient = useQueryClient()
 
   return useMutation({
     mutationFn: async (data: { ruleId: string; venueId: string; rule: Partial<Rule> }) => {
-      await api.put(`/api/v1/rule/${data.ruleId}`, data.rule)
+      await api.put(`${rulesBase}/${data.ruleId}`, data.rule)
     },
     onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({ queryKey: ['rules', variables.venueId] })
-      queryClient.invalidateQueries({ queryKey: ['rule', variables.ruleId] })
+      void queryClient.invalidateQueries({ queryKey: ['rules', variables.venueId] })
+      void queryClient.invalidateQueries({ queryKey: ['rule', variables.ruleId] })
       toast.success('Kural başarıyla güncellendi')
     },
     onError: (error: any) => {
@@ -67,16 +81,19 @@ export function useUpdateRule() {
   })
 }
 
+/**
+ * Kural siler.
+ */
 export function useDeleteRule() {
   const queryClient = useQueryClient()
 
   return useMutation({
     mutationFn: async (data: { ruleId: string; venueId: string }) => {
-      await api.delete(`/api/v1/rule/${data.ruleId}`)
+      await api.delete(`${rulesBase}/${data.ruleId}`)
     },
     onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({ queryKey: ['rules', variables.venueId] })
-      queryClient.invalidateQueries({ queryKey: ['plan-limits'] })
+      void queryClient.invalidateQueries({ queryKey: ['rules', variables.venueId] })
+      void queryClient.invalidateQueries({ queryKey: ['plan-limits'] })
       toast.success('Kural başarıyla silindi')
     },
     onError: (error: any) => {
@@ -85,17 +102,22 @@ export function useDeleteRule() {
   })
 }
 
+/**
+ * Kural öncelik sırasını günceller (ReorderRulesDto: rules).
+ */
 export function useReorderRules() {
   const queryClient = useQueryClient()
 
   return useMutation({
     mutationFn: async (data: { venueId: string; ruleIds: string[] }) => {
-      await api.post(`/api/v1/rule/venue/${data.venueId}/reorder`, {
-        ruleIds: data.ruleIds,
-      })
+      const rules = data.ruleIds.map((id, index) => ({
+        id,
+        priority: (data.ruleIds.length - index) * 10,
+      }))
+      await api.put(`${rulesBase}/reorder`, { rules })
     },
     onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({ queryKey: ['rules', variables.venueId] })
+      void queryClient.invalidateQueries({ queryKey: ['rules', variables.venueId] })
     },
     onError: (error: any) => {
       toast.error(error.response?.data?.title || 'Sıralama güncellenemedi')
@@ -103,13 +125,13 @@ export function useReorderRules() {
   })
 }
 
+/**
+ * Kuralı test eder.
+ */
 export function useTestRule() {
   return useMutation({
     mutationFn: async (data: { ruleId: string; context: RuleTestContext }) => {
-      const response = await api.post<RuleTestResult>(
-        `/api/v1/rule/${data.ruleId}/test`,
-        data.context
-      )
+      const response = await api.post<RuleTestResult>(`${rulesBase}/${data.ruleId}/test`, data.context)
       return response.data
     },
     onError: (error: any) => {
@@ -118,16 +140,19 @@ export function useTestRule() {
   })
 }
 
+/**
+ * Kural aktif/pasif toggle (gövde yok; sunucu mevcut durumu tersine çevirir).
+ */
 export function useToggleRuleActive() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: async (data: { ruleId: string; venueId: string; isActive: boolean }) => {
-      await api.patch(`/api/v1/rule/${data.ruleId}/toggle`, { isActive: data.isActive })
+    mutationFn: async (data: { ruleId: string; venueId: string }) => {
+      await api.put(`${rulesBase}/${data.ruleId}/toggle`)
     },
     onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({ queryKey: ['rules', variables.venueId] })
-      toast.success(variables.isActive ? 'Kural aktifleştirildi' : 'Kural pasifleştirildi')
+      void queryClient.invalidateQueries({ queryKey: ['rules', variables.venueId] })
+      toast.success('Kural durumu güncellendi')
     },
     onError: (error: any) => {
       toast.error(error.response?.data?.title || 'İşlem başarısız')

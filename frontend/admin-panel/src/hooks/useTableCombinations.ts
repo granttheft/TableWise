@@ -3,17 +3,17 @@ import api from '@/lib/api'
 import { toast } from 'sonner'
 import type { TableCombination } from '@/types/api'
 
+const combinationsBase = (venueId: string) => `/api/v1/venues/${venueId}/combinations`
+
 /**
- * Venue'ye ait masa birleşimlerini getirir
+ * Venue'ye ait masa birleşimlerini getirir.
  */
 export function useTableCombinations(venueId?: string) {
   return useQuery({
     queryKey: ['table-combinations', venueId],
     queryFn: async () => {
       if (!venueId) return []
-      const response = await api.get<TableCombination[]>(
-        `/api/v1/table-combination/venue/${venueId}`
-      )
+      const response = await api.get<TableCombination[]>(combinationsBase(venueId))
       return response.data
     },
     enabled: !!venueId,
@@ -21,7 +21,7 @@ export function useTableCombinations(venueId?: string) {
 }
 
 /**
- * Yeni masa birleşimi oluşturur
+ * Yeni masa birleşimi oluşturur.
  */
 export function useCreateTableCombination() {
   const queryClient = useQueryClient()
@@ -33,18 +33,15 @@ export function useCreateTableCombination() {
       tableIds: string[]
       combinedCapacity: number
     }) => {
-      const response = await api.post<string>(
-        `/api/v1/table-combination/venue/${data.venueId}`,
-        {
-          name: data.name,
-          tableIds: data.tableIds,
-          combinedCapacity: data.combinedCapacity,
-        }
-      )
+      const response = await api.post<string>(combinationsBase(data.venueId), {
+        name: data.name,
+        tableIds: data.tableIds,
+        combinedCapacity: data.combinedCapacity,
+      })
       return response.data
     },
     onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({ queryKey: ['table-combinations', variables.venueId] })
+      void queryClient.invalidateQueries({ queryKey: ['table-combinations', variables.venueId] })
       toast.success('Masa birleşimi oluşturuldu')
     },
     onError: (error: any) => {
@@ -54,17 +51,17 @@ export function useCreateTableCombination() {
 }
 
 /**
- * Masa birleşimini siler
+ * Masa birleşimini siler.
  */
 export function useDeleteTableCombination() {
   const queryClient = useQueryClient()
 
   return useMutation({
     mutationFn: async (data: { venueId: string; combinationId: string }) => {
-      await api.delete(`/api/v1/table-combination/${data.combinationId}`)
+      await api.delete(`${combinationsBase(data.venueId)}/${data.combinationId}`)
     },
     onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({ queryKey: ['table-combinations', variables.venueId] })
+      void queryClient.invalidateQueries({ queryKey: ['table-combinations', variables.venueId] })
       toast.success('Masa birleşimi silindi')
     },
     onError: (error: any) => {
