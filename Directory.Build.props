@@ -1,5 +1,6 @@
 <Project>
-  <PropertyGroup>
+  <!-- JavaScript SDK (.esproj) projects use their own MSBuild layout; skip C# defaults. -->
+  <PropertyGroup Condition="'$(MSBuildProjectExtension)' != '.esproj'">
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>

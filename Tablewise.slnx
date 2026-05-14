@@ -10,4 +10,7 @@
     <Project Path="tests/Tablewise.IntegrationTests/Tablewise.IntegrationTests.csproj" />
     <Project Path="tests/Tablewise.UnitTests/Tablewise.UnitTests.csproj" />
   </Folder>
+  <Folder Name="/frontend/">
+    <Project Path="frontend/admin-panel/Tablewise.AdminPanel.esproj" />
+  </Folder>
 </Solution>
