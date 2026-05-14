@@ -29,7 +29,14 @@ import { TableCard } from './components/TableCard'
 import { TableFormDialog } from './components/TableFormDialog'
 import { TableCombinationDialog } from './components/TableCombinationDialog'
 import { Skeleton } from '@/components/ui/skeleton'
-import type { Table } from '@/types/api'
+import type { Table, TableCombination } from '@/types/api'
+
+function resolveTablesForCombination(combination: TableCombination, allTables: Table[]): Table[] {
+  if (combination.tables?.length) return combination.tables
+  return (combination.tableIds ?? [])
+    .map((id) => allTables.find((t) => t.id === id))
+    .filter((t): t is Table => t != null)
+}
 
 export function TablesPage() {
   const [selectedVenueId, setSelectedVenueId] = useState<string>('')
@@ -352,7 +359,9 @@ export function TablesPage() {
             </Card>
           ) : (
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-              {combinations.map((combination) => (
+              {combinations.map((combination) => {
+                const combinationTables = resolveTablesForCombination(combination, tables)
+                return (
                 <Card key={combination.id}>
                   <CardContent className="p-4">
                     <div className="flex items-start justify-between mb-3">
@@ -373,16 +382,28 @@ export function TablesPage() {
                     <div className="space-y-1">
                       <p className="text-sm text-muted-foreground">Masalar:</p>
                       <div className="flex flex-wrap gap-2">
-                        {combination.tables.map((table) => (
-                          <Badge key={table.id} variant="outline">
-                            {table.name}
-                          </Badge>
-                        ))}
+                        {combinationTables.length === 0 ? (
+                          (combination.tableIds ?? []).length > 0 ? (
+                            (combination.tableIds ?? []).map((id) => (
+                              <Badge key={id} variant="outline" title={id}>
+                                {id.slice(0, 8)}…
+                              </Badge>
+                            ))
+                          ) : (
+                            <span className="text-sm text-muted-foreground">—</span>
+                          )
+                        ) : (
+                          combinationTables.map((table) => (
+                            <Badge key={table.id} variant="outline">
+                              {table.name}
+                            </Badge>
+                          ))
+                        )}
                       </div>
                     </div>
                   </CardContent>
                 </Card>
-              ))}
+              )})}
             </div>
           )}
         </TabsContent>

@@ -70,7 +70,8 @@ export interface TableCombination {
   venueId: string
   name: string
   tableIds: string[]
-  tables: Table[]
+  /** Populated by some clients; API list returns only {@link tableIds}. */
+  tables?: Table[]
   combinedCapacity: number
   isActive: boolean
   createdAt: string
