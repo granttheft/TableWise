@@ -1,3 +1,4 @@
+using System.Text.Json;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Tablewise.Application.DTOs.Tenant;
@@ -47,54 +48,83 @@ public sealed class GetPlanLimitsQueryHandler : IRequestHandler<GetPlanLimitsQue
             .CountAsync(cancellationToken);
 
         var tableCount = await _context.Tables
-            .Where(t => t.Venue != null && t.Venue.TenantId == tenantId && !t.IsDeleted)
+            .Where(t => t.TenantId == tenantId && !t.IsDeleted)
             .CountAsync(cancellationToken);
 
         var ruleCount = await _context.Rules
-            .Where(r => r.Venue != null && r.Venue.TenantId == tenantId && !r.IsDeleted)
+            .Where(r => r.TenantId == tenantId && !r.IsDeleted)
             .CountAsync(cancellationToken);
 
         // Bu ay rezervasyon sayısı
-        var monthStart = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, 1);
+        var monthStart = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, 1, 0, 0, 0, DateTimeKind.Utc);
         var reservationCount = await _context.Reservations
-            .Where(r => r.Table != null && r.Table.Venue != null && r.Table.Venue.TenantId == tenantId && 
-                       r.CreatedAt >= monthStart && 
-                       !r.IsDeleted)
+            .Where(r => r.TenantId == tenantId && r.CreatedAt >= monthStart && !r.IsDeleted)
             .CountAsync(cancellationToken);
 
-        var planLimits = !string.IsNullOrEmpty(tenant.Plan?.LimitsJson)
-            ? System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, object>>(tenant.Plan.LimitsJson)
-            : new Dictionary<string, object>();
+        var featuresJson = tenant.Plan?.FeaturesJson;
+        var limitsJson = tenant.Plan?.LimitsJson;
 
         return new PlanLimitsDto
         {
-            MaxVenues = GetLimitFromFlags(planLimits ?? new Dictionary<string, object>(), "maxVenues"),
+            MaxVenues = ReadPlanLimit(featuresJson, limitsJson, "maxVenues"),
             CurrentVenueCount = venueCount,
-            MaxTables = GetLimitFromFlags(planLimits ?? new Dictionary<string, object>(), "maxTables"),
+            MaxTables = ReadPlanLimit(featuresJson, limitsJson, "maxTables"),
             CurrentTableCount = tableCount,
-            MaxRules = GetLimitFromFlags(planLimits ?? new Dictionary<string, object>(), "maxRules"),
+            MaxRules = ReadPlanLimit(featuresJson, limitsJson, "maxRules"),
             CurrentRuleCount = ruleCount,
-            MaxReservationsPerMonth = GetLimitFromFlags(planLimits ?? new Dictionary<string, object>(), "maxReservationsPerMonth"),
+            MaxReservationsPerMonth = ReadPlanLimit(featuresJson, limitsJson, "maxReservationsPerMonth"),
             CurrentReservationCount = reservationCount
         };
     }
 
-    private static int? GetLimitFromFlags(Dictionary<string, object> flags, string key)
+    /// <summary>
+    /// Plan limit anahtarını okur: önce FeaturesJson (seed burada), sonra LimitsJson.
+    /// Negatif veya JSON null değer sınırsız kabul edilir (null döner).
+    /// </summary>
+    private static int? ReadPlanLimit(string? featuresJson, string? limitsJson, string key)
     {
-        if (flags.TryGetValue(key, out var value))
+        var fromFeatures = TryReadIntProperty(featuresJson, key);
+        if (fromFeatures.HasValue)
         {
-            if (value is System.Text.Json.JsonElement jsonElement)
-            {
-                if (jsonElement.ValueKind == System.Text.Json.JsonValueKind.Number)
-                {
-                    return jsonElement.GetInt32();
-                }
-                if (jsonElement.ValueKind == System.Text.Json.JsonValueKind.Null)
-                {
-                    return null; // Unlimited
-                }
-            }
+            return NormalizeLimit(fromFeatures.Value);
         }
-        return null; // Unlimited by default
+
+        var fromLimits = TryReadIntProperty(limitsJson, key);
+        return fromLimits.HasValue ? NormalizeLimit(fromLimits.Value) : null;
+    }
+
+    private static int? NormalizeLimit(int value) => value < 0 ? null : value;
+
+    private static int? TryReadIntProperty(string? json, string key)
+    {
+        if (string.IsNullOrWhiteSpace(json))
+        {
+            return null;
+        }
+
+        try
+        {
+            using var doc = JsonDocument.Parse(json);
+            if (doc.RootElement.ValueKind != JsonValueKind.Object)
+            {
+                return null;
+            }
+
+            if (!doc.RootElement.TryGetProperty(key, out var prop))
+            {
+                return null;
+            }
+
+            return prop.ValueKind switch
+            {
+                JsonValueKind.Null => null,
+                JsonValueKind.Number => prop.TryGetInt32(out var i) ? i : null,
+                _ => null
+            };
+        }
+        catch (JsonException)
+        {
+            return null;
+        }
     }
 }
