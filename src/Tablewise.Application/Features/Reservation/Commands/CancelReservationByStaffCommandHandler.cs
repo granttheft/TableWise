@@ -1,3 +1,4 @@
+using System.Text.Json;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -95,7 +96,7 @@ public sealed class CancelReservationByStaffCommandHandler : IRequestHandler<Can
             EntityId = reservation.Id.ToString(),
             Action = "CancelledByStaff",
             PerformedBy = _currentUser.Email ?? "Staff",
-            NewValue = $"Reason: {request.Reason}",
+            NewValue = JsonSerializer.Serialize(new { reason = request.Reason }),
             CreatedAt = DateTime.UtcNow
         };
         await _unitOfWork.AuditLogs.AddAsync(auditLog, cancellationToken).ConfigureAwait(false);

@@ -26,11 +26,6 @@ public sealed class RuleEnginePipeline : IRuleEnginePipeline
     private static readonly TimeSpan CacheTtl = TimeSpan.FromMinutes(5);
 
     /// <summary>
-    /// Cache key prefix.
-    /// </summary>
-    private const string CacheKeyPrefix = "rules";
-
-    /// <summary>
     /// Constructor.
     /// </summary>
     public RuleEnginePipeline(
@@ -132,7 +127,7 @@ public sealed class RuleEnginePipeline : IRuleEnginePipeline
         Guid venueId,
         CancellationToken cancellationToken)
     {
-        var cacheKey = $"{CacheKeyPrefix}:{tenantId}:{venueId}";
+        var cacheKey = RuleEngineCacheKeys.RulesForVenue(tenantId, venueId);
 
         // Cache'te var mı?
         var cachedRules = await _cacheService

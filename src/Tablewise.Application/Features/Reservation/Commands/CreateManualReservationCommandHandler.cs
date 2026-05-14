@@ -175,7 +175,7 @@ public sealed class CreateManualReservationCommandHandler : IRequestHandler<Crea
             EntityId = reservation.Id.ToString(),
             Action = "ManualCreated",
             PerformedBy = _currentUser.Email ?? "Staff",
-            NewValue = $"GuestName: {reservation.GuestName}, ReservedFor: {reservation.ReservedFor}",
+            NewValue = JsonSerializer.Serialize(new { reservation.GuestName, reservation.ReservedFor }),
             CreatedAt = DateTime.UtcNow
         };
         await _unitOfWork.AuditLogs.AddAsync(auditLog, cancellationToken).ConfigureAwait(false);

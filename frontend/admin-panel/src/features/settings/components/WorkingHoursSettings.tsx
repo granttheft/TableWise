@@ -37,7 +37,7 @@ export function WorkingHoursSettings() {
   )
   const [slotDuration, setSlotDuration] = useState('90')
 
-  const [closures, setClosures] = useState<{ id: string; date: string; reason: string; isPartial: boolean }[]>([])
+  const [closures] = useState<{ id: string; date: string; reason: string; isPartial: boolean }[]>([])
 
   const toggleDay = (day: number) => {
     setSchedule(

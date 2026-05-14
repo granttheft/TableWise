@@ -16,7 +16,6 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Checkbox } from '@/components/ui/checkbox'
-import { Badge } from '@/components/ui/badge'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { AlertCircle, Search, UserPlus, CheckCircle, XCircle } from 'lucide-react'
 import { toast } from 'sonner'
@@ -318,7 +317,7 @@ export function ManualReservationDialog({
                 <div key={field.id} className="space-y-2">
                   <Label>
                     {field.label}
-                    {field.isRequired && ' *'}
+                    {field.required && ' *'}
                   </Label>
                   {field.type === 'text' && (
                     <Input {...register(`customFields.${field.id}`)} placeholder={field.placeholder} />
@@ -326,7 +325,7 @@ export function ManualReservationDialog({
                   {field.type === 'textarea' && (
                     <Textarea {...register(`customFields.${field.id}`)} placeholder={field.placeholder} rows={2} />
                   )}
-                  {field.type === 'checkbox' && (
+                  {field.type === 'boolean' && (
                     <Checkbox {...register(`customFields.${field.id}`)} />
                   )}
                 </div>

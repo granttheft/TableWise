@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
 import { Switch } from '@/components/ui/switch'
 import { Label } from '@/components/ui/label'
-import { Check, X, CreditCard, Download } from 'lucide-react'
+import { Check, Download } from 'lucide-react'
 import { format } from 'date-fns'
 import { tr } from 'date-fns/locale'
 import { toast } from 'sonner'
@@ -13,8 +13,8 @@ import { toast } from 'sonner'
 interface Plan {
   id: string
   name: string
-  priceMonthly: number
-  priceYearly: number
+  priceMonthly: number | null
+  priceYearly: number | null
   features: string[]
   limits: {
     venues: number | 'unlimited'
@@ -149,6 +149,8 @@ export function SubscriptionPage() {
   }
 
   const currentPlanData = plans.find((p) => p.id === currentPlan)
+  const currentPlanDisplayPrice =
+    currentPlanData == null ? null : isYearly ? currentPlanData.priceYearly : currentPlanData.priceMonthly
 
   return (
     <div className="space-y-6">
@@ -168,7 +170,8 @@ export function SubscriptionPage() {
               </CardDescription>
             </div>
             <Badge className="text-lg px-4 py-2">
-              ₺{isYearly ? currentPlanData?.priceYearly : currentPlanData?.priceMonthly} / {isYearly ? 'yıl' : 'ay'}
+              {currentPlanDisplayPrice != null ? `₺${currentPlanDisplayPrice}` : 'Teklif'} /{' '}
+              {isYearly ? 'yıl' : 'ay'}
             </Badge>
           </div>
         </CardHeader>

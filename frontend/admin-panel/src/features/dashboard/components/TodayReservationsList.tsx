@@ -4,7 +4,6 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { Users, Clock } from 'lucide-react'
 import { format, parseISO } from 'date-fns'
 import type { TodayReservation } from '@/types/api'
-import { cn } from '@/lib/cn'
 
 interface TodayReservationsListProps {
   data?: TodayReservation[]

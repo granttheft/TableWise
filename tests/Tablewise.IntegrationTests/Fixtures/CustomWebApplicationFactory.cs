@@ -5,6 +5,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using StackExchange.Redis;
+using Tablewise.Application.Interfaces;
+using Tablewise.Application.RuleEngine;
 using Tablewise.Domain.Entities;
 using Tablewise.Domain.Enums;
 using Tablewise.Domain.Interfaces;
@@ -102,6 +104,56 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>, IAsyn
         await SeedTestDataAsync(dbContext).ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Eşzamanlı rezervasyon testleri için venue'deki fazla masaları kaldırır; tek masa kalır.
+    /// </summary>
+    public async Task RestrictTestVenueToSingleTableAsync()
+    {
+        using var scope = Services.CreateScope();
+        var dbContext = scope.ServiceProvider.GetRequiredService<TablewiseDbContext>();
+
+        await dbContext.Reservations
+            .IgnoreQueryFilters()
+            .Where(r => r.VenueId == TestVenueId)
+            .ExecuteDeleteAsync()
+            .ConfigureAwait(false);
+
+        await dbContext.TableCombinations
+            .IgnoreQueryFilters()
+            .Where(tc => tc.VenueId == TestVenueId)
+            .ExecuteDeleteAsync()
+            .ConfigureAwait(false);
+
+        await dbContext.Tables
+            .IgnoreQueryFilters()
+            .Where(t => t.VenueId == TestVenueId && t.Id != TestTableId)
+            .ExecuteDeleteAsync()
+            .ConfigureAwait(false);
+
+        // Diğer testler kural motorunda kural bırakmış olabilir; public reserve senaryolarını izole et.
+        var rules = await dbContext.Rules
+            .IgnoreQueryFilters()
+            .Where(r => r.VenueId == TestVenueId)
+            .ToListAsync()
+            .ConfigureAwait(false);
+
+        foreach (var rule in rules)
+        {
+            rule.IsActive = false;
+            if (string.Equals(rule.RuleType, "peak_hour", StringComparison.Ordinal))
+            {
+                rule.ActionsJson = """{"version":1,"block":false,"warn":true,"message":"Yoğun saat"}""";
+            }
+        }
+
+        await dbContext.SaveChangesAsync().ConfigureAwait(false);
+
+        var cache = scope.ServiceProvider.GetRequiredService<ICacheService>();
+        await RuleEngineRulesCacheInvalidation
+            .InvalidateForTenantAsync(cache, TestTenantId)
+            .ConfigureAwait(false);
+    }
+
     /// <inheritdoc />
     public new async Task DisposeAsync()
     {
@@ -190,6 +242,107 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>, IAsyn
                 SortOrder = i
             });
         }
+
+        var seedTime = DateTime.UtcNow;
+
+        dbContext.Customers.Add(new Customer
+        {
+            Id = Guid.Parse("c0000001-0000-0000-0000-000000000001"),
+            TenantId = TestTenantId,
+            FullName = "Test VIP Seed",
+            Phone = "+905551001001",
+            Email = "vip@example.com",
+            Tier = CustomerTier.VIP,
+            TotalVisits = 0,
+            CreatedAt = seedTime
+        });
+
+        dbContext.Users.Add(new User
+        {
+            Id = Guid.Parse("b0000001-0000-0000-0000-000000000001"),
+            TenantId = TestTenantId,
+            Email = "staff@demo.com",
+            PasswordHash = BCrypt.Net.BCrypt.HashPassword("Staff123!"),
+            FirstName = "Staff",
+            LastName = "User",
+            Role = UserRole.Staff,
+            IsActive = true,
+            IsEmailVerified = true,
+            CreatedAt = seedTime
+        });
+
+        dbContext.Rules.AddRange(
+            new Rule
+            {
+                Id = Guid.Parse("e0000001-0000-0000-0000-000000000001"),
+                TenantId = TestTenantId,
+                VenueId = TestVenueId,
+                Name = "Erken Rezervasyon",
+                RuleType = "early_booking",
+                TriggerType = RuleTrigger.OnReservationCreate,
+                Priority = 10,
+                IsActive = false,
+                ConditionsJson = """{"version":1,"minDaysInAdvance":7}""",
+                ActionsJson = """{"version":1,"discountPercent":10,"label":"Erken rezervasyon indirimi"}""",
+                CreatedAt = seedTime
+            },
+            new Rule
+            {
+                Id = Guid.Parse("e0000002-0000-0000-0000-000000000002"),
+                TenantId = TestTenantId,
+                VenueId = TestVenueId,
+                Name = "Yoğun Saat",
+                RuleType = "peak_hour",
+                TriggerType = RuleTrigger.OnReservationCreate,
+                Priority = 5,
+                IsActive = false,
+                ConditionsJson = """{"version":1,"startTime":"19:00","endTime":"22:00"}""",
+                ActionsJson = """{"version":1,"block":false,"warn":true,"message":"Yoğun saat"}""",
+                CreatedAt = seedTime
+            },
+            new Rule
+            {
+                Id = Guid.Parse("e0000003-0000-0000-0000-000000000003"),
+                TenantId = TestTenantId,
+                VenueId = TestVenueId,
+                Name = "Grup Kompozisyonu",
+                RuleType = "group_composition",
+                TriggerType = RuleTrigger.OnReservationCreate,
+                Priority = 2,
+                IsActive = false,
+                ConditionsJson = """
+                {
+                    "version": 1,
+                    "operator": "and",
+                    "rules": [
+                        { "type": "composition", "blockedCompositions": ["AllMale"] },
+                        { "type": "ratio", "minPartySize": 4 }
+                    ]
+                }
+                """,
+                ActionsJson = """
+                {
+                    "version": 1,
+                    "block": true,
+                    "message": "4 ve üzeri kişilik sadece erkek gruplar için rezervasyon kabul edilmemektedir."
+                }
+                """,
+                CreatedAt = seedTime
+            },
+            new Rule
+            {
+                Id = Guid.Parse("e0000004-0000-0000-0000-000000000004"),
+                TenantId = TestTenantId,
+                VenueId = TestVenueId,
+                Name = "VIP Öncelik",
+                RuleType = "vip_priority",
+                TriggerType = RuleTrigger.OnReservationCreate,
+                Priority = 20,
+                IsActive = false,
+                ConditionsJson = """{"version":1,"minTier":"Gold"}""",
+                ActionsJson = """{"version":1,"suggestBestTable":true}""",
+                CreatedAt = seedTime
+            });
 
         await dbContext.SaveChangesAsync().ConfigureAwait(false);
     }

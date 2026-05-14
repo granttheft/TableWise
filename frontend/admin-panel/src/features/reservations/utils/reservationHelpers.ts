@@ -98,27 +98,35 @@ export function calculateBlockPosition(
 }
 
 /**
- * Müşteri tier'ını Türkçe etikete çevirir
+ * Müşteri tier'ını Türkçe etikete çevirir (API enum string).
  */
-export function getTierLabel(tier: 'Regular' | 'Vip' | 'Blacklisted'): string {
-  const labels = {
+export function getTierLabel(tier: string | null | undefined): string {
+  if (!tier) return '—'
+  const labels: Record<string, string> = {
     Regular: 'Normal',
-    Vip: 'VIP',
+    Gold: 'Altın',
+    VIP: 'VIP',
     Blacklisted: 'Kara Liste',
+    Vip: 'VIP',
+    New: 'Yeni',
   }
-  return labels[tier]
+  return labels[tier] ?? tier
 }
 
 /**
  * Müşteri tier'ına göre renk sınıfı döndürür
  */
-export function getTierColor(tier: 'Regular' | 'Vip' | 'Blacklisted'): string {
-  const colors = {
+export function getTierColor(tier: string | null | undefined): string {
+  if (!tier) return 'bg-slate-400'
+  const colors: Record<string, string> = {
     Regular: 'bg-gray-500',
-    Vip: 'bg-amber-500',
-    Blacklisted: 'bg-red-500',
+    Gold: 'bg-amber-500',
+    VIP: 'bg-violet-600',
+    Blacklisted: 'bg-red-600',
+    Vip: 'bg-violet-600',
+    New: 'bg-blue-500',
   }
-  return colors[tier]
+  return colors[tier] ?? 'bg-slate-500'
 }
 
 /**

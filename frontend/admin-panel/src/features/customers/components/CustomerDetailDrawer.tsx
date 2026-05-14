@@ -22,8 +22,9 @@ import {
   useUpdateCustomerNotes 
 } from '@/hooks/useCustomers'
 import { useReservations } from '@/hooks/useReservations'
-import { getTierLabel, getTierColor, getStatusLabel, getStatusColor } from '@/features/reservations/utils/reservationHelpers'
-import type { CustomerTier } from '@/types/api'
+import { getStatusLabel, getStatusColor } from '@/features/reservations/utils/reservationHelpers'
+import type { CustomerTier, ReservationStatus } from '@/types/api'
+import { format, parseISO } from 'date-fns'
 
 interface CustomerDetailDrawerProps {
   open: boolean
@@ -145,14 +146,15 @@ export function CustomerDetailDrawer({ open, onOpenChange, customerId }: Custome
             <CardContent className="space-y-3">
               <div className="space-y-2">
                 <Label>Tier Seviyesi</Label>
-                <Select value={tier} onValueChange={setTier}>
+                <Select value={tier} onValueChange={(v) => setTier(v as CustomerTier)}>
                   <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="VIP">VIP</SelectItem>
                     <SelectItem value="Regular">Regular</SelectItem>
-                    <SelectItem value="New">New</SelectItem>
+                    <SelectItem value="Gold">Gold</SelectItem>
+                    <SelectItem value="VIP">VIP</SelectItem>
+                    <SelectItem value="Blacklisted">Blacklisted</SelectItem>
                   </SelectContent>
                 </Select>
                 <p className="text-sm text-muted-foreground">
@@ -223,14 +225,13 @@ export function CustomerDetailDrawer({ open, onOpenChange, customerId }: Custome
                       <div key={reservation.id} className="flex items-start justify-between border-b pb-3 last:border-0">
                         <div className="space-y-1">
                           <div className="text-sm font-medium">
-                            {new Date(reservation.date).toLocaleDateString('tr-TR')} • {reservation.timeSlot}
+                            {format(parseISO(reservation.reservedFor), 'dd.MM.yyyy')} •{' '}
+                            {format(parseISO(reservation.reservedFor), 'HH:mm')}
                           </div>
-                          <div className="text-sm text-muted-foreground">
-                            {reservation.guestCount} kişi
-                          </div>
+                          <div className="text-sm text-muted-foreground">{reservation.partySize} kişi</div>
                         </div>
-                        <Badge variant="secondary" className={getStatusColor(reservation.status)}>
-                          {getStatusLabel(reservation.status)}
+                        <Badge variant="secondary" className={getStatusColor(reservation.status as ReservationStatus)}>
+                          {getStatusLabel(reservation.status as ReservationStatus)}
                         </Badge>
                       </div>
                     ))}

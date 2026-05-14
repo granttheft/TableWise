@@ -1,3 +1,4 @@
+using System.Text.Json;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -114,7 +115,7 @@ public sealed class RemoveStaffCommandHandler : IRequestHandler<RemoveStaffComma
             Action = "STAFF_REMOVED",
             EntityType = "User",
             EntityId = user.Id.ToString(),
-            OldValue = $"{{\"email\":\"{user.Email}\",\"role\":\"{user.Role}\"}}",
+            OldValue = JsonSerializer.Serialize(new { user.Email, role = user.Role.ToString() }),
             CreatedAt = DateTime.UtcNow
         };
 

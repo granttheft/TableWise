@@ -140,7 +140,7 @@ export type LogicalOperator = 'And' | 'Or'
 export interface RuleCondition {
   field: string
   operator: ConditionOperator
-  value: string | number | boolean | string[]
+  value: string | number | boolean | string[] | number[]
   logicalOperator?: LogicalOperator
 }
 
@@ -233,25 +233,36 @@ export type ReservationStatus =
 export interface Reservation {
   id: string
   venueId: string
-  tableId: string
-  customerId?: string
+  venueName: string
+  tableId?: string | null
+  tableName?: string | null
+  tableCombinationId?: string | null
+  tableCombinationName?: string | null
+  customerId?: string | null
   guestName: string
-  guestEmail?: string
-  guestPhone?: string
-  guestCount: number
-  date: string
-  timeSlot: string
-  slotDuration?: number
+  guestEmail?: string | null
+  guestPhone: string
+  customerTier?: string | null
+  partySize: number
+  reservedFor: string
+  endTime: string
   status: ReservationStatus
+  source: string
   confirmCode: string
-  specialRequest?: string
-  internalNotes?: string
-  appliedRules?: string[]
-  discountPercent?: number
-  depositAmount?: number
-  depositStatus?: 'NotRequired' | 'Pending' | 'Paid' | 'Refunded'
+  specialRequests?: string | null
+  internalNotes?: string | null
+  discountPercent?: number | null
+  depositStatus: string
+  depositAmount?: number | null
+  depositPaidAt?: string | null
+  cancellationReason?: string | null
+  cancelledAt?: string | null
   createdAt: string
-  updatedAt: string
+  updatedAt?: string
+  customFieldAnswers?: Record<string, string> | null
+  modifiedFromReservationId?: string | null
+  /** Parsed snapshot when API exposes it as JSON array (optional). */
+  appliedRules?: string[]
 }
 
 export interface ReservationStatusLog {
@@ -265,7 +276,7 @@ export interface ReservationStatusLog {
   timestamp: string
 }
 
-export type CustomerTier = 'VIP' | 'Regular' | 'New'
+export type CustomerTier = 'Regular' | 'Gold' | 'VIP' | 'Blacklisted'
 
 export interface Customer {
   id: string
@@ -298,6 +309,7 @@ export interface VenueCustomField {
   type: 'text' | 'number' | 'boolean' | 'select' | 'textarea'
   required: boolean
   options?: string[]
+  placeholder?: string
 }
 
 export interface ReservationEvaluationResult {

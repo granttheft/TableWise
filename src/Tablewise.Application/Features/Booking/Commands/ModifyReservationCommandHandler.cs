@@ -223,7 +223,11 @@ public sealed class ModifyReservationCommandHandler : IRequestHandler<ModifyRese
                 EntityId = newReservation.Id.ToString(),
                 Action = "Modified",
                 PerformedBy = "Customer",
-                NewValue = $"OldCode: {existingReservation.ConfirmCode}, NewCode: {newConfirmCode}",
+                NewValue = JsonSerializer.Serialize(new
+                {
+                    oldConfirmCode = existingReservation.ConfirmCode,
+                    newConfirmCode
+                }),
                 CreatedAt = DateTime.UtcNow
             };
             await _unitOfWork.AuditLogs.AddAsync(auditLog, cancellationToken).ConfigureAwait(false);

@@ -1,5 +1,5 @@
-import type { Rule, RuleCondition, RuleAction, ConditionOperator, ActionType } from '@/types/api'
-import { dayLabels, operatorLabels } from '../data/ruleTemplates'
+import type { Rule, RuleCondition, RuleAction, ConditionOperator } from '@/types/api'
+import { dayLabels } from '../data/ruleTemplates'
 
 /**
  * Koşul operatörünü Türkçe metne çevirir
@@ -98,7 +98,11 @@ function conditionToText(condition: RuleCondition): string {
   }
   
   if (condition.field === 'DayOfWeek' && condition.operator === 'In') {
-    const daysText = getDaysText(condition.value as number[])
+    const raw = condition.value
+    const dayNums = Array.isArray(raw)
+      ? raw.map((v) => (typeof v === 'number' ? v : parseInt(String(v), 10)))
+      : []
+    const daysText = getDaysText(dayNums)
     return `${daysText} günlerinde`
   }
   

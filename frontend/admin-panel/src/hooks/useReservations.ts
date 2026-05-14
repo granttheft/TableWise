@@ -208,7 +208,7 @@ export function useExportReservations() {
       
       toast.success('CSV indirildi')
     },
-    onError: (error: any) => {
+    onError: () => {
       toast.error('CSV indirilemedi')
     },
   })

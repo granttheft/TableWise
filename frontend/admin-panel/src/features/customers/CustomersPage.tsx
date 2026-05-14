@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Badge } from '@/components/ui/badge'
@@ -53,9 +52,10 @@ export function CustomersPage() {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">Tüm Tier'lar</SelectItem>
-              <SelectItem value="VIP">VIP</SelectItem>
               <SelectItem value="Regular">Regular</SelectItem>
-              <SelectItem value="New">New</SelectItem>
+              <SelectItem value="Gold">Gold</SelectItem>
+              <SelectItem value="VIP">VIP</SelectItem>
+              <SelectItem value="Blacklisted">Blacklisted</SelectItem>
             </SelectContent>
           </Select>
 

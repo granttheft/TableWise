@@ -151,9 +151,10 @@ try
         options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
 
         var isDevelopment = builder.Environment.IsDevelopment();
-        // Development: SPA + HMR ve tekrarlı denemeler; Production: sıkı limit
-        var authPermitsPerMinute = isDevelopment ? 300 : 10;
-        var globalPermitsPerMinute = isDevelopment ? 800 : 100;
+        var relaxStressLimits = isDevelopment || builder.Environment.IsEnvironment("Testing");
+        // Development / Integration test: SPA + HMR ve paralel testler; Production: sıkı limit
+        var authPermitsPerMinute = relaxStressLimits ? 300 : 10;
+        var globalPermitsPerMinute = relaxStressLimits ? 800 : 100;
 
         // Auth endpoint'leri (register/login/refresh vb. aynı kovayı paylaşır): IP bazlı
         options.AddPolicy("auth", httpContext =>
@@ -167,25 +168,25 @@ try
                     QueueLimit = 0
                 }));
 
-        // Reserve endpoint: 5 req/dakika (IP bazlı)
+        // Reserve endpoint: test/development'ta yüksek; production'da sıkı (IP bazlı)
         options.AddPolicy("reserve", httpContext =>
             RateLimitPartition.GetFixedWindowLimiter(
                 partitionKey: GetClientIpAddress(httpContext),
                 factory: _ => new FixedWindowRateLimiterOptions
                 {
-                    PermitLimit = 5,
+                    PermitLimit = relaxStressLimits ? 2000 : 5,
                     Window = TimeSpan.FromMinutes(1),
                     QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
                     QueueLimit = 0
                 }));
 
-        // Booking endpoint'leri: 30 req/dakika (IP bazlı)
+        // Booking endpoint'leri: test/development'ta yüksek (IP bazlı)
         options.AddPolicy("booking", httpContext =>
             RateLimitPartition.GetFixedWindowLimiter(
                 partitionKey: GetClientIpAddress(httpContext),
                 factory: _ => new FixedWindowRateLimiterOptions
                 {
-                    PermitLimit = 30,
+                    PermitLimit = relaxStressLimits ? 2000 : 30,
                     Window = TimeSpan.FromMinutes(1),
                     QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
                     QueueLimit = 2
@@ -306,8 +307,11 @@ try
     // 3. CORS (UseHttpsRedirection'dan ÖNCE — aksi halde OPTIONS preflight HTTP→HTTPS redirect alır; tarayıcı CORS'u reddeder.)
     app.UseCors();
 
-    // 4. HTTPS Redirection
-    app.UseHttpsRedirection();
+    // 4. HTTPS Redirection (integration test client HTTP kullanır; Testing'de kapatılır)
+    if (!app.Environment.IsEnvironment("Testing"))
+    {
+        app.UseHttpsRedirection();
+    }
 
     // 5. Rate Limiting
     app.UseRateLimiter();

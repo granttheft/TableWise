@@ -4,6 +4,8 @@ using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Tablewise.Application.DTOs.Booking;
+using Tablewise.Application.Interfaces;
+using Tablewise.Application.RuleEngine;
 using Tablewise.Domain.Entities;
 using Tablewise.Domain.Enums;
 using Tablewise.Infrastructure.Persistence;
@@ -19,15 +21,30 @@ public sealed class RuleEngineIntegrationTests : IClassFixture<CustomWebApplicat
 {
     private readonly CustomWebApplicationFactory _factory;
     private readonly HttpClient _client;
+    private readonly string _reserveUrl;
 
     public RuleEngineIntegrationTests(CustomWebApplicationFactory factory)
     {
         _factory = factory;
         _client = factory.CreateClient();
+        _reserveUrl = $"/api/v1/book/{factory.TestSlug}/reserve";
     }
 
     private CustomWebApplicationFactory Factory => _factory;
     private HttpClient Client => _client;
+
+    /// <summary>
+    /// Public reserve endpoint requires Idempotency-Key; each call uses a fresh key.
+    /// </summary>
+    private Task<HttpResponseMessage> PostReserveAsync(ReserveRequestDto dto)
+    {
+        var request = new HttpRequestMessage(HttpMethod.Post, _reserveUrl)
+        {
+            Content = JsonContent.Create(dto)
+        };
+        request.Headers.Add("Idempotency-Key", Guid.NewGuid().ToString());
+        return Client.SendAsync(request);
+    }
 
     /// <summary>
     /// Test 1: 7+ gün öncesi rezervasyon, erken rezervasyon indirimi uygulanmalı.
@@ -47,12 +64,16 @@ public sealed class RuleEngineIntegrationTests : IClassFixture<CustomWebApplicat
             GuestEmail = "test@example.com",
             GuestPhone = "+905551234567",
             PartySize = 2,
-            ReservedFor = DateTime.UtcNow.AddDays(8), // 8 gün sonra
+            ReservedFor = DateTime.UtcNow.Date.AddDays(8).AddHours(14), // 8 gün sonra, çalışma saati içinde (UTC)
             PrivacyPolicyAccepted = true
         };
 
         // Act
-        var response = await Client.PostAsJsonAsync("/api/v1/book/demo-tenant/reserve", reserveDto);
+        var response = await PostReserveAsync(reserveDto);
+        var responseBody = await response.Content.ReadAsStringAsync();
+        Assert.True(
+            response.IsSuccessStatusCode,
+            $"HTTP {(int)response.StatusCode} {response.StatusCode}: {responseBody}");
 
         // Assert
         response.EnsureSuccessStatusCode();
@@ -91,7 +112,7 @@ public sealed class RuleEngineIntegrationTests : IClassFixture<CustomWebApplicat
         };
 
         // Act
-        var response = await Client.PostAsJsonAsync("/api/v1/book/demo-tenant/reserve", reserveDto);
+        var response = await PostReserveAsync(reserveDto);
 
         // Assert
         Assert.Equal(HttpStatusCode.UnprocessableEntity, response.StatusCode);
@@ -118,7 +139,7 @@ public sealed class RuleEngineIntegrationTests : IClassFixture<CustomWebApplicat
             GuestEmail = "test@example.com",
             GuestPhone = "+905551234567",
             PartySize = 4,
-            ReservedFor = DateTime.UtcNow.AddDays(1),
+            ReservedFor = DateTime.UtcNow.Date.AddDays(1).AddHours(14),
             CustomFieldAnswers = new Dictionary<string, string>
             {
                 { "Grup Kompozisyonu", "Sadece Erkek" },
@@ -128,7 +149,7 @@ public sealed class RuleEngineIntegrationTests : IClassFixture<CustomWebApplicat
         };
 
         // Act
-        var response = await Client.PostAsJsonAsync("/api/v1/book/demo-tenant/reserve", reserveDto);
+        var response = await PostReserveAsync(reserveDto);
 
         // Assert
         Assert.Equal(HttpStatusCode.UnprocessableEntity, response.StatusCode);
@@ -155,13 +176,13 @@ public sealed class RuleEngineIntegrationTests : IClassFixture<CustomWebApplicat
             GuestEmail = "test@example.com",
             GuestPhone = "+905551234567",
             PartySize = 4,
-            ReservedFor = DateTime.UtcNow.AddDays(1),
+            ReservedFor = DateTime.UtcNow.Date.AddDays(1).AddHours(14),
             PrivacyPolicyAccepted = true
             // CustomFieldAnswers yok
         };
 
         // Act
-        var response = await Client.PostAsJsonAsync("/api/v1/book/demo-tenant/reserve", reserveDto);
+        var response = await PostReserveAsync(reserveDto);
 
         // Assert
         response.EnsureSuccessStatusCode();
@@ -186,12 +207,12 @@ public sealed class RuleEngineIntegrationTests : IClassFixture<CustomWebApplicat
             GuestEmail = "vip@example.com",
             GuestPhone = "+905551001001", // VIP müşteri
             PartySize = 2,
-            ReservedFor = DateTime.UtcNow.AddDays(8),
+            ReservedFor = DateTime.UtcNow.Date.AddDays(8).AddHours(14),
             PrivacyPolicyAccepted = true
         };
 
         // Act
-        var response = await Client.PostAsJsonAsync("/api/v1/book/demo-tenant/reserve", reserveDto);
+        var response = await PostReserveAsync(reserveDto);
 
         // Assert
         response.EnsureSuccessStatusCode();
@@ -234,7 +255,7 @@ public sealed class RuleEngineIntegrationTests : IClassFixture<CustomWebApplicat
         Client.DefaultRequestHeaders.Authorization = 
             new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", staffToken);
 
-        var response = await Client.PostAsJsonAsync("/api/v1/book/demo-tenant/reserve", reserveDto);
+        var response = await PostReserveAsync(reserveDto);
 
         // Assert
         response.EnsureSuccessStatusCode(); // Block kuralı olmasına rağmen geçti
@@ -246,7 +267,8 @@ public sealed class RuleEngineIntegrationTests : IClassFixture<CustomWebApplicat
         var dbContext = scope.ServiceProvider.GetRequiredService<TablewiseDbContext>();
 
         var auditLog = await dbContext.AuditLogs
-            .Where(a => a.Action == "RULES_OVERRIDDEN")
+            .IgnoreQueryFilters()
+            .Where(a => a.TenantId == Factory.TestTenantId && a.Action == "RULES_OVERRIDDEN")
             .OrderByDescending(a => a.CreatedAt)
             .FirstOrDefaultAsync();
 
@@ -269,7 +291,7 @@ public sealed class RuleEngineIntegrationTests : IClassFixture<CustomWebApplicat
             GuestEmail = "test@example.com",
             GuestPhone = "+905551234567",
             PartySize = 2,
-            ReservedFor = DateTime.UtcNow.AddDays(1),
+            ReservedFor = DateTime.UtcNow.Date.AddDays(1).AddHours(14),
             OverrideRules = true,
             PrivacyPolicyAccepted = true
         };
@@ -277,7 +299,7 @@ public sealed class RuleEngineIntegrationTests : IClassFixture<CustomWebApplicat
         // Act - Token YOK (guest)
         Client.DefaultRequestHeaders.Authorization = null;
 
-        var response = await Client.PostAsJsonAsync("/api/v1/book/demo-tenant/reserve", reserveDto);
+        var response = await PostReserveAsync(reserveDto);
 
         // Assert
         // Public endpoint olduğu için 403 yerine işlemi çalıştırır ama override'ı dikkate almaz
@@ -306,12 +328,12 @@ public sealed class RuleEngineIntegrationTests : IClassFixture<CustomWebApplicat
             GuestEmail = "test@example.com",
             GuestPhone = "+905551234567",
             PartySize = 2,
-            ReservedFor = DateTime.UtcNow.AddDays(8),
+            ReservedFor = DateTime.UtcNow.Date.AddDays(8).AddHours(14),
             PrivacyPolicyAccepted = true
         };
 
         // Act
-        var response = await Client.PostAsJsonAsync("/api/v1/book/demo-tenant/reserve", reserveDto);
+        var response = await PostReserveAsync(reserveDto);
 
         // Assert
         response.EnsureSuccessStatusCode();
@@ -327,11 +349,16 @@ public sealed class RuleEngineIntegrationTests : IClassFixture<CustomWebApplicat
         using var scope = Factory.Services.CreateScope();
         var dbContext = scope.ServiceProvider.GetRequiredService<TablewiseDbContext>();
 
-        // Test için gerekli minimal data zaten seed edilmiş durumda
-        // Sadece cleanup yapalım
+        // Her test öncesi bu tenant'a ait rezervasyonları temizle (slot / idempotency izolasyonu).
         await dbContext.Reservations
-            .Where(r => r.GuestEmail!.Contains("test@"))
+            .IgnoreQueryFilters()
+            .Where(r => r.TenantId == Factory.TestTenantId)
             .ExecuteDeleteAsync();
+
+        var cache = scope.ServiceProvider.GetRequiredService<ICacheService>();
+        await RuleEngineRulesCacheInvalidation
+            .InvalidateForTenantAsync(cache, Factory.TestTenantId)
+            .ConfigureAwait(false);
     }
 
     private async Task<Guid> ActivateRuleAsync(string ruleType)
@@ -340,13 +367,18 @@ public sealed class RuleEngineIntegrationTests : IClassFixture<CustomWebApplicat
         var dbContext = scope.ServiceProvider.GetRequiredService<TablewiseDbContext>();
 
         var rule = await dbContext.Rules
-            .Where(r => r.RuleType == ruleType)
+            .IgnoreQueryFilters()
+            .Where(r => r.TenantId == Factory.TestTenantId && r.RuleType == ruleType)
             .FirstOrDefaultAsync();
 
         if (rule != null)
         {
             rule.IsActive = true;
             await dbContext.SaveChangesAsync();
+            var cache = scope.ServiceProvider.GetRequiredService<ICacheService>();
+            await RuleEngineRulesCacheInvalidation
+                .InvalidateForTenantAsync(cache, Factory.TestTenantId)
+                .ConfigureAwait(false);
             return rule.Id;
         }
 
@@ -359,7 +391,8 @@ public sealed class RuleEngineIntegrationTests : IClassFixture<CustomWebApplicat
         var dbContext = scope.ServiceProvider.GetRequiredService<TablewiseDbContext>();
 
         var rule = await dbContext.Rules
-            .Where(r => r.RuleType == ruleType)
+            .IgnoreQueryFilters()
+            .Where(r => r.TenantId == Factory.TestTenantId && r.RuleType == ruleType)
             .FirstOrDefaultAsync();
 
         if (rule != null)
@@ -374,6 +407,10 @@ public sealed class RuleEngineIntegrationTests : IClassFixture<CustomWebApplicat
                 }
                 """;
             await dbContext.SaveChangesAsync();
+            var cache = scope.ServiceProvider.GetRequiredService<ICacheService>();
+            await RuleEngineRulesCacheInvalidation
+                .InvalidateForTenantAsync(cache, Factory.TestTenantId)
+                .ConfigureAwait(false);
         }
     }
 
@@ -403,7 +440,7 @@ public sealed class RuleEngineIntegrationTests : IClassFixture<CustomWebApplicat
         response.EnsureSuccessStatusCode();
 
         var result = await response.Content.ReadFromJsonAsync<JsonElement>();
-        return result.GetProperty("accessToken").GetString()!;
+        return result.GetProperty("tokens").GetProperty("accessToken").GetString()!;
     }
 
     private async Task<int> GetRuleTimesTriggeredAsync(Guid ruleId)
@@ -411,7 +448,9 @@ public sealed class RuleEngineIntegrationTests : IClassFixture<CustomWebApplicat
         using var scope = Factory.Services.CreateScope();
         var dbContext = scope.ServiceProvider.GetRequiredService<TablewiseDbContext>();
 
-        var rule = await dbContext.Rules.FindAsync(ruleId);
+        var rule = await dbContext.Rules
+            .IgnoreQueryFilters()
+            .FirstOrDefaultAsync(r => r.Id == ruleId);
         return rule?.TimesTriggered ?? 0;
     }
 

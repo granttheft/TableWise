@@ -3,6 +3,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Tablewise.Application.Interfaces;
+using Tablewise.Application.RuleEngine;
 using Tablewise.Domain.Entities;
 using Tablewise.Domain.Enums;
 using Tablewise.Domain.Exceptions;
@@ -18,17 +19,20 @@ public sealed class UpdateRuleCommandHandler : IRequestHandler<UpdateRuleCommand
     private readonly IApplicationDbContext _dbContext;
     private readonly ITenantContext _tenantContext;
     private readonly ICurrentUser _currentUser;
+    private readonly ICacheService _cacheService;
     private readonly ILogger<UpdateRuleCommandHandler> _logger;
 
     public UpdateRuleCommandHandler(
         IApplicationDbContext dbContext,
         ITenantContext tenantContext,
         ICurrentUser currentUser,
+        ICacheService cacheService,
         ILogger<UpdateRuleCommandHandler> logger)
     {
         _dbContext = dbContext;
         _tenantContext = tenantContext;
         _currentUser = currentUser;
+        _cacheService = cacheService;
         _logger = logger;
     }
 
@@ -121,6 +125,10 @@ public sealed class UpdateRuleCommandHandler : IRequestHandler<UpdateRuleCommand
         _dbContext.AuditLogs.Add(auditLog);
 
         await _dbContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+
+        await RuleEngineRulesCacheInvalidation
+            .InvalidateForTenantAsync(_cacheService, tenantId, cancellationToken)
+            .ConfigureAwait(false);
 
         _logger.LogInformation(
             "Kural güncellendi: RuleId={RuleId}, Name={Name}",

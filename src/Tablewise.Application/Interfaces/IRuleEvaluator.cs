@@ -155,6 +155,11 @@ public sealed record AppliedRuleSnapshot
     public string RuleName { get; init; } = string.Empty;
 
     /// <summary>
+    /// Kural tipi (örn. early_booking).
+    /// </summary>
+    public string RuleType { get; init; } = string.Empty;
+
+    /// <summary>
     /// Uygulanan aksiyon tipi.
     /// </summary>
     public string ActionType { get; init; } = string.Empty;

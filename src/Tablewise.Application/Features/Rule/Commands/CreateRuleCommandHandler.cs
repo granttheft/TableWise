@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Tablewise.Application.Features.Rule.Commands;
 using Tablewise.Application.Interfaces;
+using Tablewise.Application.RuleEngine;
 using Tablewise.Domain.Entities;
 using Tablewise.Domain.Enums;
 using Tablewise.Domain.Exceptions;
@@ -20,6 +21,7 @@ public sealed class CreateRuleCommandHandler : IRequestHandler<CreateRuleCommand
     private readonly ITenantContext _tenantContext;
     private readonly ICurrentUser _currentUser;
     private readonly IPlanLimitService _planLimitService;
+    private readonly ICacheService _cacheService;
     private readonly ILogger<CreateRuleCommandHandler> _logger;
 
     public CreateRuleCommandHandler(
@@ -27,12 +29,14 @@ public sealed class CreateRuleCommandHandler : IRequestHandler<CreateRuleCommand
         ITenantContext tenantContext,
         ICurrentUser currentUser,
         IPlanLimitService planLimitService,
+        ICacheService cacheService,
         ILogger<CreateRuleCommandHandler> logger)
     {
         _dbContext = dbContext;
         _tenantContext = tenantContext;
         _currentUser = currentUser;
         _planLimitService = planLimitService;
+        _cacheService = cacheService;
         _logger = logger;
     }
 
@@ -129,6 +133,10 @@ public sealed class CreateRuleCommandHandler : IRequestHandler<CreateRuleCommand
         _dbContext.AuditLogs.Add(auditLog);
 
         await _dbContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+
+        await RuleEngineRulesCacheInvalidation
+            .InvalidateForTenantAsync(_cacheService, tenantId, cancellationToken)
+            .ConfigureAwait(false);
 
         _logger.LogInformation(
             "Kural oluşturuldu: RuleId={RuleId}, Name={Name}, Type={Type}",

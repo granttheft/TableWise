@@ -10,15 +10,11 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
 import { Textarea } from '@/components/ui/textarea'
-import { Label } from '@/components/ui/label'
 import {
   User,
-  Mail,
-  Phone,
   Users,
   Calendar,
   Clock,
-  MapPin,
   MessageSquare,
   FileText,
   Tag,
@@ -32,7 +28,7 @@ import {
 import { useReservation, useReservationStatusLog, useUpdateReservation, useUpdateReservationStatus } from '@/hooks/useReservations'
 import { Skeleton } from '@/components/ui/skeleton'
 import { toast } from 'sonner'
-import type { Reservation, ReservationStatus } from '@/types/api'
+import type { ReservationStatus } from '@/types/api'
 import {
   getStatusLabel,
   getStatusVariant,
@@ -40,24 +36,21 @@ import {
   getTierColor,
   formatDate,
   formatTime,
-  calculateEndTime,
   formatConfirmCode,
 } from '../utils/reservationHelpers'
-import { formatDistanceToNow, parseISO } from 'date-fns'
+import { formatDistanceToNow, parseISO, differenceInMinutes } from 'date-fns'
 import { tr } from 'date-fns/locale'
 
 interface ReservationDetailDrawerProps {
   open: boolean
   onOpenChange: (open: boolean) => void
   reservationId: string | null
-  venueId: string
 }
 
 export function ReservationDetailDrawer({
   open,
   onOpenChange,
   reservationId,
-  venueId,
 }: ReservationDetailDrawerProps) {
   const [internalNotes, setInternalNotes] = useState('')
   const [isEditingNotes, setIsEditingNotes] = useState(false)
@@ -72,7 +65,6 @@ export function ReservationDetailDrawer({
     updateReservationMutation.mutate(
       {
         reservationId: reservation.id,
-        venueId,
         updates: { internalNotes },
       },
       {
@@ -90,7 +82,6 @@ export function ReservationDetailDrawer({
 
     updateStatusMutation.mutate({
       reservationId: reservation.id,
-      venueId,
       status,
     })
   }
@@ -138,8 +129,8 @@ export function ReservationDetailDrawer({
           <Card>
             <CardContent className="p-4">
               <div className="flex items-center justify-between mb-4">
-                <Badge variant={getStatusVariant(reservation.status)} className="text-sm">
-                  {getStatusLabel(reservation.status)}
+                <Badge variant={getStatusVariant(reservation.status as ReservationStatus)} className="text-sm">
+                  {getStatusLabel(reservation.status as ReservationStatus)}
                 </Badge>
                 <Button
                   variant="ghost"
@@ -197,28 +188,24 @@ export function ReservationDetailDrawer({
               </h3>
               <div className="space-y-2 text-sm">
                 <div className="flex items-center justify-between">
-                  <span className="text-muted-foreground">İsim:</span>
+                  <span className="text-muted-foreground">Misafir:</span>
                   <div className="flex items-center gap-2">
-                    <span className="font-medium">{reservation.customerName}</span>
-                    <Badge className={getTierColor(reservation.customerTier)}>
-                      {getTierLabel(reservation.customerTier)}
-                    </Badge>
+                    <span className="font-medium">{reservation.guestName}</span>
+                    {reservation.customerTier && (
+                      <Badge className={getTierColor(reservation.customerTier)}>
+                        {getTierLabel(reservation.customerTier)}
+                      </Badge>
+                    )}
                   </div>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-muted-foreground">Email:</span>
-                  <span className="font-medium">{reservation.customerEmail}</span>
+                  <span className="font-medium">{reservation.guestEmail ?? '—'}</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-muted-foreground">Telefon:</span>
-                  <span className="font-medium">{reservation.customerPhone}</span>
+                  <span className="font-medium">{reservation.guestPhone}</span>
                 </div>
-                {reservation.guestName !== reservation.customerName && (
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground">Misafir Adı:</span>
-                    <span className="font-medium">{reservation.guestName}</span>
-                  </div>
-                )}
               </div>
             </CardContent>
           </Card>
@@ -238,12 +225,12 @@ export function ReservationDetailDrawer({
                 <div className="flex items-center justify-between">
                   <span className="text-muted-foreground">Saat:</span>
                   <span className="font-medium">
-                    {formatTime(reservation.reservedFor)} - {calculateEndTime(reservation.reservedFor, reservation.durationMinutes)}
+                    {formatTime(reservation.reservedFor)} - {formatTime(reservation.endTime)}
                   </span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-muted-foreground">Masa:</span>
-                  <span className="font-medium">{reservation.tableName}</span>
+                  <span className="font-medium">{reservation.tableName ?? '—'}</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-muted-foreground">Kişi Sayısı:</span>
@@ -254,7 +241,9 @@ export function ReservationDetailDrawer({
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-muted-foreground">Süre:</span>
-                  <span className="font-medium">{reservation.durationMinutes} dakika</span>
+                  <span className="font-medium">
+                    {differenceInMinutes(parseISO(reservation.endTime), parseISO(reservation.reservedFor))} dakika
+                  </span>
                 </div>
               </div>
             </CardContent>
@@ -315,12 +304,12 @@ export function ReservationDetailDrawer({
                       </div>
                       <div className="flex items-center justify-between">
                         <span className="text-muted-foreground">Durum:</span>
-                        <Badge variant={reservation.depositPaid ? 'default' : 'outline'}>
-                          {reservation.depositPaid
+                        <Badge variant={reservation.depositStatus === 'Paid' ? 'default' : 'outline'}>
+                          {reservation.depositStatus === 'Paid'
                             ? 'Ödendi'
-                            : reservation.depositRefunded
-                            ? 'İade Edildi'
-                            : 'Bekleniyor'}
+                            : reservation.depositStatus === 'Refunded'
+                              ? 'İade Edildi'
+                              : 'Bekleniyor'}
                         </Badge>
                       </div>
                     </>
@@ -432,7 +421,7 @@ export function ReservationDetailDrawer({
               Oluşturulma: {formatDate(reservation.createdAt, 'PPP p')}
             </div>
             <div>
-              Son Güncelleme: {formatDate(reservation.updatedAt, 'PPP p')}
+              Son Güncelleme: {formatDate(reservation.updatedAt ?? reservation.createdAt, 'PPP p')}
             </div>
           </div>
         </div>

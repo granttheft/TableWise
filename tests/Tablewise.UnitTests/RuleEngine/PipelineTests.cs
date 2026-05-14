@@ -150,6 +150,7 @@ public class PipelineTests
             {
                 RuleId = blockRule.Id,
                 RuleName = blockRule.Name,
+                RuleType = blockRule.RuleType,
                 ActionType = RuleActionType.Block,
                 Message = "Blocked by test"
             });
@@ -162,6 +163,7 @@ public class PipelineTests
             {
                 RuleId = allowRule.Id,
                 RuleName = allowRule.Name,
+                RuleType = allowRule.RuleType,
                 ActionType = RuleActionType.Allow
             });
 
@@ -210,6 +212,7 @@ public class PipelineTests
             {
                 RuleId = allowRule.Id,
                 RuleName = allowRule.Name,
+                RuleType = allowRule.RuleType,
                 ActionType = RuleActionType.Allow
             });
 
@@ -259,6 +262,7 @@ public class PipelineTests
             {
                 RuleId = highPriorityRule.Id,
                 RuleName = highPriorityRule.Name,
+                RuleType = highPriorityRule.RuleType,
                 ActionType = RuleActionType.Allow
             });
 
@@ -271,6 +275,7 @@ public class PipelineTests
             {
                 RuleId = mediumPriorityRule.Id,
                 RuleName = mediumPriorityRule.Name,
+                RuleType = mediumPriorityRule.RuleType,
                 ActionType = RuleActionType.Allow
             });
 
@@ -283,6 +288,7 @@ public class PipelineTests
             {
                 RuleId = lowPriorityRule.Id,
                 RuleName = lowPriorityRule.Name,
+                RuleType = lowPriorityRule.RuleType,
                 ActionType = RuleActionType.Allow
             });
 
@@ -318,6 +324,7 @@ public class PipelineTests
             {
                 RuleId = knownRule.Id,
                 RuleName = knownRule.Name,
+                RuleType = knownRule.RuleType,
                 ActionType = RuleActionType.Allow
             });
 
@@ -357,6 +364,7 @@ public class PipelineTests
             {
                 RuleId = tenantWideRule.Id,
                 RuleName = tenantWideRule.Name,
+                RuleType = tenantWideRule.RuleType,
                 ActionType = RuleActionType.Warn,
                 Message = "Tenant-wide warning"
             });
@@ -369,6 +377,7 @@ public class PipelineTests
             {
                 RuleId = venueSpecificRule.Id,
                 RuleName = venueSpecificRule.Name,
+                RuleType = venueSpecificRule.RuleType,
                 ActionType = RuleActionType.Allow
             });
 
@@ -406,6 +415,7 @@ public class PipelineTests
             {
                 RuleId = discount1.Id,
                 RuleName = discount1.Name,
+                RuleType = discount1.RuleType,
                 ActionType = RuleActionType.Discount,
                 Payload = """{"discountPercent": 10}"""
             });
@@ -418,6 +428,7 @@ public class PipelineTests
             {
                 RuleId = discount2.Id,
                 RuleName = discount2.Name,
+                RuleType = discount2.RuleType,
                 ActionType = RuleActionType.Discount,
                 Payload = """{"discountPercent": 5}"""
             });
@@ -453,6 +464,7 @@ public class PipelineTests
             {
                 RuleId = depositRule.Id,
                 RuleName = depositRule.Name,
+                RuleType = depositRule.RuleType,
                 ActionType = RuleActionType.Deposit,
                 Payload = """{"depositAmount": 100}"""
             });
@@ -491,6 +503,7 @@ public class PipelineTests
             {
                 RuleId = rule.Id,
                 RuleName = rule.Name,
+                RuleType = rule.RuleType,
                 ActionType = RuleActionType.Allow
             });
 
@@ -522,6 +535,7 @@ public class PipelineTests
             {
                 RuleId = rule.Id,
                 RuleName = rule.Name,
+                RuleType = rule.RuleType,
                 ActionType = RuleActionType.Allow
             });
 

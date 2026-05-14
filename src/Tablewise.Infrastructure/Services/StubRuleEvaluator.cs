@@ -1,3 +1,4 @@
+using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Tablewise.Application.Interfaces;
@@ -231,10 +232,9 @@ public sealed class StubRuleEvaluator : IRuleEvaluator
         {
             RuleId = outcome.RuleId,
             RuleName = outcome.RuleName,
+            RuleType = outcome.RuleType,
             ActionType = outcome.ActionType.ToString(),
-            ActionParams = outcome.Payload != null
-                ? System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, object>>(outcome.Payload)
-                : null
+            ActionParams = ParseActionParamsDictionary(outcome.Payload)
         }).ToList();
 
         return new RuleEvaluationResult
@@ -248,5 +248,46 @@ public sealed class StubRuleEvaluator : IRuleEvaluator
             AppliedRules = appliedRules,
             Warnings = pipelineResult.Warnings.ToList()
         };
+    }
+
+    /// <summary>
+    /// Maps rule outcome payload JSON to a dictionary suitable for <see cref="AppliedRuleSnapshot"/>.
+    /// Avoids <c>Dictionary&lt;string, object&gt;</c> deserialization which is unreliable with System.Text.Json.
+    /// </summary>
+    /// <param name="payload">JSON string from the rule engine outcome.</param>
+    /// <returns>Parsed parameters or null when empty or invalid.</returns>
+    private static Dictionary<string, object>? ParseActionParamsDictionary(string? payload)
+    {
+        if (string.IsNullOrWhiteSpace(payload))
+            return null;
+
+        try
+        {
+            using var doc = JsonDocument.Parse(payload);
+            if (doc.RootElement.ValueKind != JsonValueKind.Object)
+                return null;
+
+            var dict = new Dictionary<string, object>(StringComparer.Ordinal);
+            foreach (var prop in doc.RootElement.EnumerateObject())
+            {
+                dict[prop.Name] = prop.Value.ValueKind switch
+                {
+                    JsonValueKind.String => prop.Value.GetString() ?? string.Empty,
+                    JsonValueKind.Number => prop.Value.TryGetInt64(out var l)
+                        ? l
+                        : prop.Value.GetDouble(),
+                    JsonValueKind.True => true,
+                    JsonValueKind.False => false,
+                    JsonValueKind.Null => null!,
+                    _ => prop.Value.GetRawText()
+                };
+            }
+
+            return dict;
+        }
+        catch (JsonException)
+        {
+            return null;
+        }
     }
 }

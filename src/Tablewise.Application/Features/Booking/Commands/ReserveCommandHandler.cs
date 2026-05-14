@@ -145,7 +145,9 @@ public sealed class ReserveCommandHandler : IRequestHandler<ReserveCommand, Rese
 
                 if (!ruleResult.IsAllowed)
                 {
-                    throw new BusinessRuleException(ruleResult.BlockReason ?? "Kural ihlali nedeniyle rezervasyon reddedildi.");
+                    throw new BusinessRuleException(
+                        ruleResult.BlockReason ?? "Kural ihlali nedeniyle rezervasyon reddedildi.",
+                        "RULE_BLOCKED");
                 }
             }
 
@@ -212,7 +214,7 @@ public sealed class ReserveCommandHandler : IRequestHandler<ReserveCommand, Rese
                 EntityId = reservation.Id.ToString(),
                 Action = "Created",
                 PerformedBy = "BookingUI",
-                NewValue = $"ConfirmCode: {confirmCode}, GuestName: {request.GuestName}",
+                NewValue = JsonSerializer.Serialize(new { confirmCode, guestName = request.GuestName }),
                 CreatedAt = DateTime.UtcNow
             };
             await _unitOfWork.AuditLogs.AddAsync(auditLog, cancellationToken).ConfigureAwait(false);
@@ -461,7 +463,7 @@ public sealed class ReserveCommandHandler : IRequestHandler<ReserveCommand, Rese
             EntityId = reservationId.ToString(),
             Action = "RULES_OVERRIDDEN",
             PerformedBy = _currentUser.UserId?.ToString() ?? "Staff",
-            NewValue = "Kural motoru manuel olarak atlandı",
+            NewValue = JsonSerializer.Serialize(new { message = "Kural motoru manuel olarak atlandı" }),
             CreatedAt = DateTime.UtcNow
         };
 

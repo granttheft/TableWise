@@ -47,7 +47,6 @@ export function TableCombinationDialog({
     formState: { errors },
     reset,
     setValue,
-    watch,
   } = useForm<CombinationFormData>({
     resolver: zodResolver(combinationFormSchema),
     defaultValues: {
@@ -56,8 +55,6 @@ export function TableCombinationDialog({
       combinedCapacity: 0,
     },
   })
-
-  const capacityValue = watch('combinedCapacity')
 
   useEffect(() => {
     const totalCapacity = tables

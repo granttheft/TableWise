@@ -38,7 +38,7 @@ public sealed class IdempotencyMiddleware
     }
 
     /// <summary>
-    /// Middleware invoke.
+    /// Middleware invoke. Cancellation uses <see cref="HttpContext.RequestAborted"/>; middleware cannot inject <see cref="CancellationToken"/>.
     /// </summary>
     public async Task InvokeAsync(
         HttpContext context,
@@ -137,7 +137,8 @@ public sealed class IdempotencyMiddleware
             responseBody.Seek(0, SeekOrigin.Begin);
             var responseContent = await new StreamReader(responseBody).ReadToEndAsync().ConfigureAwait(false);
 
-            // Başarılı response'u cache'le (2xx status kodları)
+            // Başarılı response'u cache'le (2xx status kodları). Aynı isteğin hemen ardından gelen
+            // tekrarlarının cache'ten okunabilmesi için yazma işlemi tamamlanana kadar beklenir.
             if (context.Response.StatusCode >= 200 && context.Response.StatusCode < 300)
             {
                 var responseToCache = new CachedIdempotencyResponse
@@ -148,19 +149,17 @@ public sealed class IdempotencyMiddleware
                     CreatedAt = DateTime.UtcNow
                 };
 
-                // Fire-and-forget olarak cache'e yaz
-                _ = Task.Run(async () =>
+                try
                 {
-                    try
-                    {
-                        await idempotencyService.SaveAsync(tenantId, key, responseToCache).ConfigureAwait(false);
-                        _logger.LogDebug("Idempotency response cached. Key: {Key}", key);
-                    }
-                    catch (Exception ex)
-                    {
-                        _logger.LogWarning(ex, "Idempotency cache yazılamadı. Key: {Key}", key);
-                    }
-                });
+                    await idempotencyService
+                        .SaveAsync(tenantId, key, responseToCache, context.RequestAborted)
+                        .ConfigureAwait(false);
+                    _logger.LogDebug("Idempotency response cached. Key: {Key}", key);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogWarning(ex, "Idempotency cache yazılamadı. Key: {Key}", key);
+                }
             }
 
             // Response'u orijinal stream'e kopyala

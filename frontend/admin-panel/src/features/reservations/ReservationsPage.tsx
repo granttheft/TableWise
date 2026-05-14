@@ -1,17 +1,18 @@
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Badge } from '@/components/ui/badge'
 import { Card } from '@/components/ui/card'
 import { ChevronLeft, ChevronRight, Plus, Download, Calendar as CalendarIcon } from 'lucide-react'
-import { format, addDays, subDays, startOfDay } from 'date-fns'
+import { format, addDays, subDays, startOfDay, parseISO, differenceInMinutes } from 'date-fns'
 import { tr } from 'date-fns/locale'
 import { useReservations, useExportReservations } from '@/hooks/useReservations'
 import { useTables } from '@/hooks/useTables'
 import { ReservationDetailDrawer } from './components/ReservationDetailDrawer'
 import { ManualReservationDialog } from './components/ManualReservationDialog'
 import { getStatusLabel, getStatusColor, calculateBlockPosition, generateTimeSlots } from './utils/reservationHelpers'
-import type { Reservation, ReservationStatus } from '@/types/api'
+import type { ReservationStatus } from '@/types/api'
 
 export function ReservationsPage() {
   const [selectedDate, setSelectedDate] = useState(startOfDay(new Date()))
@@ -34,7 +35,7 @@ export function ReservationsPage() {
   const { data: tables = [] } = useTables(selectedVenue !== 'all' ? selectedVenue : undefined)
   const exportReservations = useExportReservations()
 
-  const timeSlots = generateTimeSlots('10:00', '23:00', 30)
+  const timeSlots = generateTimeSlots(10, 24)
 
   const handlePrevDay = () => setSelectedDate(subDays(selectedDate, 1))
   const handleNextDay = () => setSelectedDate(addDays(selectedDate, 1))
@@ -125,7 +126,10 @@ export function ReservationsPage() {
           </Select>
 
           {/* Status Filter */}
-          <Select value={selectedStatus} onValueChange={(value: any) => setSelectedStatus(value)}>
+          <Select
+            value={selectedStatus}
+            onValueChange={(value) => setSelectedStatus(value as ReservationStatus | 'all')}
+          >
             <SelectTrigger className="w-[180px]">
               <SelectValue placeholder="Tüm Durumlar" />
             </SelectTrigger>
@@ -149,8 +153,8 @@ export function ReservationsPage() {
       ) : !tables || tables.length === 0 ? (
         <Card className="flex flex-col items-center justify-center py-12">
           <p className="text-muted-foreground">Henüz masa eklenmemiş</p>
-          <Button variant="link" href="/tables">
-            İlk masanızı ekleyin
+          <Button variant="link" asChild>
+            <Link to="/tables">İlk masanızı ekleyin</Link>
           </Button>
         </Card>
       ) : (
@@ -180,7 +184,7 @@ export function ReservationsPage() {
                   </div>
                   
                   <div className="flex flex-1 relative" style={{ minHeight: '80px' }}>
-                    {timeSlots.map((slot, index) => (
+                    {timeSlots.map((slot) => (
                       <div
                         key={slot}
                         className="flex-1 border-r hover:bg-accent/10 cursor-pointer transition-colors"
@@ -190,10 +194,14 @@ export function ReservationsPage() {
 
                     {/* Reservation Blocks */}
                     {tableReservations.map((reservation) => {
+                      const durationMin = differenceInMinutes(
+                        parseISO(reservation.endTime),
+                        parseISO(reservation.reservedFor)
+                      )
                       const { left, width } = calculateBlockPosition(
-                        reservation.timeSlot,
-                        reservation.slotDuration || 90,
-                        timeSlots
+                        reservation.reservedFor,
+                        durationMin,
+                        '10:00'
                       )
 
                       return (
@@ -204,7 +212,7 @@ export function ReservationsPage() {
                             handleReservationClick(reservation.id)
                           }}
                           className={`absolute top-2 bottom-2 rounded px-2 py-1 text-xs text-white hover:opacity-90 transition-opacity ${getStatusColor(
-                            reservation.status
+                            reservation.status as ReservationStatus
                           )}`}
                           style={{
                             left: `${left}%`,
@@ -212,7 +220,7 @@ export function ReservationsPage() {
                           }}
                         >
                           <div className="font-medium truncate">{reservation.guestName}</div>
-                          <div className="text-xs opacity-90">{reservation.guestCount} kişi</div>
+                          <div className="text-xs opacity-90">{reservation.partySize} kişi</div>
                         </button>
                       )
                     })}
@@ -229,9 +237,7 @@ export function ReservationsPage() {
         <Card>
           {reservations.length > 0 ? (
             <div className="divide-y">
-              {reservations.map((reservation) => {
-                const table = tables?.find((t) => t.id === reservation.tableId)
-                return (
+              {reservations.map((reservation) => (
                   <button
                     key={reservation.id}
                     onClick={() => handleReservationClick(reservation.id)}
@@ -241,16 +247,15 @@ export function ReservationsPage() {
                       <div>
                         <div className="font-medium">{reservation.guestName}</div>
                         <div className="text-sm text-muted-foreground">
-                          {reservation.timeSlot} • {reservation.guestCount} kişi
+                          {format(parseISO(reservation.reservedFor), 'HH:mm')} • {reservation.partySize} kişi
                         </div>
                       </div>
-                      <Badge variant="secondary" className={getStatusColor(reservation.status)}>
-                        {getStatusLabel(reservation.status)}
+                      <Badge variant="secondary" className={getStatusColor(reservation.status as ReservationStatus)}>
+                        {getStatusLabel(reservation.status as ReservationStatus)}
                       </Badge>
                     </div>
                   </button>
-                )
-              })}
+                ))}
             </div>
           ) : (
             <div className="flex flex-col items-center justify-center py-12 text-center">
@@ -266,7 +271,6 @@ export function ReservationsPage() {
           open={isDetailDrawerOpen}
           onOpenChange={setIsDetailDrawerOpen}
           reservationId={selectedReservationId}
-          venueId={selectedVenue !== 'all' ? selectedVenue : ''}
         />
       )}
 

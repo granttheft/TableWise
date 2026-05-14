@@ -1,3 +1,4 @@
+using System.Text.Json;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -136,7 +137,7 @@ public sealed class InviteStaffCommandHandler : IRequestHandler<InviteStaffComma
             Action = "STAFF_INVITED",
             EntityType = "UserInvitation",
             EntityId = invitation.Id.ToString(),
-            NewValue = $"{{\"email\":\"{emailLower}\",\"role\":\"{request.Role}\"}}",
+            NewValue = JsonSerializer.Serialize(new { email = emailLower, role = request.Role.ToString() }),
             CreatedAt = DateTime.UtcNow
         };
 

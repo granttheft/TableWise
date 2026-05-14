@@ -3,6 +3,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Tablewise.Application.Interfaces;
+using Tablewise.Application.RuleEngine;
 using Tablewise.Domain.Entities;
 using Tablewise.Domain.Enums;
 using Tablewise.Domain.Exceptions;
@@ -18,17 +19,20 @@ public sealed class ReorderRulesCommandHandler : IRequestHandler<ReorderRulesCom
     private readonly IApplicationDbContext _dbContext;
     private readonly ITenantContext _tenantContext;
     private readonly ICurrentUser _currentUser;
+    private readonly ICacheService _cacheService;
     private readonly ILogger<ReorderRulesCommandHandler> _logger;
 
     public ReorderRulesCommandHandler(
         IApplicationDbContext dbContext,
         ITenantContext tenantContext,
         ICurrentUser currentUser,
+        ICacheService cacheService,
         ILogger<ReorderRulesCommandHandler> logger)
     {
         _dbContext = dbContext;
         _tenantContext = tenantContext;
         _currentUser = currentUser;
+        _cacheService = cacheService;
         _logger = logger;
     }
 
@@ -85,6 +89,10 @@ public sealed class ReorderRulesCommandHandler : IRequestHandler<ReorderRulesCom
         _dbContext.AuditLogs.Add(auditLog);
 
         await _dbContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+
+        await RuleEngineRulesCacheInvalidation
+            .InvalidateForTenantAsync(_cacheService, tenantId, cancellationToken)
+            .ConfigureAwait(false);
 
         _logger.LogInformation(
             "Kural sıralaması güncellendi: RuleCount={Count}",

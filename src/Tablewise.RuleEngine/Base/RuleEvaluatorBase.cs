@@ -124,6 +124,7 @@ public abstract class RuleEvaluatorBase : IRuleTypeEvaluator
         {
             RuleId = rule.Id,
             RuleName = rule.Name,
+            RuleType = rule.RuleType,
             ActionType = actionType,
             Message = message,
             Payload = payload,

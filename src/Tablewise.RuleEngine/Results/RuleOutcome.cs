@@ -18,6 +18,11 @@ public sealed record RuleOutcome
     public required string RuleName { get; init; }
 
     /// <summary>
+    /// Kural tipi (örn. early_booking); audit ve snapshot için.
+    /// </summary>
+    public required string RuleType { get; init; }
+
+    /// <summary>
     /// Aksiyonun tipi.
     /// </summary>
     public required RuleActionType ActionType { get; init; }

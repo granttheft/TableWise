@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -114,8 +115,8 @@ export function IntegrationSettings() {
             <div className="rounded-lg border border-dashed p-8 text-center">
               <Key className="mx-auto mb-2 h-12 w-12 text-muted-foreground" />
               <p className="text-muted-foreground">API erişimi Business plandan itibaren</p>
-              <Button variant="link" href="/subscription">
-                Planınızı yükseltin
+              <Button variant="link" asChild>
+                <Link to="/subscription">Planınızı yükseltin</Link>
               </Button>
             </div>
           )}
@@ -182,8 +183,8 @@ export function IntegrationSettings() {
             <div className="rounded-lg border border-dashed p-8 text-center">
               <Webhook className="mx-auto mb-2 h-12 w-12 text-muted-foreground" />
               <p className="text-muted-foreground">Webhook entegrasyonu Business plandan itibaren</p>
-              <Button variant="link" href="/subscription">
-                Planınızı yükseltin
+              <Button variant="link" asChild>
+                <Link to="/subscription">Planınızı yükseltin</Link>
               </Button>
             </div>
           )}

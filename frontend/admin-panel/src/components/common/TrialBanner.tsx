@@ -1,7 +1,7 @@
 import { useCurrentTenant } from '@/hooks/useCurrentTenant'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
-import { AlertCircle, Calendar } from 'lucide-react'
+import { Calendar } from 'lucide-react'
 import { differenceInDays } from 'date-fns'
 
 export function TrialBanner() {

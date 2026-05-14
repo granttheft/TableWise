@@ -82,8 +82,6 @@ export function RulesPage() {
 
   const sortedRules = [...rules].sort((a, b) => b.priority - a.priority)
 
-  const isLimitWarning =
-    planLimits?.maxRules && planLimits.currentRuleCount >= planLimits.maxRules * 0.8
   const isLimitReached =
     planLimits?.maxRules && planLimits.currentRuleCount >= planLimits.maxRules
   const remainingRules = planLimits?.maxRules

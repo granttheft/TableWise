@@ -42,6 +42,7 @@ public sealed class GlobalExceptionHandler : IExceptionHandler
             ForbiddenException forbiddenEx => HandleForbiddenException(forbiddenEx, correlationId),
             TenantIsolationException tenantEx => HandleTenantIsolationException(tenantEx, correlationId, httpContext),
             PlanLimitExceededException planEx => HandlePlanLimitException(planEx, correlationId),
+            ConflictException conflictEx => HandleConflictException(conflictEx, correlationId),
             BusinessRuleException businessEx => HandleBusinessRuleException(businessEx, correlationId),
             _ => HandleUnknownException(exception, correlationId, httpContext)
         };
@@ -236,6 +237,29 @@ public sealed class GlobalExceptionHandler : IExceptionHandler
     }
 
     /// <summary>
+    /// ConflictException → 409 Conflict (ör. slot müsait değil).
+    /// </summary>
+    private (int, ProblemDetails) HandleConflictException(
+        ConflictException exception,
+        string correlationId)
+    {
+        _logger.LogWarning("Çakışma: {Message}", exception.Message);
+
+        var problemDetails = new ProblemDetails
+        {
+            Type = "https://tools.ietf.org/html/rfc7231#section-6.5.8",
+            Title = "Conflict",
+            Status = StatusCodes.Status409Conflict,
+            Detail = exception.Message,
+            Instance = correlationId
+        };
+
+        problemDetails.Extensions["traceId"] = correlationId;
+
+        return (StatusCodes.Status409Conflict, problemDetails);
+    }
+
+    /// <summary>
     /// BusinessRuleException → 400 Bad Request veya 409 Conflict.
     /// </summary>
     private (int, ProblemDetails) HandleBusinessRuleException(
@@ -252,6 +276,7 @@ public sealed class GlobalExceptionHandler : IExceptionHandler
             "EMAIL_ALREADY_EXISTS" => StatusCodes.Status409Conflict,
             "SLOT_NOT_AVAILABLE" => StatusCodes.Status409Conflict,
             "ACCOUNT_LOCKED" => StatusCodes.Status429TooManyRequests,
+            "RULE_BLOCKED" => StatusCodes.Status422UnprocessableEntity,
             _ => StatusCodes.Status400BadRequest
         };
 

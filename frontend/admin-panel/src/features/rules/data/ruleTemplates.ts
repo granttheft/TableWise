@@ -1,4 +1,4 @@
-import type { RuleTemplate, RuleType } from '@/types/api'
+import type { RuleTemplate } from '@/types/api'
 
 export const ruleTemplates: RuleTemplate[] = [
   {
@@ -40,7 +40,7 @@ export const ruleTemplates: RuleTemplate[] = [
     ruleType: 'VipPriority',
     icon: 'Crown',
     defaultConditions: {
-      conditions: [{ field: 'CustomerTier', operator: 'Equals', value: 'Vip' }],
+      conditions: [{ field: 'CustomerTier', operator: 'Equals', value: 'VIP' }],
       logicalOperator: 'And',
     },
     defaultActions: [{ type: 'Suggest', message: 'VIP müşteri için özel masa önerildi' }],

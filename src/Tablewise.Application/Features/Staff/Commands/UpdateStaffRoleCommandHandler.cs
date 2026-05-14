@@ -1,3 +1,4 @@
+using System.Text.Json;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -106,8 +107,8 @@ public sealed class UpdateStaffRoleCommandHandler : IRequestHandler<UpdateStaffR
             Action = "STAFF_ROLE_UPDATED",
             EntityType = "User",
             EntityId = user.Id.ToString(),
-            OldValue = $"{{\"role\":\"{oldRole}\"}}",
-            NewValue = $"{{\"role\":\"{request.NewRole}\"}}",
+            OldValue = JsonSerializer.Serialize(new { role = oldRole.ToString() }),
+            NewValue = JsonSerializer.Serialize(new { role = request.NewRole.ToString() }),
             CreatedAt = DateTime.UtcNow
         };
 

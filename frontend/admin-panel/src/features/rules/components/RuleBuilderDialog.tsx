@@ -17,7 +17,6 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Switch } from '@/components/ui/switch'
 import { Slider } from '@/components/ui/slider'
-import { Checkbox } from '@/components/ui/checkbox'
 import {
   Select,
   SelectContent,
@@ -458,27 +457,30 @@ export function RuleBuilderDialog({
 
                               {condition.field === 'DayOfWeek' ? (
                                 <div className="flex flex-wrap gap-1">
-                                  {Object.entries(dayLabels).map(([day, label]) => (
-                                    <Badge
-                                      key={day}
-                                      variant={
-                                        (Array.isArray(condition.value) && condition.value.includes(parseInt(day)))
-                                          ? 'default'
-                                          : 'outline'
-                                      }
-                                      className="cursor-pointer"
-                                      onClick={() => {
-                                        const current = Array.isArray(condition.value) ? condition.value : []
-                                        const dayNum = parseInt(day)
-                                        const newValue = current.includes(dayNum)
-                                          ? current.filter((d) => d !== dayNum)
-                                          : [...current, dayNum]
-                                        updateCondition(index, { value: newValue })
-                                      }}
-                                    >
-                                      {label.slice(0, 3)}
-                                    </Badge>
-                                  ))}
+                                  {Object.entries(dayLabels).map(([day, label]) => {
+                                    const dayNum = parseInt(day, 10)
+                                    const selectedDays = Array.isArray(condition.value)
+                                      ? (condition.value as (string | number)[]).map((v) =>
+                                          typeof v === 'number' ? v : parseInt(String(v), 10),
+                                        )
+                                      : []
+                                    const isSelected = selectedDays.includes(dayNum)
+                                    return (
+                                      <Badge
+                                        key={day}
+                                        variant={isSelected ? 'default' : 'outline'}
+                                        className="cursor-pointer"
+                                        onClick={() => {
+                                          const newValue = isSelected
+                                            ? selectedDays.filter((d) => d !== dayNum)
+                                            : [...selectedDays, dayNum]
+                                          updateCondition(index, { value: newValue })
+                                        }}
+                                      >
+                                        {label.slice(0, 3)}
+                                      </Badge>
+                                    )
+                                  })}
                                 </div>
                               ) : condition.field === 'CustomerTier' ? (
                                 <Select
@@ -490,7 +492,7 @@ export function RuleBuilderDialog({
                                   </SelectTrigger>
                                   <SelectContent>
                                     <SelectItem value="Regular">Normal</SelectItem>
-                                    <SelectItem value="Vip">VIP</SelectItem>
+                                    <SelectItem value="VIP">VIP</SelectItem>
                                     <SelectItem value="Blacklisted">Kara Liste</SelectItem>
                                   </SelectContent>
                                 </Select>

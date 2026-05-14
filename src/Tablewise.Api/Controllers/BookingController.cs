@@ -178,7 +178,8 @@ public sealed class BookingController : ControllerBase
             TableId = dto.TableId,
             TableCombinationId = dto.TableCombinationId,
             SpecialRequests = dto.SpecialRequests,
-            CustomFieldAnswers = dto.CustomFieldAnswers
+            CustomFieldAnswers = dto.CustomFieldAnswers,
+            OverrideRules = dto.OverrideRules
         };
 
         var result = await _mediator.Send(command, cancellationToken);

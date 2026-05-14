@@ -62,9 +62,12 @@ export function TablesPage() {
     setSelectedVenueId(venues[0].id)
   }
 
-  const currentVenue = venues?.find((v) => v.id === selectedVenueId)
-  const isLimitWarning = planLimits?.maxTables && planLimits.currentTableCount >= planLimits.maxTables * 0.8
-  const isLimitReached = planLimits?.maxTables && planLimits.currentTableCount >= planLimits.maxTables
+  const isLimitWarning = Boolean(
+    planLimits?.maxTables && planLimits.currentTableCount >= planLimits.maxTables * 0.8
+  )
+  const isLimitReached = Boolean(
+    planLimits?.maxTables && planLimits.currentTableCount >= planLimits.maxTables
+  )
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event
@@ -241,7 +244,7 @@ export function TablesPage() {
         </div>
       </div>
 
-      {isLimitWarning && !isLimitReached && (
+      {isLimitWarning && !isLimitReached && planLimits && (
         <Alert variant="default" className="border-amber-500/50 bg-amber-500/10">
           <AlertCircle className="h-4 w-4 text-amber-500" />
           <AlertDescription className="text-amber-500">
@@ -251,7 +254,7 @@ export function TablesPage() {
         </Alert>
       )}
 
-      {isLimitReached && (
+      {isLimitReached && planLimits && (
         <Alert variant="default" className="border-destructive/50 bg-destructive/10">
           <AlertCircle className="h-4 w-4 text-destructive" />
           <AlertDescription className="flex items-center justify-between text-destructive">

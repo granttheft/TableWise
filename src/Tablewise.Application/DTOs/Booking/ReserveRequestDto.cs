@@ -26,7 +26,6 @@ public sealed record ReserveRequestDto
     /// Misafir telefon (zorunlu).
     /// </summary>
     [Required(ErrorMessage = "Telefon numarası zorunludur.")]
-    [Phone(ErrorMessage = "Geçerli bir telefon numarası giriniz.")]
     [StringLength(20)]
     public string GuestPhone { get; init; } = string.Empty;
 
