@@ -38,7 +38,7 @@ import {
   formatTime,
   formatConfirmCode,
 } from '../utils/reservationHelpers'
-import { formatDistanceToNow, parseISO, differenceInMinutes } from 'date-fns'
+import { getRuleTypeLabel } from '@/features/rules/utils/ruleHumanReadable'
 import { tr } from 'date-fns/locale'
 
 interface ReservationDetailDrawerProps {
@@ -271,11 +271,29 @@ export function ReservationDetailDrawer({
                   Uygulanan Kurallar
                 </h3>
                 <div className="flex flex-wrap gap-2">
-                  {reservation.appliedRules.map((rule, index) => (
-                    <Badge key={index} variant="secondary">
-                      {rule}
-                    </Badge>
-                  ))}
+                  {reservation.appliedRules.map((rule, index) => {
+                    const label = getRuleTypeLabel(rule)
+                    const isGroupComposition =
+                      rule === 'group_composition' ||
+                      rule === 'GroupComposition' ||
+                      label.toLowerCase().includes('grup dengesi')
+                    return (
+                      <Badge
+                        key={index}
+                        variant="secondary"
+                        className={
+                          isGroupComposition
+                            ? 'border border-pink-500/40 bg-pink-500/10 text-pink-800 dark:text-pink-100'
+                            : undefined
+                        }
+                      >
+                        <span className="mr-1" aria-hidden>
+                          {isGroupComposition ? '⚖' : null}
+                        </span>
+                        {label}
+                      </Badge>
+                    )
+                  })}
                 </div>
               </CardContent>
             </Card>

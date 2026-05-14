@@ -174,6 +174,86 @@ public static class RuleTemplatesProvider
 
         new RuleTemplateDto
         {
+            Id = "group_composition",
+            Name = "Grup Dengesi",
+            Description = "Grup kompozisyonuna göre rezervasyon yönet",
+            Icon = "scale",
+            Category = "Gelişmiş",
+            DefaultConditionsJson = """
+                {
+                    "version": 1,
+                    "operator": "and",
+                    "rules": [
+                        { "type": "composition", "blockedCompositions": ["AllMale"] },
+                        { "type": "ratio", "minPartySize": 4 }
+                    ]
+                }
+                """,
+            DefaultActionsJson = """
+                {
+                    "version": 1,
+                    "block": true,
+                    "message": "Bu kompozisyondaki gruplar için rezervasyon alınmamaktadır."
+                }
+                """,
+            ParamsSchema = new Dictionary<string, object>
+            {
+                {
+                    "blockedCompositions",
+                    new
+                    {
+                        type = "multiselect",
+                        label = "Engellenen Kompozisyonlar",
+                        options = new[]
+                        {
+                            new { value = "AllMale", label = "Sadece Erkek" },
+                            new { value = "AllFemale", label = "Sadece Kadın" },
+                            new { value = "Mixed", label = "Karma" },
+                            new { value = "Family", label = "Aile" }
+                        }
+                    }
+                },
+                {
+                    "minPartySize",
+                    new
+                    {
+                        type = "number",
+                        label = "Minimum Kişi Sayısı",
+                        min = 1,
+                        max = 20,
+                        defaultValue = 4,
+                        hint = "Bu kural kaç kişinin üzerinde uygulanacak?"
+                    }
+                },
+                {
+                    "minFemaleRatio",
+                    new
+                    {
+                        type = "slider",
+                        label = "Minimum Kadın Oranı (opsiyonel)",
+                        min = 0,
+                        max = 1,
+                        step = 0.05,
+                        hint = "0.30 = en az %30 kadın zorunlu. Boş bırakılabilir."
+                    }
+                },
+                {
+                    "maxMaleRatio",
+                    new
+                    {
+                        type = "slider",
+                        label = "Maksimum Erkek Oranı (opsiyonel)",
+                        min = 0,
+                        max = 1,
+                        step = 0.05,
+                        hint = "0.80 = en fazla %80 erkek. Boş bırakılabilir."
+                    }
+                }
+            }
+        },
+
+        new RuleTemplateDto
+        {
             Id = "custom_condition",
             Name = "Özel Koşul",
             Description = "Tamamen özelleştirilebilir kural. Manuel JSON düzenleme gerektirir.",

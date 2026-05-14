@@ -10,7 +10,7 @@ import {
   CreditCard,
   Clock,
   Timer,
-  Baby,
+  Scale,
   Code,
   Edit,
   Trash2,
@@ -39,7 +39,7 @@ const ruleTypeIcons: Record<RuleType, LucideIcon> = {
   DepositRequired: CreditCard,
   PeakHour: Clock,
   TableCooldown: Timer,
-  GroupComposition: Baby,
+  GroupComposition: Scale,
   CustomCondition: Code,
 }
 
@@ -66,6 +66,7 @@ export function RuleCard({
 
   const Icon = ruleTypeIcons[rule.ruleType] || Code
   const humanReadable = ruleToHumanReadable(rule)
+  const isGroupComposition = rule.ruleType === 'GroupComposition'
 
   return (
     <Card
@@ -94,7 +95,12 @@ export function RuleCard({
           </Badge>
 
           {/* Icon */}
-          <div className="shrink-0 p-2 rounded-full bg-accent/10 text-accent">
+          <div
+            className={cn(
+              'shrink-0 p-2 rounded-full bg-accent/10 text-accent',
+              isGroupComposition && 'bg-pink-500/10 text-pink-600 ring-2 ring-pink-500/35'
+            )}
+          >
             <Icon className="h-5 w-5" />
           </div>
 

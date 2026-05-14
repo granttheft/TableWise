@@ -6,6 +6,7 @@ import {
   mapRuleFormToApiPayload,
   type RuleBuilderSubmitPayload,
 } from '@/features/rules/utils/mapRuleFormToApiPayload'
+import { mapApiRuleDtoToRule, type RuleApiDto } from '@/features/rules/utils/mapApiRuleDto'
 
 function ruleApiErrorMessage(error: unknown): string {
   if (error instanceof Error && error.message) return error.message
@@ -23,8 +24,8 @@ export function useRules(venueId?: string) {
     queryKey: ['rules', venueId],
     queryFn: async () => {
       if (!venueId) return []
-      const response = await api.get<Rule[]>(rulesBase, { params: { venueId } })
-      return response.data
+      const response = await api.get<RuleApiDto[]>(rulesBase, { params: { venueId } })
+      return response.data.map(mapApiRuleDtoToRule)
     },
     enabled: !!venueId,
   })

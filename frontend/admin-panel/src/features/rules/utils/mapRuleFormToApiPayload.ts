@@ -1,4 +1,9 @@
-import type { RuleAction, RuleCondition, RuleConditionGroup } from '@/types/api'
+import type {
+  RuleAction,
+  RuleCondition,
+  RuleConditionGroup,
+  GroupCompositionRuleFormState,
+} from '@/types/api'
 
 /** Maps UI ruleType (PascalCase) to API / evaluator snake_case. */
 const UI_RULE_TYPE_TO_API: Record<string, string> = {
@@ -187,10 +192,46 @@ function minTierFromVipTemplate(conds: RuleCondition[]): string {
   return 'Gold'
 }
 
+function buildGroupCompositionConditionsJson(state: GroupCompositionRuleFormState): string {
+  const rules: Record<string, unknown>[] = []
+  if (state.blockedCompositions.length > 0) {
+    rules.push({
+      type: 'composition',
+      blockedCompositions: state.blockedCompositions,
+    })
+  }
+
+  const ratio: Record<string, unknown> = { type: 'ratio' }
+  let ratioHasPayload = false
+  if (typeof state.minPartySize === 'number' && !Number.isNaN(state.minPartySize) && state.minPartySize >= 1) {
+    ratio.minPartySize = Math.floor(state.minPartySize)
+    ratioHasPayload = true
+  }
+  if (state.minFemaleRatioPercent != null && state.minFemaleRatioPercent > 0) {
+    ratio.minFemaleRatio = Math.min(1, Math.max(0, state.minFemaleRatioPercent / 100))
+    ratioHasPayload = true
+  }
+  if (state.maxMaleRatioPercent != null && state.maxMaleRatioPercent < 100) {
+    ratio.maxMaleRatio = Math.min(1, Math.max(0, state.maxMaleRatioPercent / 100))
+    ratioHasPayload = true
+  }
+  if (ratioHasPayload) {
+    rules.push(ratio)
+  }
+
+  const op = state.operator === 'or' ? 'or' : 'and'
+  return JSON.stringify({
+    version: 1,
+    operator: op,
+    rules,
+  })
+}
+
 function buildTypedPayload(
   apiRuleType: string,
   group: RuleConditionGroup,
-  actions: RuleAction[]
+  actions: RuleAction[],
+  groupComposition?: GroupCompositionRuleFormState
 ): { conditionsJson: string; actionsJson: string } {
   const conds = group.conditions ?? []
 
@@ -308,13 +349,25 @@ function buildTypedPayload(
       }
     }
     case 'group_composition': {
-      const msg = actions[0]?.message ?? 'Grup kompozisyonu kuralı'
+      const gc = groupComposition ?? {
+        operator: 'and' as const,
+        blockedCompositions: [] as string[],
+        minPartySize: 4,
+        minFemaleRatioPercent: null,
+        maxMaleRatioPercent: null,
+      }
+      const act = actions[0]
+      const block = act?.type === 'Block'
+      const warn = act?.type === 'Warn' || act?.type === 'Suggest'
+      const msg =
+        act?.message?.trim() ||
+        'Bu kompozisyondaki gruplar için rezervasyon alınmamaktadır.'
       return {
-        conditionsJson: JSON.stringify({ version: 1, operator: 'or', rules: [] }),
+        conditionsJson: buildGroupCompositionConditionsJson(gc),
         actionsJson: JSON.stringify({
           version: 1,
-          block: false,
-          warn: true,
+          block,
+          warn: warn && !block,
           message: msg,
         }),
       }
@@ -338,6 +391,8 @@ export type RuleBuilderSubmitPayload = {
   ruleType: string
   conditions: RuleConditionGroup
   actions: RuleAction[]
+  /** Grup kompozisyonu koşul formu; yalnızca GroupComposition için kullanılır. */
+  groupComposition?: GroupCompositionRuleFormState
 }
 
 /**
@@ -366,7 +421,12 @@ export function mapRuleFormToApiPayload(payload: RuleBuilderSubmitPayload): {
     conditionsJson = buildCustomConditionsJson(group)
     actionsJson = buildCustomActionsJson(payload.actions)
   } else {
-    const typed = buildTypedPayload(apiRuleType, group, payload.actions)
+    const typed = buildTypedPayload(
+      apiRuleType,
+      group,
+      payload.actions,
+      payload.groupComposition
+    )
     conditionsJson = typed.conditionsJson
     actionsJson = typed.actionsJson
   }

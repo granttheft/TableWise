@@ -15,7 +15,7 @@ import {
   CreditCard,
   Clock,
   Timer,
-  Baby,
+  Scale,
   Ban,
   Percent,
   AlertTriangle,
@@ -38,7 +38,7 @@ const iconMap: Record<string, LucideIcon> = {
   CreditCard,
   Clock,
   Timer,
-  Baby,
+  Scale,
   Ban,
   Percent,
   AlertTriangle,
@@ -68,6 +68,7 @@ export function RuleTemplateGalleryDialog({
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 mt-4">
           {ruleTemplates.map((template) => {
             const Icon = iconMap[template.icon] || Code
+            const accent = template.color
             return (
               <Card
                 key={template.id}
@@ -76,18 +77,42 @@ export function RuleTemplateGalleryDialog({
               >
                 <CardContent className="p-4">
                   <div className="flex flex-col items-center text-center space-y-3">
-                    <div className="p-3 rounded-full bg-accent/10 text-accent group-hover:bg-accent group-hover:text-white transition-colors">
+                    <div
+                      className="p-3 rounded-full bg-accent/10 text-accent group-hover:bg-accent group-hover:text-white transition-colors"
+                      style={
+                        accent
+                          ? {
+                              backgroundColor: `${accent}1a`,
+                              color: accent,
+                            }
+                          : undefined
+                      }
+                    >
                       <Icon className="h-8 w-8" />
                     </div>
                     <div>
-                      <h3 className="font-semibold">{template.name}</h3>
+                      <div className="flex items-center justify-center gap-1">
+                        {template.emoji ? (
+                          <span className="text-lg leading-none" aria-hidden>
+                            {template.emoji}
+                          </span>
+                        ) : null}
+                        <h3 className="font-semibold">{template.name}</h3>
+                      </div>
                       <p className="text-sm text-muted-foreground mt-1 line-clamp-2">
                         {template.description}
                       </p>
                     </div>
-                    <Badge variant="secondary" className="text-xs">
-                      {template.ruleType}
-                    </Badge>
+                    <div className="flex flex-wrap items-center justify-center gap-1">
+                      {template.category ? (
+                        <Badge variant="outline" className="text-xs">
+                          {template.category}
+                        </Badge>
+                      ) : null}
+                      <Badge variant="secondary" className="text-xs">
+                        {template.ruleType}
+                      </Badge>
+                    </div>
                   </div>
                 </CardContent>
               </Card>

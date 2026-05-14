@@ -161,6 +161,15 @@ export interface RuleAction {
   suggestedTableIds?: string[]
 }
 
+/** Grup kompozisyonu kuralı — koşul adımı formu (sliders UI’da 0–100, API’ye oran olarak yazılır). */
+export interface GroupCompositionRuleFormState {
+  operator: 'and' | 'or'
+  blockedCompositions: string[]
+  minPartySize: number
+  minFemaleRatioPercent: number | null
+  maxMaleRatioPercent: number | null
+}
+
 export interface Rule {
   id: string
   venueId: string
@@ -176,6 +185,8 @@ export interface Rule {
   lastTriggeredAt?: string
   createdAt: string
   updatedAt: string
+  /** Yalnızca {@link RuleType.GroupComposition}; API conditionsJson’dan üretilir. */
+  groupCompositionParams?: GroupCompositionRuleFormState
 }
 
 export interface RuleTemplate {
@@ -184,20 +195,39 @@ export interface RuleTemplate {
   description: string
   ruleType: RuleType
   icon: string
+  /** Şablon kartı vurgu rengi (hex). */
+  color?: string
+  /** Şablon galerisi kategorisi (Türkçe). */
+  category?: string
+  /** Lucide dışı kısa sembol (ör. şablon kartında). */
+  emoji?: string
   defaultConditions: Partial<RuleConditionGroup>
   defaultActions: Partial<RuleAction>[]
   parameters: RuleTemplateParameter[]
 }
 
+export type RuleTemplateParameterType =
+  | 'number'
+  | 'text'
+  | 'select'
+  | 'boolean'
+  | 'time'
+  | 'days'
+  | 'multiselect'
+  | 'slider'
+
 export interface RuleTemplateParameter {
   name: string
   label: string
-  type: 'number' | 'text' | 'select' | 'boolean' | 'time' | 'days'
-  defaultValue: any
+  type: RuleTemplateParameterType
+  defaultValue: unknown
   options?: { value: string; label: string }[]
   min?: number
   max?: number
+  step?: number
   required?: boolean
+  /** Form altı açıklama. */
+  hint?: string
 }
 
 export interface RuleTestContext {

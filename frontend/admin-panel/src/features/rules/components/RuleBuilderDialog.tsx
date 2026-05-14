@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
@@ -12,6 +12,7 @@ import {
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { Checkbox } from '@/components/ui/checkbox'
 import { Textarea } from '@/components/ui/textarea'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -39,9 +40,24 @@ import {
   Trash2,
   Code,
 } from 'lucide-react'
-import type { Rule, RuleTemplate, RuleCondition, RuleAction, ActionType, ConditionOperator, RuleTrigger } from '@/types/api'
+import type {
+  Rule,
+  RuleTemplate,
+  RuleCondition,
+  RuleAction,
+  ActionType,
+  ConditionOperator,
+  RuleTrigger,
+  RuleType,
+  GroupCompositionRuleFormState,
+} from '@/types/api'
 import { conditionFields, operatorLabels, dayLabels, actionTypeLabels } from '../data/ruleTemplates'
-import { ruleToHumanReadable, getPriorityDescription, getPriorityColor } from '../utils/ruleHumanReadable'
+import {
+  DEFAULT_GROUP_COMPOSITION_FORM,
+  GROUP_COMPOSITION_LABELS,
+  GROUP_COMPOSITION_VALUES,
+} from '../constants/groupCompositionRule'
+import { ruleToHumanReadable, getPriorityDescription, getPriorityColor, groupCompositionToHumanReadable } from '../utils/ruleHumanReadable'
 import { RuleTestDialog } from './RuleTestDialog'
 import { cn } from '@/lib/cn'
 
@@ -74,6 +90,8 @@ interface RuleBuilderDialogProps {
   isLoading?: boolean
 }
 
+const RATIO_SLIDER_STEP_UI = 5
+
 const STEPS = [
   { id: 1, title: 'Temel Bilgiler', description: 'İsim, açıklama ve öncelik' },
   { id: 2, title: 'Koşullar', description: 'Kuralın tetiklenme koşulları' },
@@ -96,6 +114,15 @@ export function RuleBuilderDialog({
   const [showJsonEditor, setShowJsonEditor] = useState(false)
   const [showTestDialog, setShowTestDialog] = useState(false)
   const [tempRuleId, setTempRuleId] = useState<string | null>(null)
+  const [groupCompositionForm, setGroupCompositionForm] = useState<GroupCompositionRuleFormState>(
+    () => ({ ...DEFAULT_GROUP_COMPOSITION_FORM })
+  )
+
+  const effectiveRuleType = useMemo(
+    () => (template?.ruleType ?? existingRule?.ruleType ?? 'CustomCondition') as RuleType,
+    [template, existingRule]
+  )
+  const isGroupCompositionRule = effectiveRuleType === 'GroupComposition'
 
   const {
     register,
@@ -128,7 +155,12 @@ export function RuleBuilderDialog({
         trigger: 'OnReservation',
         isActive: true,
       })
-      setConditions(template.defaultConditions?.conditions || [])
+      if (template.ruleType === 'GroupComposition') {
+        setGroupCompositionForm({ ...DEFAULT_GROUP_COMPOSITION_FORM })
+        setConditions([])
+      } else {
+        setConditions(template.defaultConditions?.conditions || [])
+      }
       setActions(template.defaultActions?.map(a => a as RuleAction) || [])
     } else if (existingRule) {
       reset({
@@ -138,7 +170,16 @@ export function RuleBuilderDialog({
         trigger: existingRule.trigger,
         isActive: existingRule.isActive,
       })
-      setConditions(existingRule.conditions?.conditions || [])
+      if (existingRule.ruleType === 'GroupComposition') {
+        setGroupCompositionForm(
+          existingRule.groupCompositionParams
+            ? { ...existingRule.groupCompositionParams }
+            : { ...DEFAULT_GROUP_COMPOSITION_FORM }
+        )
+        setConditions([])
+      } else {
+        setConditions(existingRule.conditions?.conditions || [])
+      }
       setActions(existingRule.actions || [])
       setTempRuleId(existingRule.id)
     } else {
@@ -151,8 +192,10 @@ export function RuleBuilderDialog({
       })
       setConditions([])
       setActions([])
+      setGroupCompositionForm({ ...DEFAULT_GROUP_COMPOSITION_FORM })
     }
     setCurrentStep(1)
+    setShowJsonEditor(false)
   }, [template, existingRule, reset, open])
 
   const handleNext = () => {
@@ -217,12 +260,13 @@ export function RuleBuilderDialog({
     const ruleData = {
       ...data,
       venueId,
-      ruleType: template?.ruleType || 'CustomCondition',
+      ruleType: effectiveRuleType,
       conditions: {
         conditions,
         logicalOperator: 'And' as const,
       },
       actions,
+      groupComposition: isGroupCompositionRule ? groupCompositionForm : undefined,
     }
     onSubmit(ruleData)
   }
@@ -232,11 +276,15 @@ export function RuleBuilderDialog({
     description: watch('description'),
     priority: watch('priority'),
     trigger: watch('trigger'),
+    ruleType: effectiveRuleType,
     conditions: { conditions, logicalOperator: 'And' },
     actions,
+    groupCompositionParams: isGroupCompositionRule ? groupCompositionForm : undefined,
   }
 
-  const humanReadableText = ruleToHumanReadable(previewRule as Rule)
+  const humanReadableText = isGroupCompositionRule
+    ? groupCompositionToHumanReadable(groupCompositionForm, actions)
+    : ruleToHumanReadable(previewRule as Rule)
 
   return (
     <>
@@ -356,27 +404,158 @@ export function RuleBuilderDialog({
                   <div>
                     <h3 className="font-medium">Koşullar</h3>
                     <p className="text-sm text-muted-foreground">
-                      Kuralın tetiklenmesi için gerekli koşulları belirleyin
+                      {isGroupCompositionRule
+                        ? 'Grup yapısı ve cinsiyet oranı kurallarını tanımlayın'
+                        : 'Kuralın tetiklenmesi için gerekli koşulları belirleyin'}
                     </p>
                   </div>
-                  <div className="flex items-center space-x-2">
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setShowJsonEditor(!showJsonEditor)}
-                    >
-                      <Code className="h-4 w-4 mr-1" />
-                      {showJsonEditor ? 'Form' : 'JSON'}
-                    </Button>
-                    <Button type="button" size="sm" onClick={addCondition}>
-                      <Plus className="h-4 w-4 mr-1" />
-                      Koşul Ekle
-                    </Button>
-                  </div>
+                  {!isGroupCompositionRule && (
+                    <div className="flex items-center space-x-2">
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setShowJsonEditor(!showJsonEditor)}
+                      >
+                        <Code className="h-4 w-4 mr-1" />
+                        {showJsonEditor ? 'Form' : 'JSON'}
+                      </Button>
+                      <Button type="button" size="sm" onClick={addCondition}>
+                        <Plus className="h-4 w-4 mr-1" />
+                        Koşul Ekle
+                      </Button>
+                    </div>
+                  )}
                 </div>
 
-                {showJsonEditor ? (
+                {isGroupCompositionRule ? (
+                  <div className="space-y-6">
+                    <div className="space-y-2">
+                      <Label>Alt kurallar birleşimi</Label>
+                      <Select
+                        value={groupCompositionForm.operator}
+                        onValueChange={(v) =>
+                          setGroupCompositionForm((s) => ({
+                            ...s,
+                            operator: v === 'or' ? 'or' : 'and',
+                          }))
+                        }
+                      >
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="and">VE (tümü birlikte)</SelectItem>
+                          <SelectItem value="or">VEYA (birinin yeterli olması)</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label>Engellenen kompozisyonlar</Label>
+                      <div className="grid grid-cols-2 gap-3">
+                        {GROUP_COMPOSITION_VALUES.map((key) => {
+                          const id = `gc-block-${key}`
+                          const checked = groupCompositionForm.blockedCompositions.includes(key)
+                          return (
+                            <label
+                              key={key}
+                              htmlFor={id}
+                              className="flex items-center gap-2 rounded-md border p-3 cursor-pointer hover:bg-muted/40"
+                            >
+                              <Checkbox
+                                id={id}
+                                checked={checked}
+                                onCheckedChange={(c) => {
+                                  const on = c === true
+                                  setGroupCompositionForm((s) => ({
+                                    ...s,
+                                    blockedCompositions: on
+                                      ? [...s.blockedCompositions, key]
+                                      : s.blockedCompositions.filter((x) => x !== key),
+                                  }))
+                                }}
+                              />
+                              <span className="text-sm">{GROUP_COMPOSITION_LABELS[key]}</span>
+                            </label>
+                          )
+                        })}
+                      </div>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label>Minimum kişi sayısı (oran alt kuralı için)</Label>
+                      <Input
+                        type="number"
+                        min={1}
+                        max={20}
+                        value={groupCompositionForm.minPartySize}
+                        onChange={(e) => {
+                          const n = parseInt(e.target.value, 10)
+                          setGroupCompositionForm((s) => ({
+                            ...s,
+                            minPartySize: Number.isNaN(n) ? 1 : Math.min(20, Math.max(1, n)),
+                          }))
+                        }}
+                      />
+                      <p className="text-xs text-muted-foreground">
+                        Bu değerin üzerindeki partilerde oran kuralları değerlendirilir.
+                      </p>
+                    </div>
+
+                    <div className="space-y-2">
+                      <div className="flex justify-between gap-2">
+                        <Label>Minimum kadın oranı (opsiyonel)</Label>
+                        <span className="text-sm text-muted-foreground shrink-0">
+                          {!groupCompositionForm.minFemaleRatioPercent
+                            ? 'Kapalı (0%)'
+                            : `%${groupCompositionForm.minFemaleRatioPercent}`}
+                        </span>
+                      </div>
+                      <Slider
+                        value={[groupCompositionForm.minFemaleRatioPercent ?? 0]}
+                        onValueChange={([v]) =>
+                          setGroupCompositionForm((s) => ({
+                            ...s,
+                            minFemaleRatioPercent: v <= 0 ? null : v,
+                          }))
+                        }
+                        min={0}
+                        max={100}
+                        step={RATIO_SLIDER_STEP_UI}
+                      />
+                      <p className="text-xs text-muted-foreground">
+                        0 = kısıtlama yok. JSON&apos;a 0.0–1.0 oran olarak yazılır.
+                      </p>
+                    </div>
+
+                    <div className="space-y-2">
+                      <div className="flex justify-between gap-2">
+                        <Label>Maksimum erkek oranı (opsiyonel)</Label>
+                        <span className="text-sm text-muted-foreground shrink-0">
+                          {groupCompositionForm.maxMaleRatioPercent == null
+                            ? 'Kapalı'
+                            : `%${groupCompositionForm.maxMaleRatioPercent} üst sınır`}
+                        </span>
+                      </div>
+                      <Slider
+                        value={[groupCompositionForm.maxMaleRatioPercent ?? 100]}
+                        onValueChange={([v]) =>
+                          setGroupCompositionForm((s) => ({
+                            ...s,
+                            maxMaleRatioPercent: v >= 100 ? null : v,
+                          }))
+                        }
+                        min={0}
+                        max={100}
+                        step={RATIO_SLIDER_STEP_UI}
+                      />
+                      <p className="text-xs text-muted-foreground">
+                        %100 = kısıtlama yok. Daha düşük değerler JSON&apos;a 0.0–1.0 oran olarak yazılır.
+                      </p>
+                    </div>
+                  </div>
+                ) : showJsonEditor ? (
                   <div className="space-y-2">
                     <Label>JSON Koşulları</Label>
                     <Textarea
