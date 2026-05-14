@@ -231,7 +231,10 @@ public sealed class PlanLimitService : IPlanLimitService
 
         try
         {
-            return JsonSerializer.Deserialize<PlanLimits>(limitsJson) ?? PlanLimits.Default;
+            // Seed LimitsJson uses camelCase (e.g. maxTables); default serializer is case-sensitive.
+            return JsonSerializer.Deserialize<PlanLimits>(
+                limitsJson,
+                new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? PlanLimits.Default;
         }
         catch (JsonException ex)
         {

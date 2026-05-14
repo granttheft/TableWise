@@ -30,7 +30,12 @@ export function useCreateTable() {
 
   return useMutation({
     mutationFn: async (data: { venueId: string; table: CreateTablePayload & { isActive?: boolean } }) => {
-      const { isActive: _ignored, ...body } = data.table
+      const { isActive: _ignored, ...rest } = data.table
+      const description =
+        typeof rest.description === 'string' && rest.description.trim().length > 0
+          ? rest.description.trim()
+          : null
+      const body = { ...rest, description }
       const response = await api.post<string>(tablesBase(data.venueId), body)
       return response.data
     },
@@ -40,7 +45,12 @@ export function useCreateTable() {
       toast.success('Masa başarıyla oluşturuldu')
     },
     onError: (error: any) => {
-      toast.error(error.response?.data?.title || 'Masa oluşturulamadı')
+      const data = error.response?.data
+      const msg =
+        (typeof data?.detail === 'string' && data.detail) ||
+        (typeof data?.title === 'string' && data.title) ||
+        'Masa oluşturulamadı'
+      toast.error(msg)
     },
   })
 }

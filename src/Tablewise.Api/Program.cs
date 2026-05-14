@@ -1,4 +1,5 @@
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.RateLimiting;
 using FluentValidation;
 using FluentValidation.AspNetCore;
@@ -126,8 +127,12 @@ try
     builder.Services.AddValidatorsFromAssemblyContaining<RegisterTenantDtoValidator>();
     builder.Services.AddFluentValidationAutoValidation();
 
-    // Controllers
-    builder.Services.AddControllers();
+    // Controllers (JSON: string enum — SPA "Indoor" vb.; sayısal enum da kabul)
+    builder.Services.AddControllers()
+        .AddJsonOptions(options =>
+        {
+            options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter(allowIntegerValues: true));
+        });
 
     // CORS
     builder.Services.AddCors(options =>
