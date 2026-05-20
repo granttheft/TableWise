@@ -2,7 +2,7 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "dev: full stack (Docker + API + Admin)",
+      "label": "dev: full stack (Docker + API + Admin + Booking)",
       "type": "shell",
       "command": "powershell -NoProfile -ExecutionPolicy Bypass -File \"${workspaceFolder}/scripts/dev.ps1\"",
       "options": {
@@ -16,7 +16,7 @@
       "problemMatcher": []
     },
     {
-      "label": "dev: full stack (API + Admin, Docker atlanır)",
+      "label": "dev: full stack (API + Admin + Booking, Docker atlanır)",
       "type": "shell",
       "command": "powershell -NoProfile -ExecutionPolicy Bypass -File \"${workspaceFolder}/scripts/dev.ps1\" -SkipDocker",
       "options": {
