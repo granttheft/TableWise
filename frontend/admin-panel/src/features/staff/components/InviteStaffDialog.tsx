@@ -13,7 +13,8 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { toast } from 'sonner'
+import { Loader2 } from 'lucide-react'
+import { useInviteStaff } from '@/hooks/useStaff'
 
 const inviteSchema = z.object({
   email: z.string().email('Geçerli bir email adresi giriniz'),
@@ -28,12 +29,14 @@ interface InviteStaffDialogProps {
 }
 
 export function InviteStaffDialog({ open, onOpenChange }: InviteStaffDialogProps) {
+  const inviteMutation = useInviteStaff()
+
   const {
     register,
     handleSubmit,
     control,
     reset,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm<InviteForm>({
     resolver: zodResolver(inviteSchema),
     defaultValues: {
@@ -44,15 +47,15 @@ export function InviteStaffDialog({ open, onOpenChange }: InviteStaffDialogProps
 
   const onSubmit = async (data: InviteForm) => {
     try {
-      console.log('Sending invite:', data)
-      // TODO: POST /api/v1/staff/invite
-      toast.success('Davet gönderildi')
+      await inviteMutation.mutateAsync(data)
       reset()
       onOpenChange(false)
-    } catch (error) {
-      toast.error('Davet gönderilemedi')
+    } catch {
+      // Toast handled in mutation
     }
   }
+
+  const isSubmitting = inviteMutation.isPending
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -109,7 +112,14 @@ export function InviteStaffDialog({ open, onOpenChange }: InviteStaffDialogProps
               İptal
             </Button>
             <Button type="submit" disabled={isSubmitting}>
-              {isSubmitting ? 'Gönderiliyor...' : 'Davet Gönder'}
+              {isSubmitting ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Gönderiliyor...
+                </>
+              ) : (
+                'Davet Gönder'
+              )}
             </Button>
           </DialogFooter>
         </form>

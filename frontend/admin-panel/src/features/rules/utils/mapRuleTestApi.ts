@@ -51,15 +51,10 @@ export function mapTestContextToApi(context: RuleTestContext): ApiTestRuleContex
       ? DAY_INDEX_TO_ENGLISH[context.dayOfWeek]
       : undefined
 
-  let tier: string | undefined
-  if (context.customerTier === 'Vip') tier = 'VIP'
-  else if (context.customerTier === 'Blacklisted') tier = 'Blacklisted'
-  else if (context.customerTier === 'Regular') tier = 'Regular'
-
   return {
     partySize: context.partySize,
     daysInAdvance: context.daysInAdvance,
-    customerTier: tier,
+    customerTier: context.customerTier,
     dayOfWeek: day,
     hour: context.hour,
     venueOccupancy: Math.min(1, Math.max(0, context.occupancyPercent / 100)),

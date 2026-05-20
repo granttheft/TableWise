@@ -113,8 +113,8 @@ export function useDeleteRule() {
       void queryClient.invalidateQueries({ queryKey: ['plan-limits'] })
       toast.success('Kural başarıyla silindi')
     },
-    onError: (error: any) => {
-      toast.error(error.response?.data?.title || 'Kural silinemedi')
+    onError: (error: unknown) => {
+      toast.error(ruleApiErrorMessage(error) || 'Kural silinemedi')
     },
   })
 }
@@ -136,8 +136,8 @@ export function useReorderRules() {
     onSuccess: (_, variables) => {
       void queryClient.invalidateQueries({ queryKey: ['rules', variables.venueId] })
     },
-    onError: (error: any) => {
-      toast.error(error.response?.data?.title || 'Sıralama güncellenemedi')
+    onError: (error: unknown) => {
+      toast.error(ruleApiErrorMessage(error) || 'Sıralama güncellenemedi')
     },
   })
 }
@@ -198,8 +198,8 @@ export function useToggleRuleActive() {
       void queryClient.invalidateQueries({ queryKey: ['rules', variables.venueId] })
       toast.success('Kural durumu güncellendi')
     },
-    onError: (error: any) => {
-      toast.error(error.response?.data?.title || 'İşlem başarısız')
+    onError: (error: unknown) => {
+      toast.error(ruleApiErrorMessage(error) || 'İşlem başarısız')
     },
   })
 }

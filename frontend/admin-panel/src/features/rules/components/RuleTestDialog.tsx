@@ -31,7 +31,7 @@ import { dayLabels } from '../data/ruleTemplates'
 const testContextSchema = z.object({
   partySize: z.number().min(1).max(50),
   daysInAdvance: z.number().min(0).max(365),
-  customerTier: z.enum(['Regular', 'Vip', 'Blacklisted']),
+  customerTier: z.enum(['Regular', 'Gold', 'VIP', 'Blacklisted']),
   dayOfWeek: z.number().min(0).max(6),
   hour: z.number().min(0).max(23),
   occupancyPercent: z.number().min(0).max(100),
@@ -167,7 +167,8 @@ export function RuleTestDialog({
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="Regular">Normal</SelectItem>
-                  <SelectItem value="Vip">VIP</SelectItem>
+                  <SelectItem value="Gold">Gold</SelectItem>
+                  <SelectItem value="VIP">VIP</SelectItem>
                   <SelectItem value="Blacklisted">Kara Liste</SelectItem>
                 </SelectContent>
               </Select>

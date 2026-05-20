@@ -234,10 +234,12 @@ export interface RuleTemplateParameter {
   hint?: string
 }
 
+export type CustomerTier = 'Regular' | 'Gold' | 'VIP' | 'Blacklisted'
+
 export interface RuleTestContext {
   partySize: number
   daysInAdvance: number
-  customerTier: 'Regular' | 'Vip' | 'Blacklisted'
+  customerTier: CustomerTier
   dayOfWeek: number
   hour: number
   occupancyPercent: number
@@ -317,8 +319,6 @@ export interface ReservationStatusLog {
   reason?: string
   timestamp: string
 }
-
-export type CustomerTier = 'Regular' | 'Gold' | 'VIP' | 'Blacklisted'
 
 export interface Customer {
   id: string

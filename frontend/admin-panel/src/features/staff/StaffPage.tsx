@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import { Skeleton } from '@/components/ui/skeleton'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,39 +14,63 @@ import {
 import { Plus, MoreVertical, Mail, RefreshCw, X } from 'lucide-react'
 import { format } from 'date-fns'
 import { tr } from 'date-fns/locale'
-import { toast } from 'sonner'
 import { InviteStaffDialog } from './components/InviteStaffDialog'
-import type { StaffMember, StaffInvite } from '@/types/api'
+import {
+  useStaffMembers,
+  useStaffInvites,
+  useChangeStaffRole,
+  useRemoveStaff,
+  useResendInvite,
+  useCancelInvite,
+} from '@/hooks/useStaff'
+
+function StaffListSkeleton() {
+  return (
+    <Card className="divide-y p-0">
+      {[1, 2, 3].map((i) => (
+        <div key={i} className="flex items-center gap-4 p-4">
+          <Skeleton className="h-12 w-12 rounded-full" />
+          <div className="flex-1 space-y-2">
+            <Skeleton className="h-4 w-40" />
+            <Skeleton className="h-3 w-56" />
+          </div>
+        </div>
+      ))}
+    </Card>
+  )
+}
 
 export function StaffPage() {
   const [isInviteDialogOpen, setIsInviteDialogOpen] = useState(false)
 
-  // TODO: Fetch staff members and invites
-  const staffMembers: StaffMember[] = []
-  const pendingInvites: StaffInvite[] = []
-  const isLoading = false
+  const { data: staffMembers = [], isLoading: staffLoading } = useStaffMembers(true)
+  const { data: pendingInvites = [], isLoading: invitesLoading } = useStaffInvites(true)
+
+  const changeRoleMutation = useChangeStaffRole()
+  const removeStaffMutation = useRemoveStaff()
+  const resendInviteMutation = useResendInvite()
+  const cancelInviteMutation = useCancelInvite()
 
   const handleChangeRole = (staffId: string, newRole: 'Owner' | 'Staff') => {
-    console.log('Change role:', staffId, newRole)
-    toast.success('Rol güncellendi')
+    changeRoleMutation.mutate({ userId: staffId, role: newRole })
   }
 
   const handleRemoveStaff = (staffId: string) => {
-    if (!confirm('Bu kullanıcıyı silmek istediğinizden emin misiniz?')) {
+    if (!confirm('Bu kullanıcıyı kaldırmak istediğinizden emin misiniz?')) {
       return
     }
-    console.log('Remove staff:', staffId)
-    toast.success('Kullanıcı silindi')
+    removeStaffMutation.mutate(staffId)
   }
 
   const handleResendInvite = (inviteId: string) => {
-    console.log('Resend invite:', inviteId)
-    toast.success('Davet tekrar gönderildi')
+    resendInviteMutation.mutate(inviteId)
   }
 
   const handleCancelInvite = (inviteId: string) => {
-    console.log('Cancel invite:', inviteId)
-    toast.success('Davet iptal edildi')
+    if (!confirm('Daveti iptal etmek istediğinizden emin misiniz?')) {
+      return
+    }
+    cancelInviteMutation.mutate(inviteId)
   }
 
   const getInitials = (name: string) => {
@@ -81,10 +106,8 @@ export function StaffPage() {
         </TabsList>
 
         <TabsContent value="active">
-          {isLoading ? (
-            <Card className="flex items-center justify-center py-12">
-              <div className="text-muted-foreground">Yükleniyor...</div>
-            </Card>
+          {staffLoading ? (
+            <StaffListSkeleton />
           ) : staffMembers.length === 0 ? (
             <Card className="flex flex-col items-center justify-center py-12">
               <p className="text-muted-foreground">Henüz ekip üyeniz yok</p>
@@ -97,7 +120,8 @@ export function StaffPage() {
               <div className="divide-y">
                 {staffMembers.map((staff) => {
                   const isOwner = staff.role === 'Owner'
-                  const isLastOwner = isOwner && staffMembers.filter((s) => s.role === 'Owner').length === 1
+                  const isLastOwner =
+                    isOwner && staffMembers.filter((s) => s.role === 'Owner').length === 1
 
                   return (
                     <div key={staff.id} className="flex items-center justify-between p-4">
@@ -117,34 +141,43 @@ export function StaffPage() {
                           </div>
                           <div className="text-sm text-muted-foreground">{staff.email}</div>
                           <div className="text-xs text-muted-foreground">
-                            Son giriş: {staff.lastLoginAt ? format(new Date(staff.lastLoginAt), 'dd MMM yyyy HH:mm', { locale: tr }) : 'Hiç'}
+                            Son giriş:{' '}
+                            {staff.lastLoginAt
+                              ? format(new Date(staff.lastLoginAt), 'dd MMM yyyy HH:mm', {
+                                  locale: tr,
+                                })
+                              : 'Hiç'}
                           </div>
                         </div>
                       </div>
 
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size="icon">
+                          <Button variant="ghost" size="icon" disabled={changeRoleMutation.isPending}>
                             <MoreVertical className="h-4 w-4" />
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
                           {!isOwner && (
-                            <DropdownMenuItem onClick={() => handleChangeRole(staff.id, 'Owner')}>
+                            <DropdownMenuItem
+                              onClick={() => handleChangeRole(staff.id, 'Owner')}
+                            >
                               Owner Yap
                             </DropdownMenuItem>
                           )}
                           {isOwner && !isLastOwner && (
-                            <DropdownMenuItem onClick={() => handleChangeRole(staff.id, 'Staff')}>
+                            <DropdownMenuItem
+                              onClick={() => handleChangeRole(staff.id, 'Staff')}
+                            >
                               Staff Yap
                             </DropdownMenuItem>
                           )}
                           <DropdownMenuItem
                             onClick={() => handleRemoveStaff(staff.id)}
-                            disabled={isLastOwner}
+                            disabled={isLastOwner || removeStaffMutation.isPending}
                             className="text-destructive"
                           >
-                            {isLastOwner ? 'Son Owner Silinemez' : 'Sil'}
+                            {isLastOwner ? 'Son Owner Kaldırılamaz' : 'Kaldır'}
                           </DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>
@@ -157,10 +190,8 @@ export function StaffPage() {
         </TabsContent>
 
         <TabsContent value="invites">
-          {isLoading ? (
-            <Card className="flex items-center justify-center py-12">
-              <div className="text-muted-foreground">Yükleniyor...</div>
-            </Card>
+          {invitesLoading ? (
+            <StaffListSkeleton />
           ) : pendingInvites.length === 0 ? (
             <Card className="flex flex-col items-center justify-center py-12">
               <Mail className="mb-4 h-12 w-12 text-muted-foreground" />
@@ -183,10 +214,12 @@ export function StaffPage() {
                           )}
                         </div>
                         <div className="text-sm text-muted-foreground">
-                          Gönderildi: {format(new Date(invite.createdAt), 'dd MMM yyyy', { locale: tr })}
+                          Gönderildi:{' '}
+                          {format(new Date(invite.createdAt), 'dd MMM yyyy', { locale: tr })}
                         </div>
                         <div className="text-sm text-muted-foreground">
-                          Sona erme: {format(new Date(invite.expiresAt), 'dd MMM yyyy', { locale: tr })}
+                          Sona erme:{' '}
+                          {format(new Date(invite.expiresAt), 'dd MMM yyyy', { locale: tr })}
                         </div>
                       </div>
 
@@ -195,6 +228,7 @@ export function StaffPage() {
                           variant="outline"
                           size="sm"
                           onClick={() => handleResendInvite(invite.id)}
+                          disabled={resendInviteMutation.isPending}
                         >
                           <RefreshCw className="mr-2 h-4 w-4" />
                           Tekrar Gönder
@@ -203,6 +237,7 @@ export function StaffPage() {
                           variant="ghost"
                           size="sm"
                           onClick={() => handleCancelInvite(invite.id)}
+                          disabled={cancelInviteMutation.isPending}
                         >
                           <X className="mr-2 h-4 w-4" />
                           İptal
