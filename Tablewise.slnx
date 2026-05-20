@@ -11,6 +11,9 @@
     <Project Path="tests/Tablewise.UnitTests/Tablewise.UnitTests.csproj" />
   </Folder>
   <Folder Name="/frontend/">
-    <Project Path="frontend/admin-panel/Tablewise.AdminPanel.esproj" />
+    <Project Path="frontend/admin-panel/Tablewise.AdminPanel.esproj">
+      <Build />
+      <Deploy />
+    </Project>
   </Folder>
 </Solution>
