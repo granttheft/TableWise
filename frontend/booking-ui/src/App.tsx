@@ -34,7 +34,7 @@ function App() {
               path="/rezervasyon/degistir/:code"
               element={<ModifyPage />}
             />
-            <Route path="*" element={<Navigate to="/rezervasyon/demo-venue" replace />} />
+            <Route path="*" element={<Navigate to="/rezervasyon/demo-restoran" replace />} />
           </Routes>
           <Toaster position="top-center" richColors />
         </BrowserRouter>

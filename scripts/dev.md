@@ -38,7 +38,7 @@ VS Code/Cursor: **Terminal → Run Task → dev: full stack**
 | Admin panel | http://localhost:3000 |
 | Booking UI | http://localhost:5174/rezervasyon/{slug} |
 
-Örnek booking: `http://localhost:5174/rezervasyon/demo-venue` (seed slug’a göre değişir).
+Örnek booking: `http://localhost:5174/rezervasyon/demo-restoran` (seed tenant slug).
 
 ## İlk kurulum
 
@@ -57,7 +57,8 @@ API için `src/Tablewise.Api` altında `dotnet restore` yeterlidir; script `dotn
 `frontend/booking-ui/.env` (`.env.example` kopyası):
 
 ```env
-VITE_API_URL=http://localhost:5086
+# Bos = Vite proxy -> API 5086 (onerilen)
+VITE_API_URL=
 VITE_BOOKING_BASE_URL=http://localhost:5174/rezervasyon
 ```
 

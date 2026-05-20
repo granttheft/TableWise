@@ -13,7 +13,8 @@ import type {
 } from '@/types/api';
 import { generateIdempotencyKey } from './utils';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+/** Bos ise Vite proxy /api -> localhost:5086 (admin-panel ile ayni yerel akis). */
+const API_URL = import.meta.env.VITE_API_URL ?? '';
 
 export const api = axios.create({
   baseURL: API_URL,
