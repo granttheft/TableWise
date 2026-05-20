@@ -102,6 +102,35 @@ public sealed class ReservationController : ControllerBase
     }
 
     /// <summary>
+    /// Manuel rezervasyon öncesi slot ve kural değerlendirmesi yapar.
+    /// </summary>
+    /// <param name="dto">Değerlendirme parametreleri</param>
+    /// <param name="cancellationToken">İptal token'ı</param>
+    /// <returns>Değerlendirme sonucu</returns>
+    [HttpPost("evaluate")]
+    [ProducesResponseType(typeof(EvaluateManualReservationResponseDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+    public async Task<IActionResult> EvaluateReservation(
+        [FromBody] EvaluateManualReservationRequestDto dto,
+        CancellationToken cancellationToken = default)
+    {
+        var command = new EvaluateManualReservationCommand
+        {
+            VenueId = dto.VenueId,
+            TableId = dto.TableId,
+            PartySize = dto.PartySize,
+            ReservedFor = dto.ReservedFor,
+            CustomerId = dto.CustomerId,
+            GuestEmail = dto.GuestEmail,
+            GuestPhone = dto.GuestPhone,
+        };
+
+        var result = await _mediator.Send(command, cancellationToken);
+        return Ok(result);
+    }
+
+    /// <summary>
     /// Manuel rezervasyon oluşturur.
     /// </summary>
     /// <param name="dto">Rezervasyon bilgileri</param>

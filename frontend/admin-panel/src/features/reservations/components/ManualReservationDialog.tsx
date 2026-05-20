@@ -20,6 +20,10 @@ import { Alert, AlertDescription } from '@/components/ui/alert'
 import { AlertCircle, Search, UserPlus, CheckCircle, XCircle } from 'lucide-react'
 import { toast } from 'sonner'
 import { useSearchCustomers, useCreateReservation, useEvaluateReservation } from '@/hooks/useReservations'
+import {
+  mapManualReservationToCreatePayload,
+  mapManualReservationToEvaluatePayload,
+} from '../utils/manualReservationPayload'
 import { useTables } from '@/hooks/useTables'
 import { useVenues } from '@/hooks/useVenues'
 import type { Table, VenueCustomField, Customer } from '@/types/api'
@@ -39,7 +43,7 @@ const manualReservationSchema = z.object({
   overrideRules: z.boolean().default(false),
 })
 
-type ManualReservationForm = z.infer<typeof manualReservationSchema>
+export type ManualReservationForm = z.infer<typeof manualReservationSchema>
 
 interface ManualReservationDialogProps {
   open: boolean
@@ -145,14 +149,18 @@ export function ManualReservationDialog({
   const handleCheckRules = async () => {
     const values = watch()
     try {
-      const result = await evaluateReservation.mutateAsync({
-        venueId: values.venueId,
-        tableId: values.tableId,
-        date: values.date,
-        timeSlot: values.timeSlot,
-        guestCount: values.guestCount,
-        customerId: values.customerId,
-      })
+      const result = await evaluateReservation.mutateAsync(
+        mapManualReservationToEvaluatePayload({
+          venueId: values.venueId,
+          tableId: values.tableId,
+          date: values.date,
+          timeSlot: values.timeSlot,
+          guestCount: values.guestCount,
+          customerId: values.customerId,
+          guestEmail: values.guestEmail,
+          guestPhone: values.guestPhone,
+        })
+      )
       setEvaluationResult(result)
     } catch (error) {
       toast.error('Kurallar kontrol edilemedi')
@@ -161,7 +169,7 @@ export function ManualReservationDialog({
 
   const onSubmit = async (data: ManualReservationForm) => {
     try {
-      await createReservation.mutateAsync(data)
+      await createReservation.mutateAsync(mapManualReservationToCreatePayload(data))
       toast.success('Rezervasyon oluşturuldu')
       onOpenChange(false)
     } catch (error: any) {

@@ -147,24 +147,43 @@ export function useUpdateReservationStatus() {
   })
 }
 
+/** API evaluate yanıtı (camelCase). */
+interface EvaluateReservationApiResponse {
+  isAllowed: boolean
+  warnings?: { message: string; ruleId: string }[]
+  blockers?: { message: string; ruleId: string }[]
+  discountPercent?: number
+  depositRequired?: boolean
+  depositAmount?: number
+  appliedRules?: string[]
+}
+
 export function useEvaluateReservation() {
   return useMutation({
     mutationFn: async (data: {
       venueId: string
       tableId: string
-      date: string
-      timeSlot: string
-      guestCount: number
-      customerId?: string
+      partySize: number
+      reservedFor: string
+      customerId?: string | null
+      guestEmail?: string | null
+      guestPhone?: string | null
     }) => {
-      const response = await api.post<ReservationEvaluationResult>(
+      const response = await api.post<EvaluateReservationApiResponse>(
         `/api/v1/reservations/evaluate`,
         data
       )
-      return response.data
-    },
-    onError: (error: any) => {
-      toast.error(error.response?.data?.message || 'Değerlendirme başarısız')
+      const body = response.data
+      const result: ReservationEvaluationResult = {
+        isAllowed: body.isAllowed,
+        warnings: body.warnings,
+        blockers: body.blockers,
+        discountPercent: body.discountPercent,
+        depositRequired: body.depositRequired,
+        depositAmount: body.depositAmount,
+        appliedRules: body.appliedRules,
+      }
+      return result
     },
   })
 }
