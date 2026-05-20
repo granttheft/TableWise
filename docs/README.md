@@ -4,7 +4,11 @@ Bu klasör proje dokümantasyonunu içerir.
 
 ## İçerik
 
-- **Tablewise_Urun_Dokumani_v1.1.docx** - Ana ürün dokümantasyonu (buraya eklenecek)
+- **Tablewise_Urun_Dokumani_v1.1.docx** - Ana ürün dokümantasyonu
+- **[FAZ_5_TAMAMLANDI.md](./FAZ_5_TAMAMLANDI.md)** - Faz 5 Admin Panel özet (sunum / handoff)
+- **FAZ_1.8_PERSONEL_DAVETI.md** — Personel davet backend
+- **FAZ_2.1a / 2.1b / 2.1c_TAMAMLANDI.md** — API katmanı modülleri
+- **tablewise-cursor-prompts-v1.1.md** — Faz planı ve Cursor promptları
 
 ## Dokümantasyon Yapısı
 
