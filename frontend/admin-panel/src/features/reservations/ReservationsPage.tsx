@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
@@ -9,6 +9,7 @@ import { format, addDays, subDays, startOfDay, parseISO, differenceInMinutes } f
 import { tr } from 'date-fns/locale'
 import { useReservations, useExportReservations } from '@/hooks/useReservations'
 import { useTables } from '@/hooks/useTables'
+import { useVenues } from '@/hooks/useVenues'
 import { ReservationDetailDrawer } from './components/ReservationDetailDrawer'
 import { ManualReservationDialog } from './components/ManualReservationDialog'
 import { getStatusLabel, getStatusColor, calculateBlockPosition, generateTimeSlots } from './utils/reservationHelpers'
@@ -16,7 +17,14 @@ import type { ReservationStatus } from '@/types/api'
 
 export function ReservationsPage() {
   const [selectedDate, setSelectedDate] = useState(startOfDay(new Date()))
-  const [selectedVenue, setSelectedVenue] = useState<string>('all')
+  const [selectedVenue, setSelectedVenue] = useState<string>('')
+  const { data: venues = [] } = useVenues()
+
+  useEffect(() => {
+    if (!selectedVenue && venues.length > 0) {
+      setSelectedVenue(venues[0].id)
+    }
+  }, [venues, selectedVenue])
   const [selectedTable, setSelectedTable] = useState<string>('all')
   const [selectedStatus, setSelectedStatus] = useState<ReservationStatus | 'all'>('all')
   
@@ -27,12 +35,12 @@ export function ReservationsPage() {
 
   const { data: reservations = [], isLoading } = useReservations({
     date: format(selectedDate, 'yyyy-MM-dd'),
-    venueId: selectedVenue !== 'all' ? selectedVenue : undefined,
+    venueId: selectedVenue || undefined,
     tableId: selectedTable !== 'all' ? selectedTable : undefined,
     status: selectedStatus !== 'all' ? selectedStatus : undefined,
   })
 
-  const { data: tables = [] } = useTables(selectedVenue !== 'all' ? selectedVenue : undefined)
+  const { data: tables = [] } = useTables(selectedVenue || undefined)
   const exportReservations = useExportReservations()
 
   const timeSlots = generateTimeSlots(10, 24)
@@ -55,7 +63,7 @@ export function ReservationsPage() {
     try {
       await exportReservations.mutateAsync({
         date: format(selectedDate, 'yyyy-MM-dd'),
-        venueId: selectedVenue !== 'all' ? selectedVenue : undefined,
+        venueId: selectedVenue || undefined,
       })
     } catch (error) {
       console.error('Export failed:', error)
@@ -100,13 +108,20 @@ export function ReservationsPage() {
           </div>
 
           {/* Venue Filter */}
-          <Select value={selectedVenue} onValueChange={setSelectedVenue}>
+          <Select
+            value={selectedVenue || undefined}
+            onValueChange={setSelectedVenue}
+            disabled={venues.length === 0}
+          >
             <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Tüm Mekanlar" />
+              <SelectValue placeholder="Mekan seçin" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">Tüm Mekanlar</SelectItem>
-              {/* TODO: Fetch venues */}
+              {venues.map((venue) => (
+                <SelectItem key={venue.id} value={venue.id}>
+                  {venue.name}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
 
@@ -278,8 +293,8 @@ export function ReservationsPage() {
       <ManualReservationDialog
         open={isManualDialogOpen}
         onOpenChange={setIsManualDialogOpen}
-        venueId={selectedVenue !== 'all' ? selectedVenue : ''}
-        tables={tables || []}
+        venueId={selectedVenue}
+        tables={tables}
         presetTableId={presetSlot?.tableId}
         presetTimeSlot={presetSlot?.timeSlot}
         presetDate={format(selectedDate, 'yyyy-MM-dd')}

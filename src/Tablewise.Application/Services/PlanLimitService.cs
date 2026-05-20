@@ -217,29 +217,82 @@ public sealed class PlanLimitService : IPlanLimitService
     /// </summary>
     private async Task<PlanLimits> GetPlanLimitsAsync(Guid tenantId, CancellationToken cancellationToken)
     {
-        var limitsJson = await _dbContext.Tenants
+        var planJson = await _dbContext.Tenants
             .Where(t => t.Id == tenantId)
-            .Join(_dbContext.Plans, t => t.PlanId, p => p.Id, (t, p) => p.LimitsJson)
+            .Join(_dbContext.Plans, t => t.PlanId, p => p.Id, (t, p) => new { p.FeaturesJson, p.LimitsJson })
             .FirstOrDefaultAsync(cancellationToken)
             .ConfigureAwait(false);
 
-        if (string.IsNullOrEmpty(limitsJson))
+        if (planJson is null)
         {
-            _logger.LogWarning("Tenant {TenantId} için plan limitleri bulunamadı, varsayılan limitler kullanılıyor", tenantId);
+            _logger.LogWarning("Tenant {TenantId} için plan bulunamadı, varsayılan limitler kullanılıyor", tenantId);
             return PlanLimits.Default;
+        }
+
+        // Seed maxTables/maxRules değerleri FeaturesJson içinde; LimitsJson teknik kota (apiRateLimit vb.).
+        return new PlanLimits
+        {
+            MaxVenues = ResolvePlanLimit(planJson.FeaturesJson, planJson.LimitsJson, "maxVenues", PlanLimits.Default.MaxVenues),
+            MaxTables = ResolvePlanLimit(planJson.FeaturesJson, planJson.LimitsJson, "maxTables", PlanLimits.Default.MaxTables),
+            MaxRules = ResolvePlanLimit(planJson.FeaturesJson, planJson.LimitsJson, "maxRules", PlanLimits.Default.MaxRules),
+            MaxReservationsPerMonth = ResolvePlanLimit(
+                planJson.FeaturesJson,
+                planJson.LimitsJson,
+                "maxReservationsPerMonth",
+                PlanLimits.Default.MaxReservationsPerMonth)
+        };
+    }
+
+    /// <summary>
+    /// Plan limit anahtarını okur: önce FeaturesJson, sonra LimitsJson. Negatif değer sınırsız (-1).
+    /// </summary>
+    private static int ResolvePlanLimit(string? featuresJson, string? limitsJson, string key, int defaultWhenMissing)
+    {
+        var fromFeatures = TryReadIntProperty(featuresJson, key);
+        if (fromFeatures.HasValue)
+        {
+            return fromFeatures.Value < 0 ? -1 : fromFeatures.Value;
+        }
+
+        var fromLimits = TryReadIntProperty(limitsJson, key);
+        if (fromLimits.HasValue)
+        {
+            return fromLimits.Value < 0 ? -1 : fromLimits.Value;
+        }
+
+        return defaultWhenMissing;
+    }
+
+    private static int? TryReadIntProperty(string? json, string key)
+    {
+        if (string.IsNullOrWhiteSpace(json))
+        {
+            return null;
         }
 
         try
         {
-            // Seed LimitsJson uses camelCase (e.g. maxTables); default serializer is case-sensitive.
-            return JsonSerializer.Deserialize<PlanLimits>(
-                limitsJson,
-                new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? PlanLimits.Default;
+            using var doc = JsonDocument.Parse(json);
+            if (doc.RootElement.ValueKind != JsonValueKind.Object)
+            {
+                return null;
+            }
+
+            if (!doc.RootElement.TryGetProperty(key, out var prop))
+            {
+                return null;
+            }
+
+            return prop.ValueKind switch
+            {
+                JsonValueKind.Null => null,
+                JsonValueKind.Number => prop.TryGetInt32(out var i) ? i : null,
+                _ => null
+            };
         }
-        catch (JsonException ex)
+        catch (JsonException)
         {
-            _logger.LogError(ex, "Plan limitleri JSON parse hatası, varsayılan limitler kullanılıyor");
-            return PlanLimits.Default;
+            return null;
         }
     }
 

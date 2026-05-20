@@ -20,11 +20,13 @@ import { Alert, AlertDescription } from '@/components/ui/alert'
 import { AlertCircle, Search, UserPlus, CheckCircle, XCircle } from 'lucide-react'
 import { toast } from 'sonner'
 import { useSearchCustomers, useCreateReservation, useEvaluateReservation } from '@/hooks/useReservations'
+import { useTables } from '@/hooks/useTables'
+import { useVenues } from '@/hooks/useVenues'
 import type { Table, VenueCustomField, Customer } from '@/types/api'
 
 const manualReservationSchema = z.object({
-  venueId: z.string().uuid(),
-  tableId: z.string().uuid(),
+  venueId: z.string({ required_error: 'Mekan seçin' }).uuid('Geçerli bir mekan seçin'),
+  tableId: z.string({ required_error: 'Masa seçin' }).uuid('Geçerli bir masa seçin'),
   date: z.string(),
   timeSlot: z.string(),
   guestCount: z.number().min(1).max(50),
@@ -43,7 +45,8 @@ interface ManualReservationDialogProps {
   open: boolean
   onOpenChange: (open: boolean) => void
   venueId: string
-  tables: Table[]
+  /** Üst sayfadan gelen liste; boşsa dialog içinde useTables ile yüklenir. */
+  tables?: Table[]
   customFields?: VenueCustomField[]
   presetTableId?: string
   presetTimeSlot?: string
@@ -54,7 +57,7 @@ export function ManualReservationDialog({
   open,
   onOpenChange,
   venueId,
-  tables,
+  tables: tablesFromParent = [],
   customFields = [],
   presetTableId,
   presetTimeSlot,
@@ -72,6 +75,7 @@ export function ManualReservationDialog({
 
   const createReservation = useCreateReservation()
   const evaluateReservation = useEvaluateReservation()
+  const { data: venues = [] } = useVenues()
 
   const {
     register,
@@ -83,9 +87,11 @@ export function ManualReservationDialog({
     formState: { errors, isSubmitting },
   } = useForm<ManualReservationForm>({
     resolver: zodResolver(manualReservationSchema),
+    mode: 'onSubmit',
+    reValidateMode: 'onChange',
     defaultValues: {
-      venueId,
-      tableId: presetTableId || '',
+      venueId: venueId || undefined,
+      tableId: presetTableId,
       date: presetDate || new Date().toISOString().split('T')[0],
       timeSlot: presetTimeSlot || '',
       guestCount: 2,
@@ -99,12 +105,18 @@ export function ManualReservationDialog({
   })
 
   const overrideRules = watch('overrideRules')
+  const watchedVenueId = watch('venueId')
+  const effectiveVenueId = watchedVenueId || venueId || undefined
+  const { data: tablesFromApi = [], isLoading: tablesLoading } = useTables(effectiveVenueId)
+  const tableOptions = (tablesFromApi.length > 0 ? tablesFromApi : tablesFromParent).filter(
+    (t) => t.isActive
+  )
 
   useEffect(() => {
     if (open) {
       reset({
-        venueId,
-        tableId: presetTableId || '',
+        venueId: venueId || venues[0]?.id,
+        tableId: presetTableId,
         date: presetDate || new Date().toISOString().split('T')[0],
         timeSlot: presetTimeSlot || '',
         guestCount: 2,
@@ -119,7 +131,7 @@ export function ManualReservationDialog({
       setShowNewCustomerForm(false)
       setEvaluationResult(null)
     }
-  }, [open, reset, venueId, presetTableId, presetDate, presetTimeSlot])
+  }, [open, reset, venueId, venues, presetTableId, presetDate, presetTimeSlot])
 
   const handleCustomerSelect = (customer: Customer) => {
     setSelectedCustomer(customer)
@@ -166,6 +178,39 @@ export function ManualReservationDialog({
         </DialogHeader>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          {venues.length > 1 && (
+            <div className="space-y-2">
+              <Label>Mekan *</Label>
+              <Controller
+                name="venueId"
+                control={control}
+                render={({ field }) => (
+                  <Select
+                    value={field.value || undefined}
+                    onValueChange={(value) => {
+                      field.onChange(value)
+                      setValue('tableId', '' as ManualReservationForm['tableId'])
+                    }}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Mekan seçin" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {venues.map((v) => (
+                        <SelectItem key={v.id} value={v.id}>
+                          {v.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                )}
+              />
+              {errors.venueId && (
+                <p className="text-sm text-destructive">{errors.venueId.message}</p>
+              )}
+            </div>
+          )}
+
           {/* Masa & Tarih & Saat */}
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
@@ -174,12 +219,24 @@ export function ManualReservationDialog({
                 name="tableId"
                 control={control}
                 render={({ field }) => (
-                  <Select value={field.value} onValueChange={field.onChange}>
+                  <Select
+                    value={field.value || undefined}
+                    onValueChange={field.onChange}
+                    disabled={!effectiveVenueId || tablesLoading}
+                  >
                     <SelectTrigger>
-                      <SelectValue placeholder="Masa seçin" />
+                      <SelectValue
+                        placeholder={
+                          tablesLoading
+                            ? 'Masalar yükleniyor...'
+                            : tableOptions.length === 0
+                              ? 'Bu mekanda masa yok'
+                              : 'Masa seçin'
+                        }
+                      />
                     </SelectTrigger>
                     <SelectContent>
-                      {tables.map((table) => (
+                      {tableOptions.map((table) => (
                         <SelectItem key={table.id} value={table.id}>
                           {table.name} ({table.capacity} kişi)
                         </SelectItem>
@@ -189,6 +246,11 @@ export function ManualReservationDialog({
                 )}
               />
               {errors.tableId && <p className="text-sm text-destructive">{errors.tableId.message}</p>}
+              {!tablesLoading && tableOptions.length === 0 && effectiveVenueId && (
+                <p className="text-sm text-muted-foreground">
+                  Önce Masalar sayfasından bu mekana masa ekleyin.
+                </p>
+              )}
             </div>
 
             <div className="space-y-2">
