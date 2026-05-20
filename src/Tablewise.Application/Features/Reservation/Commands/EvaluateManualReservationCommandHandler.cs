@@ -1,5 +1,6 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Tablewise.Application.Common;
 using Tablewise.Application.DTOs.Reservation;
 using Tablewise.Application.Interfaces;
 using Tablewise.Domain.Exceptions;
@@ -39,6 +40,7 @@ public sealed class EvaluateManualReservationCommandHandler
         CancellationToken cancellationToken)
     {
         var tenantId = _tenantContext.TenantId;
+        var reservedFor = DateTimeNormalization.ToUtcReservedFor(request.ReservedFor);
 
         var venue = await _unitOfWork.Venues
             .Query()
@@ -54,10 +56,10 @@ public sealed class EvaluateManualReservationCommandHandler
         var blockers = new List<ReservationEvaluationItemDto>();
         var warnings = new List<ReservationEvaluationItemDto>();
 
-        var slotEndTime = request.ReservedFor.AddMinutes(venue.SlotDurationMinutes);
+        var slotEndTime = reservedFor.AddMinutes(venue.SlotDurationMinutes);
         var availability = await _slotService.CheckSlotAvailabilityAsync(
                 venue.Id,
-                request.ReservedFor,
+                reservedFor,
                 slotEndTime,
                 request.PartySize,
                 request.TableId,
@@ -112,7 +114,7 @@ public sealed class EvaluateManualReservationCommandHandler
             CustomerEmail = customerEmail,
             CustomerPhone = customerPhone,
             CustomerTier = customerTier,
-            ReservedFor = request.ReservedFor,
+            ReservedFor = reservedFor,
             PartySize = request.PartySize,
             TableId = effectiveTableId,
             Source = "ManualAdmin",

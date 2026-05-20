@@ -5,7 +5,11 @@ import type { ManualReservationForm } from '../components/ManualReservationDialo
  */
 export function buildReservedForIso(date: string, timeSlot: string): string {
   const time = timeSlot.length === 5 ? `${timeSlot}:00` : timeSlot
-  return `${date}T${time}`
+  const local = new Date(`${date}T${time}`)
+  if (Number.isNaN(local.getTime())) {
+    return `${date}T${time}`
+  }
+  return local.toISOString()
 }
 
 /**

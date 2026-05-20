@@ -3,6 +3,7 @@ using System.Text.Json;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Tablewise.Application.Common;
 using Tablewise.Application.DTOs.Reservation;
 using Tablewise.Application.Interfaces;
 using Tablewise.Domain.Entities;
@@ -54,6 +55,7 @@ public sealed class CreateManualReservationCommandHandler : IRequestHandler<Crea
     public async Task<ReservationDto> Handle(CreateManualReservationCommand request, CancellationToken cancellationToken)
     {
         var tenantId = _tenantContext.TenantId;
+        var reservedFor = DateTimeNormalization.ToUtcReservedFor(request.ReservedFor);
 
         // 1. Venue kontrolü
         var venue = await _unitOfWork.Venues
@@ -67,12 +69,12 @@ public sealed class CreateManualReservationCommandHandler : IRequestHandler<Crea
             throw new NotFoundException("Venue", request.VenueId.ToString(), "Mekan bulunamadı.");
         }
 
-        var slotEndTime = request.ReservedFor.AddMinutes(venue.SlotDurationMinutes);
+        var slotEndTime = reservedFor.AddMinutes(venue.SlotDurationMinutes);
 
         // 2. Slot müsaitlik kontrolü
         var availability = await _slotService.CheckSlotAvailabilityAsync(
             venue.Id,
-            request.ReservedFor,
+            reservedFor,
             slotEndTime,
             request.PartySize,
             request.TableId,
@@ -94,7 +96,7 @@ public sealed class CreateManualReservationCommandHandler : IRequestHandler<Crea
                 VenueId = venue.Id,
                 CustomerEmail = request.GuestEmail,
                 CustomerPhone = request.GuestPhone,
-                ReservedFor = request.ReservedFor,
+                ReservedFor = reservedFor,
                 PartySize = request.PartySize,
                 TableId = request.TableId ?? availability.SuggestedTableId,
                 Source = "ManualAdmin"
@@ -141,7 +143,7 @@ public sealed class CreateManualReservationCommandHandler : IRequestHandler<Crea
             GuestEmail = request.GuestEmail,
             GuestPhone = request.GuestPhone,
             PartySize = request.PartySize,
-            ReservedFor = request.ReservedFor,
+            ReservedFor = reservedFor,
             EndTime = slotEndTime,
             Status = ReservationStatus.Confirmed,
             Source = source,
@@ -184,7 +186,7 @@ public sealed class CreateManualReservationCommandHandler : IRequestHandler<Crea
         await _unitOfWork.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
         // Cache invalidate
-        await _slotService.InvalidateCacheAsync(venue.Id, request.ReservedFor.Date, cancellationToken)
+        await _slotService.InvalidateCacheAsync(venue.Id, reservedFor.Date, cancellationToken)
             .ConfigureAwait(false);
 
         // 11. Email gönder
