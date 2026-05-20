@@ -42,7 +42,7 @@ public sealed class SlotAvailabilityService : ISlotAvailabilityService
         Guid? tableId = null,
         CancellationToken cancellationToken = default)
     {
-        var dateOnly = date.Date;
+        var dateOnly = DateTime.SpecifyKind(date.Date, DateTimeKind.Utc);
         var cacheKey = BuildCacheKey(venueId, dateOnly);
 
         // Cache kontrolü (tableId ve partySize olmadan genel veri)
@@ -101,11 +101,22 @@ public sealed class SlotAvailabilityService : ISlotAvailabilityService
                 closeTime = closure.CloseTime.Value;
         }
 
-        // Aktif masaları al
-        var tables = await _dbContext.Tables
+        // Aktif masaları al (enum.ToString() EF SQL'e cevrilmez; bellekte map edilir)
+        var tableRows = await _dbContext.Tables
             .AsNoTracking()
             .Where(t => t.VenueId == venueId && t.IsActive && !t.IsDeleted)
             .Where(t => tableId == null || t.Id == tableId)
+            .Select(t => new
+            {
+                t.Id,
+                t.Name,
+                t.Capacity,
+                t.Location
+            })
+            .ToListAsync(cancellationToken)
+            .ConfigureAwait(false);
+
+        var tables = tableRows
             .Select(t => new TableInfo
             {
                 Id = t.Id,
@@ -113,8 +124,7 @@ public sealed class SlotAvailabilityService : ISlotAvailabilityService
                 Capacity = t.Capacity,
                 Location = t.Location.ToString()
             })
-            .ToListAsync(cancellationToken)
-            .ConfigureAwait(false);
+            .ToList();
 
         // Masa birleşimlerini al
         var combinations = await _dbContext.TableCombinations
@@ -224,7 +234,7 @@ public sealed class SlotAvailabilityService : ISlotAvailabilityService
         Guid? excludeReservationId = null,
         CancellationToken cancellationToken = default)
     {
-        var dateOnly = startTime.Date;
+        var dateOnly = DateTime.SpecifyKind(startTime.Date, DateTimeKind.Utc);
 
         // Venue kontrolü
         var venue = await _dbContext.Venues

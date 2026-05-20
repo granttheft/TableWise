@@ -29,6 +29,9 @@ public sealed class GetAvailableSlotsQueryHandler : IRequestHandler<GetAvailable
     /// <inheritdoc />
     public async Task<AvailabilityResponseDto> Handle(GetAvailableSlotsQuery request, CancellationToken cancellationToken)
     {
+        // Query string tarihi Unspecified gelir; Npgsql timestamptz yalnizca UTC kabul eder
+        var bookingDate = DateTime.SpecifyKind(request.Date.Date, DateTimeKind.Utc);
+
         // Slug ile venue bul
         var venue = await _unitOfWork.Venues
             .Query()
@@ -52,7 +55,7 @@ public sealed class GetAvailableSlotsQueryHandler : IRequestHandler<GetAvailable
         var closure = await _unitOfWork.VenueClosures
             .Query()
             .IgnoreQueryFilters()
-            .Where(c => c.VenueId == venue.Id && c.Date.Date == request.Date.Date && !c.IsDeleted)
+            .Where(c => c.VenueId == venue.Id && c.Date.Date == bookingDate && !c.IsDeleted)
             .FirstOrDefaultAsync(cancellationToken)
             .ConfigureAwait(false);
 
@@ -61,7 +64,7 @@ public sealed class GetAvailableSlotsQueryHandler : IRequestHandler<GetAvailable
             return new AvailabilityResponseDto
             {
                 VenueId = venue.Id,
-                Date = request.Date.Date,
+                Date = bookingDate,
                 PartySize = request.PartySize,
                 Slots = [],
                 IsVenueClosed = true,
@@ -72,7 +75,7 @@ public sealed class GetAvailableSlotsQueryHandler : IRequestHandler<GetAvailable
         // Müsait slotları al
         var availableSlots = await _slotService.GetAvailableSlotsAsync(
             venue.Id,
-            request.Date,
+            bookingDate,
             request.PartySize,
             request.TableId,
             cancellationToken)
@@ -103,7 +106,7 @@ public sealed class GetAvailableSlotsQueryHandler : IRequestHandler<GetAvailable
         return new AvailabilityResponseDto
         {
             VenueId = venue.Id,
-            Date = request.Date.Date,
+            Date = bookingDate,
             PartySize = request.PartySize,
             Slots = slots,
             IsVenueClosed = false
