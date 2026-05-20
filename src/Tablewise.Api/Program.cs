@@ -312,8 +312,8 @@ try
     // 3. CORS (UseHttpsRedirection'dan ÖNCE — aksi halde OPTIONS preflight HTTP→HTTPS redirect alır; tarayıcı CORS'u reddeder.)
     app.UseCors();
 
-    // 4. HTTPS Redirection (integration test client HTTP kullanır; Testing'de kapatılır)
-    if (!app.Environment.IsEnvironment("Testing"))
+    // 4. HTTPS Redirection (Development ve Testing'de kapalı — Vite dev server HTTP kullanır, redirect GET'leri ERR_CONNECTION_REFUSED'a düşürür)
+    if (!app.Environment.IsDevelopment() && !app.Environment.IsEnvironment("Testing"))
     {
         app.UseHttpsRedirection();
     }

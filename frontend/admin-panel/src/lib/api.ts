@@ -8,7 +8,8 @@ function generateUUID(): string {
 }
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5086',
+  // Development: VITE_API_URL boşsa Vite proxy üzerinden relative path (/api/*→5086) kullanılır
+  baseURL: import.meta.env.VITE_API_URL ?? '',
   headers: {
     'Content-Type': 'application/json',
   },
@@ -50,7 +51,8 @@ api.interceptors.response.use(
           throw new Error('No refresh token')
         }
 
-        const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/v1/auth/refresh`, {
+        const baseUrl = import.meta.env.VITE_API_URL ?? ''
+        const response = await axios.post(`${baseUrl}/api/v1/auth/refresh`, {
           refreshToken,
         })
 

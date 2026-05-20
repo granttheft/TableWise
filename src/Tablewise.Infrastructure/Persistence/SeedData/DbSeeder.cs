@@ -291,6 +291,7 @@ public class DbSeeder
             PhoneNumber = "+905551112234",
             Role = UserRole.Owner,
             IsActive = true,
+            IsEmailVerified = true,
             CreatedAt = DateTime.UtcNow.AddMonths(-1)
         };
 

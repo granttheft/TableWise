@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(xargs cat)",
+      "Bash(xargs ls)",
+      "Bash(curl -s -X POST http://localhost:5086/api/v1/auth/login -H \"Content-Type: application/json\" -d \"{\\\\\"email\\\\\":\\\\\"ahmet@demo-restoran.com\\\\\",\\\\\"password\\\\\":\\\\\"Demo123!\\\\\",\\\\\"rememberMe\\\\\":false}\")",
+      "Bash(curl -v -X POST http://localhost:5086/api/v1/auth/login -H \"Content-Type: application/json\" -d \"{\\\\\"email\\\\\":\\\\\"ahmet@demo-restoran.com\\\\\",\\\\\"password\\\\\":\\\\\"Demo123!\\\\\",\\\\\"rememberMe\\\\\":false}\")",
+      "Bash(xargs grep -l \"IsEmailVerified\")",
+      "Bash(xargs grep -A 5 \"IsEmailVerified\")",
+      "Bash(dotnet build *)",
+      "Bash(npx tsc *)"
+    ]
+  }
+}
