@@ -67,6 +67,11 @@ public sealed record VenueConfigDto
     public Dictionary<string, WorkingHoursPeriod>? WorkingHours { get; init; }
 
     /// <summary>
+    /// Onumuzdeki 60 gun icindeki tam gun kapaliliklar (takvim icin).
+    /// </summary>
+    public IReadOnlyList<BookingClosureDto> Closures { get; init; } = [];
+
+    /// <summary>
     /// Custom field'lar (rezervasyon formundaki ek alanlar).
     /// </summary>
     public IReadOnlyList<VenueCustomFieldDto> CustomFields { get; init; } = [];
@@ -114,6 +119,32 @@ public sealed record WorkingHoursPeriod
 }
 
 /// <summary>
+/// Booking UI takvim kapalilik kaydi.
+/// </summary>
+public sealed record BookingClosureDto
+{
+    /// <summary>
+    /// Kapalilik ID.
+    /// </summary>
+    public Guid Id { get; init; }
+
+    /// <summary>
+    /// Baslangic tarihi (yyyy-MM-dd).
+    /// </summary>
+    public string StartDate { get; init; } = string.Empty;
+
+    /// <summary>
+    /// Bitis tarihi (yyyy-MM-dd).
+    /// </summary>
+    public string EndDate { get; init; } = string.Empty;
+
+    /// <summary>
+    /// Kapalilik nedeni.
+    /// </summary>
+    public string Reason { get; init; } = string.Empty;
+}
+
+/// <summary>
 /// Booking UI için custom field DTO.
 /// </summary>
 public sealed record VenueCustomFieldDto
@@ -124,7 +155,17 @@ public sealed record VenueCustomFieldDto
     public Guid FieldId { get; init; }
 
     /// <summary>
-    /// Field adı.
+    /// Alan anahtari (kural motoru / form state).
+    /// </summary>
+    public string FieldKey { get; init; } = string.Empty;
+
+    /// <summary>
+    /// Gorunen etiket.
+    /// </summary>
+    public string Label { get; init; } = string.Empty;
+
+    /// <summary>
+    /// Field adı (geriye uyumluluk).
     /// </summary>
     public string Name { get; init; } = string.Empty;
 

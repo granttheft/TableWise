@@ -12,6 +12,10 @@ import type {
   ApiError,
 } from '@/types/api';
 import { generateIdempotencyKey } from './utils';
+import {
+  mapAvailabilityFromApi,
+  mapVenueConfigFromApi,
+} from './bookingMappers';
 
 /** Bos ise Vite proxy /api -> localhost:5086 (admin-panel ile ayni yerel akis). */
 const API_URL = import.meta.env.VITE_API_URL ?? '';
@@ -49,8 +53,8 @@ export function handleApiError(error: unknown): ApiError {
 // API Functions
 
 export async function getVenueConfig(slug: string): Promise<VenueConfig> {
-  const response = await api.get<VenueConfig>(`/api/v1/book/${slug}/config`);
-  return response.data;
+  const response = await api.get(`/api/v1/book/${slug}/config`);
+  return mapVenueConfigFromApi(response.data);
 }
 
 export async function getAvailability(
@@ -58,13 +62,10 @@ export async function getAvailability(
   date: string,
   partySize: number
 ): Promise<AvailabilitySlot[]> {
-  const response = await api.get<AvailabilitySlot[]>(
-    `/api/v1/book/${slug}/availability`,
-    {
-      params: { date, partySize },
-    }
-  );
-  return response.data;
+  const response = await api.get(`/api/v1/book/${slug}/availability`, {
+    params: { date, partySize },
+  });
+  return mapAvailabilityFromApi(response.data);
 }
 
 export async function evaluateRules(

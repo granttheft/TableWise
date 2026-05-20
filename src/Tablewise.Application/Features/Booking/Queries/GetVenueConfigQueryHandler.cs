@@ -60,13 +60,38 @@ public sealed class GetVenueConfigQueryHandler : IRequestHandler<GetVenueConfigQ
             }
         }
 
+        // Onumuzdeki 60 gun tam gun kapaliliklar
+        var today = DateTime.UtcNow.Date;
+        var horizon = today.AddDays(60);
+        var closures = await _unitOfWork.VenueClosures
+            .Query()
+            .IgnoreQueryFilters()
+            .Where(c =>
+                c.VenueId == venue.Id &&
+                !c.IsDeleted &&
+                c.IsFullDay &&
+                c.Date.Date >= today &&
+                c.Date.Date <= horizon)
+            .OrderBy(c => c.Date)
+            .Select(c => new BookingClosureDto
+            {
+                Id = c.Id,
+                StartDate = c.Date.ToString("yyyy-MM-dd"),
+                EndDate = c.Date.ToString("yyyy-MM-dd"),
+                Reason = c.Reason ?? "Mekan kapali"
+            })
+            .ToListAsync(cancellationToken)
+            .ConfigureAwait(false);
+
         // Custom field'ları map et
         var customFields = venue.CustomFields
             .OrderBy(cf => cf.SortOrder)
             .Select(cf => new VenueCustomFieldDto
             {
                 FieldId = cf.Id,
-                Name = cf.Name,
+                FieldKey = cf.Name,
+                Label = cf.Label,
+                Name = cf.Label,
                 FieldType = cf.FieldType.ToString(),
                 IsRequired = cf.IsRequired,
                 Options = ParseOptions(cf.Options),
@@ -88,6 +113,7 @@ public sealed class GetVenueConfigQueryHandler : IRequestHandler<GetVenueConfigQ
             DepositAmount = venue.DepositAmount,
             DepositPerPerson = venue.DepositPerPerson,
             WorkingHours = workingHours,
+            Closures = closures,
             CustomFields = customFields,
             MinPartySize = 1,
             MaxPartySize = 20,

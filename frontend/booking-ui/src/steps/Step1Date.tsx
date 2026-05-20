@@ -26,8 +26,11 @@ export function Step1Date({
   const maxDate = addDays(today, config.advanceBookingDays);
 
   // Get closures for the current month
+  const closures = config.closures ?? [];
+  const workingHours = config.workingHours ?? [];
+
   const closuresInMonth = useMemo(() => {
-    return config.closures.filter((closure) => {
+    return closures.filter((closure) => {
       const start = new Date(closure.startDate);
       const end = new Date(closure.endDate);
       const monthStart = new Date(
@@ -44,7 +47,7 @@ export function Step1Date({
       // Check if closure overlaps with current month
       return start <= monthEnd && end >= monthStart;
     });
-  }, [config.closures, currentMonth]);
+  }, [closures, currentMonth]);
 
   const disabledDays = (date: Date) => {
     // Before today or after max date
@@ -54,15 +57,14 @@ export function Step1Date({
 
     // Check if day of week is closed
     const dayOfWeek = date.getDay();
-    const workingHour = config.workingHours.find(
-      (wh) => wh.dayOfWeek === dayOfWeek
-    );
-    if (!workingHour || !workingHour.isOpen) {
-      return true;
+    if (workingHours.length > 0) {
+      const workingHour = workingHours.find((wh) => wh.dayOfWeek === dayOfWeek);
+      if (!workingHour?.isOpen) {
+        return true;
+      }
     }
 
-    // Check if date is in closure period
-    const isInClosure = config.closures.some((closure) => {
+    const isInClosure = closures.some((closure) => {
       const start = new Date(closure.startDate);
       const end = new Date(closure.endDate);
       return isDateInRange(date, start, end);

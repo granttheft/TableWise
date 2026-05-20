@@ -117,10 +117,10 @@ export function BookingPage() {
   return (
     <>
       <Helmet>
-        <title>{config.venueName} — Rezervasyon | Tablewise</title>
+        <title>{`${config.venueName} - Rezervasyon | Tablewise`}</title>
         <meta
           name="description"
-          content={`${config.venueName} için online rezervasyon yapın`}
+          content={`${config.venueName} icin online rezervasyon yapin`}
         />
         <meta
           property="og:title"
@@ -128,7 +128,7 @@ export function BookingPage() {
         />
         <meta
           property="og:description"
-          content={`${config.venueName} için online rezervasyon yapın`}
+          content={`${config.venueName} icin online rezervasyon yapin`}
         />
         {config.coverImageUrl && (
           <meta property="og:image" content={config.coverImageUrl} />
