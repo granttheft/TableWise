@@ -19,4 +19,14 @@ public interface IRuleTestService
         Guid ruleId,
         TestRuleRequestDto request,
         CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Kaydedilmemiş kural tanımını test eder (taslak JSON ile).
+    /// </summary>
+    /// <param name="request">Taslak kural ve test bağlamı</param>
+    /// <param name="cancellationToken">İptal token'ı</param>
+    /// <returns>Test sonucu</returns>
+    Task<RuleTestResultDto> TestDraftRuleAsync(
+        TestDraftRuleRequestDto request,
+        CancellationToken cancellationToken = default);
 }

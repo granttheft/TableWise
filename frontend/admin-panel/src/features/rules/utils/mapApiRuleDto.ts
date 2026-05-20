@@ -96,5 +96,13 @@ export function mapApiRuleDtoToRule(dto: RuleApiDto): Rule {
     }
   }
 
+  if (ruleType === 'CustomCondition') {
+    return {
+      ...base,
+      conditionsJson: dto.conditionsJson,
+      actionsJson: dto.actionsJson,
+    }
+  }
+
   return base
 }

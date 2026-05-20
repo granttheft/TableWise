@@ -124,6 +124,73 @@ public sealed class RuleTestService : IRuleTestService
         return result;
     }
 
+    /// <inheritdoc />
+    public async Task<RuleTestResultDto> TestDraftRuleAsync(
+        TestDraftRuleRequestDto request,
+        CancellationToken cancellationToken = default)
+    {
+        var tenantId = _tenantContext.TenantId;
+        var stopwatch = Stopwatch.StartNew();
+
+        var rule = new Rule
+        {
+            Id = Guid.Empty,
+            TenantId = tenantId,
+            Name = string.IsNullOrWhiteSpace(request.RuleName) ? "Taslak kural" : request.RuleName.Trim(),
+            RuleType = request.RuleType,
+            ConditionsJson = request.ConditionsJson,
+            ActionsJson = request.ActionsJson,
+            TriggerType = RuleTrigger.OnReservationCreate,
+            Priority = 1,
+            IsActive = true,
+            CreatedAt = DateTime.UtcNow
+        };
+
+        var evaluator = _evaluatorFactory.GetFor(rule.RuleType);
+        if (evaluator == null)
+        {
+            stopwatch.Stop();
+            return new RuleTestResultDto
+            {
+                Triggered = false,
+                ExecutionMs = (int)stopwatch.ElapsedMilliseconds
+            };
+        }
+
+        var context = BuildReservationContext(request.Context, tenantId);
+        var outcome = await evaluator.EvaluateAsync(rule, context, cancellationToken)
+            .ConfigureAwait(false);
+
+        stopwatch.Stop();
+
+        var result = new RuleTestResultDto
+        {
+            Triggered = outcome != null,
+            ExecutionMs = (int)stopwatch.ElapsedMilliseconds,
+            Outcome = outcome != null
+                ? new RuleOutcomeDto
+                {
+                    RuleId = Guid.Empty,
+                    RuleName = rule.Name,
+                    ActionType = outcome.ActionType.ToString(),
+                    Message = outcome.Message,
+                    Payload = outcome.Payload
+                }
+                : null
+        };
+
+        if (evaluator is CustomConditionRuleEvaluator customEvaluator &&
+            rule.RuleType.Equals("custom_condition", StringComparison.OrdinalIgnoreCase))
+        {
+            result = result with
+            {
+                ConditionEvaluations = GetConditionEvaluations(rule, context, customEvaluator)
+            };
+        }
+
+        return result;
+    }
+
     /// <summary>
     /// TestRuleRequestDto'dan ReservationContext oluşturur.
     /// In-memory, DB'ye dokunmaz.

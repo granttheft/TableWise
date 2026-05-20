@@ -225,6 +225,24 @@ public sealed class RuleController : ControllerBase
     /// Kuralı test eder.
     /// Gerçek kural motorunu kullanarak sonuç döner.
     /// </summary>
+    [HttpPost("test-draft")]
+    [ProducesResponseType(typeof(RuleTestResultDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
+    public async Task<IActionResult> TestDraftRule(
+        [FromBody] TestDraftRuleRequestDto dto,
+        CancellationToken cancellationToken = default)
+    {
+        var command = new TestDraftRuleCommand { Dto = dto };
+        var result = await _mediator.Send(command, cancellationToken);
+        return Ok(result);
+    }
+
+    /// <summary>
+    /// Kuralı test eder.
+    /// Gerçek kural motorunu kullanarak sonuç döner.
+    /// </summary>
     /// <param name="id">Kural ID</param>
     /// <param name="dto">Test parametreleri</param>
     /// <param name="cancellationToken">İptal token'ı</param>

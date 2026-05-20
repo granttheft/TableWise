@@ -187,6 +187,10 @@ export interface Rule {
   updatedAt: string
   /** Yalnızca {@link RuleType.GroupComposition}; API conditionsJson’dan üretilir. */
   groupCompositionParams?: GroupCompositionRuleFormState
+  /** Özel kural düzenleme: ham API koşul JSON. */
+  conditionsJson?: string
+  /** Özel kural düzenleme: ham API aksiyon JSON. */
+  actionsJson?: string
 }
 
 export interface RuleTemplate {
@@ -244,12 +248,19 @@ export interface RuleTestContext {
 export interface RuleTestResult {
   triggered: boolean
   outcome?: {
-    action: ActionType
+    action: ActionType | string
     message?: string
-    payload?: Record<string, any>
+    payload?: Record<string, unknown> | string
   }
   executionTimeMs: number
   evaluationPath?: string[]
+  conditionEvaluations?: {
+    field: string
+    op: string
+    expectedValue?: unknown
+    actualValue?: unknown
+    result: boolean
+  }[]
 }
 
 // Reservation Types

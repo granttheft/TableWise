@@ -58,7 +58,21 @@ import {
   GROUP_COMPOSITION_VALUES,
 } from '../constants/groupCompositionRule'
 import { ruleToHumanReadable, getPriorityDescription, getPriorityColor, groupCompositionToHumanReadable } from '../utils/ruleHumanReadable'
-import { RuleTestDialog } from './RuleTestDialog'
+import { validateCustomConditionJson } from '../utils/validateCustomConditionJson'
+import { validateCustomActionsJson } from '../utils/validateCustomActionsJson'
+import {
+  DEFAULT_CUSTOM_ACTIONS_FORM,
+  buildCustomActionsJsonFromForm,
+  parseCustomActionsJson,
+  type CustomActionsFormState,
+} from '../utils/customActionsForm'
+import {
+  DEFAULT_CUSTOM_CONDITIONS_JSON,
+  DEFAULT_CUSTOM_ACTIONS_JSON,
+} from '../constants/customConditionExamples'
+import { CustomConditionJsonEditor } from './CustomConditionJsonEditor'
+import { CustomConditionActionsEditor } from './CustomConditionActionsEditor'
+import { RuleTestDialog, type RuleTestDraftPayload } from './RuleTestDialog'
 import { cn } from '@/lib/cn'
 
 const actionIcons: Record<string, any> = {
@@ -123,6 +137,24 @@ export function RuleBuilderDialog({
     [template, existingRule]
   )
   const isGroupCompositionRule = effectiveRuleType === 'GroupComposition'
+  const isCustomConditionRule = effectiveRuleType === 'CustomCondition'
+
+  const [customConditionsJson, setCustomConditionsJson] = useState(DEFAULT_CUSTOM_CONDITIONS_JSON)
+  const [customActionsJson, setCustomActionsJson] = useState(DEFAULT_CUSTOM_ACTIONS_JSON)
+  const [customActionsForm, setCustomActionsForm] = useState<CustomActionsFormState>(() => ({
+    ...DEFAULT_CUSTOM_ACTIONS_FORM,
+  }))
+  const [customActionsRawMode, setCustomActionsRawMode] = useState(false)
+
+  const conditionsValidation = useMemo(
+    () => validateCustomConditionJson(customConditionsJson),
+    [customConditionsJson]
+  )
+  const actionsValidation = useMemo(
+    () => validateCustomActionsJson(customActionsJson),
+    [customActionsJson]
+  )
+  const customConditionValid = conditionsValidation.valid && actionsValidation.valid
 
   const {
     register,
@@ -158,6 +190,12 @@ export function RuleBuilderDialog({
       if (template.ruleType === 'GroupComposition') {
         setGroupCompositionForm({ ...DEFAULT_GROUP_COMPOSITION_FORM })
         setConditions([])
+      } else if (template.ruleType === 'CustomCondition' || template.id === 'custom') {
+        setCustomConditionsJson(DEFAULT_CUSTOM_CONDITIONS_JSON)
+        setCustomActionsJson(DEFAULT_CUSTOM_ACTIONS_JSON)
+        setCustomActionsForm(parseCustomActionsJson(DEFAULT_CUSTOM_ACTIONS_JSON))
+        setConditions([])
+        setActions([])
       } else {
         setConditions(template.defaultConditions?.conditions || [])
       }
@@ -177,6 +215,14 @@ export function RuleBuilderDialog({
             : { ...DEFAULT_GROUP_COMPOSITION_FORM }
         )
         setConditions([])
+      } else if (existingRule.ruleType === 'CustomCondition') {
+        const cj = existingRule.conditionsJson ?? DEFAULT_CUSTOM_CONDITIONS_JSON
+        const aj = existingRule.actionsJson ?? DEFAULT_CUSTOM_ACTIONS_JSON
+        setCustomConditionsJson(cj)
+        setCustomActionsJson(aj)
+        setCustomActionsForm(parseCustomActionsJson(aj))
+        setConditions([])
+        setActions([])
       } else {
         setConditions(existingRule.conditions?.conditions || [])
       }
@@ -193,12 +239,18 @@ export function RuleBuilderDialog({
       setConditions([])
       setActions([])
       setGroupCompositionForm({ ...DEFAULT_GROUP_COMPOSITION_FORM })
+      setCustomConditionsJson(DEFAULT_CUSTOM_CONDITIONS_JSON)
+      setCustomActionsJson(DEFAULT_CUSTOM_ACTIONS_JSON)
+      setCustomActionsForm({ ...DEFAULT_CUSTOM_ACTIONS_FORM })
+      setCustomActionsRawMode(false)
     }
     setCurrentStep(1)
     setShowJsonEditor(false)
   }, [template, existingRule, reset, open])
 
   const handleNext = () => {
+    if (currentStep === 2 && isCustomConditionRule && !conditionsValidation.valid) return
+    if (currentStep === 3 && isCustomConditionRule && !actionsValidation.valid) return
     if (currentStep < 4) setCurrentStep(currentStep + 1)
   }
 
@@ -267,9 +319,23 @@ export function RuleBuilderDialog({
       },
       actions,
       groupComposition: isGroupCompositionRule ? groupCompositionForm : undefined,
+      customConditionsJson: isCustomConditionRule ? customConditionsJson : undefined,
+      customActionsJson: isCustomConditionRule ? customActionsJson : undefined,
     }
     onSubmit(ruleData)
   }
+
+  const testDraftPayload: RuleTestDraftPayload | undefined =
+    isCustomConditionRule && customConditionValid
+      ? {
+          ruleType: 'custom_condition',
+          conditionsJson: customConditionsJson,
+          actionsJson: customActionsJson,
+        }
+      : undefined
+
+  const canOpenTest =
+    Boolean(testDraftPayload) || Boolean(tempRuleId && !isCustomConditionRule)
 
   const previewRule: Partial<Rule> = {
     name: watch('name'),
@@ -284,12 +350,19 @@ export function RuleBuilderDialog({
 
   const humanReadableText = isGroupCompositionRule
     ? groupCompositionToHumanReadable(groupCompositionForm, actions)
-    : ruleToHumanReadable(previewRule as Rule)
+    : isCustomConditionRule
+      ? 'Özel kural: koşul ve aksiyon JSON şeması ile tanımlanır.'
+      : ruleToHumanReadable(previewRule as Rule)
 
   return (
     <>
       <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent className="max-w-3xl max-h-[90vh] overflow-hidden flex flex-col">
+        <DialogContent
+          className={cn(
+            'max-h-[90vh] overflow-hidden flex flex-col',
+            isCustomConditionRule ? 'max-w-6xl' : 'max-w-3xl'
+          )}
+        >
           <DialogHeader>
             <DialogTitle>
               {existingRule ? 'Kuralı Düzenle' : template ? `${template.name} Kuralı` : 'Yeni Kural'}
@@ -406,29 +479,54 @@ export function RuleBuilderDialog({
                     <p className="text-sm text-muted-foreground">
                       {isGroupCompositionRule
                         ? 'Grup yapısı ve cinsiyet oranı kurallarını tanımlayın'
-                        : 'Kuralın tetiklenmesi için gerekli koşulları belirleyin'}
+                        : isCustomConditionRule
+                          ? 'API formatında koşul JSON tanımlayın (field referansına bakın)'
+                          : 'Kuralın tetiklenmesi için gerekli koşulları belirleyin'}
                     </p>
                   </div>
-                  {!isGroupCompositionRule && (
-                    <div className="flex items-center space-x-2">
+                  <div className="flex items-center space-x-2">
+                    {isCustomConditionRule ? (
                       <Button
                         type="button"
                         variant="outline"
                         size="sm"
-                        onClick={() => setShowJsonEditor(!showJsonEditor)}
+                        disabled={!canOpenTest}
+                        onClick={() => setShowTestDialog(true)}
                       >
-                        <Code className="h-4 w-4 mr-1" />
-                        {showJsonEditor ? 'Form' : 'JSON'}
+                        <Play className="h-4 w-4 mr-1" />
+                        Test Et
                       </Button>
-                      <Button type="button" size="sm" onClick={addCondition}>
-                        <Plus className="h-4 w-4 mr-1" />
-                        Koşul Ekle
-                      </Button>
-                    </div>
-                  )}
+                    ) : !isGroupCompositionRule ? (
+                      <>
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          onClick={() => setShowJsonEditor(!showJsonEditor)}
+                        >
+                          <Code className="h-4 w-4 mr-1" />
+                          {showJsonEditor ? 'Form' : 'JSON'}
+                        </Button>
+                        <Button type="button" size="sm" onClick={addCondition}>
+                          <Plus className="h-4 w-4 mr-1" />
+                          Koşul Ekle
+                        </Button>
+                      </>
+                    ) : null}
+                  </div>
                 </div>
 
-                {isGroupCompositionRule ? (
+                {isCustomConditionRule ? (
+                  <CustomConditionJsonEditor
+                    value={customConditionsJson}
+                    onChange={setCustomConditionsJson}
+                    onLoadExample={(cj, aj) => {
+                      setCustomConditionsJson(cj)
+                      setCustomActionsJson(aj)
+                      setCustomActionsForm(parseCustomActionsJson(aj))
+                    }}
+                  />
+                ) : isGroupCompositionRule ? (
                   <div className="space-y-6">
                     <div className="space-y-2">
                       <Label>Alt kurallar birleşimi</Label>
@@ -723,11 +821,27 @@ export function RuleBuilderDialog({
                 <div>
                   <h3 className="font-medium">Aksiyonlar</h3>
                   <p className="text-sm text-muted-foreground">
-                    Kural tetiklendiğinde yapılacak işlemleri seçin
+                    {isCustomConditionRule
+                      ? 'Tetiklenince uygulanacak aksiyonları tanımlayın'
+                      : 'Kural tetiklendiğinde yapılacak işlemleri seçin'}
                   </p>
                 </div>
 
-                {actions.length === 0 ? (
+                {isCustomConditionRule ? (
+                  <CustomConditionActionsEditor
+                    jsonValue={customActionsJson}
+                    onJsonChange={setCustomActionsJson}
+                    form={customActionsForm}
+                    onFormChange={(f) => {
+                      setCustomActionsForm(f)
+                      if (!customActionsRawMode) {
+                        setCustomActionsJson(buildCustomActionsJsonFromForm(f))
+                      }
+                    }}
+                    rawJsonMode={customActionsRawMode}
+                    onRawJsonModeChange={setCustomActionsRawMode}
+                  />
+                ) : actions.length === 0 ? (
                   <div className="grid grid-cols-2 gap-3">
                     {Object.entries(actionTypeLabels).map(([type, info]) => {
                       const Icon = actionIcons[type]
@@ -888,7 +1002,11 @@ export function RuleBuilderDialog({
                       </div>
                       <div>
                         <span className="text-muted-foreground">Koşul Sayısı:</span>
-                        <Badge variant="outline" className="ml-2">{conditions.length}</Badge>
+                        <Badge variant="outline" className="ml-2">
+                          {isCustomConditionRule
+                            ? (conditionsValidation.valid ? 'JSON geçerli' : 'Hatalı')
+                            : conditions.length}
+                        </Badge>
                       </div>
                       <div>
                         <span className="text-muted-foreground">Aksiyon Sayısı:</span>
@@ -912,7 +1030,7 @@ export function RuleBuilderDialog({
                   <Label>Kuralı hemen aktifleştir</Label>
                 </div>
 
-                {tempRuleId && (
+                {(canOpenTest || tempRuleId) && (
                   <Button
                     type="button"
                     variant="outline"
@@ -949,14 +1067,28 @@ export function RuleBuilderDialog({
               </Button>
 
               {currentStep < 4 ? (
-                <Button type="button" onClick={handleNext}>
+                <Button
+                  type="button"
+                  onClick={handleNext}
+                  disabled={
+                    (currentStep === 2 &&
+                      isCustomConditionRule &&
+                      !conditionsValidation.valid) ||
+                    (currentStep === 3 && isCustomConditionRule && !actionsValidation.valid)
+                  }
+                >
                   İleri
                   <ChevronRight className="h-4 w-4 ml-1" />
                 </Button>
               ) : (
                 <Button
                   onClick={handleSubmit(handleFormSubmit)}
-                  disabled={isLoading || actions.length === 0}
+                  disabled={
+                    isLoading ||
+                    (isCustomConditionRule
+                      ? !customConditionValid
+                      : actions.length === 0)
+                  }
                 >
                   {isLoading ? 'Kaydediliyor...' : existingRule ? 'Güncelle' : 'Kuralı Oluştur'}
                 </Button>
@@ -966,12 +1098,13 @@ export function RuleBuilderDialog({
         </DialogContent>
       </Dialog>
 
-      {tempRuleId && (
+      {(canOpenTest || tempRuleId) && (
         <RuleTestDialog
           open={showTestDialog}
           onOpenChange={setShowTestDialog}
-          ruleId={tempRuleId}
-          ruleName={watch('name')}
+          ruleId={testDraftPayload ? undefined : tempRuleId ?? undefined}
+          draftRule={testDraftPayload}
+          ruleName={watch('name') || 'Taslak kural'}
         />
       )}
     </>

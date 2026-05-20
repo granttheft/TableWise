@@ -393,6 +393,10 @@ export type RuleBuilderSubmitPayload = {
   actions: RuleAction[]
   /** Grup kompozisyonu koşul formu; yalnızca GroupComposition için kullanılır. */
   groupComposition?: GroupCompositionRuleFormState
+  /** Özel kural: doğrulanmış ham koşul JSON (varsa doğrudan API'ye gider). */
+  customConditionsJson?: string
+  /** Özel kural: doğrulanmış ham aksiyon JSON. */
+  customActionsJson?: string
 }
 
 /**
@@ -417,7 +421,14 @@ export function mapRuleFormToApiPayload(payload: RuleBuilderSubmitPayload): {
   let conditionsJson: string
   let actionsJson: string
 
-  if (apiRuleType === 'custom_condition') {
+  if (
+    apiRuleType === 'custom_condition' &&
+    payload.customConditionsJson?.trim() &&
+    payload.customActionsJson?.trim()
+  ) {
+    conditionsJson = payload.customConditionsJson.trim()
+    actionsJson = payload.customActionsJson.trim()
+  } else if (apiRuleType === 'custom_condition') {
     conditionsJson = buildCustomConditionsJson(group)
     actionsJson = buildCustomActionsJson(payload.actions)
   } else {

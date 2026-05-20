@@ -7,6 +7,10 @@ import {
   type RuleBuilderSubmitPayload,
 } from '@/features/rules/utils/mapRuleFormToApiPayload'
 import { mapApiRuleDtoToRule, type RuleApiDto } from '@/features/rules/utils/mapApiRuleDto'
+import {
+  mapRuleTestResultFromApi,
+  mapTestContextToApi,
+} from '@/features/rules/utils/mapRuleTestApi'
 
 function ruleApiErrorMessage(error: unknown): string {
   if (error instanceof Error && error.message) return error.message
@@ -144,11 +148,38 @@ export function useReorderRules() {
 export function useTestRule() {
   return useMutation({
     mutationFn: async (data: { ruleId: string; context: RuleTestContext }) => {
-      const response = await api.post<RuleTestResult>(`${rulesBase}/${data.ruleId}/test`, data.context)
-      return response.data
+      const response = await api.post(`${rulesBase}/${data.ruleId}/test`, mapTestContextToApi(data.context))
+      return mapRuleTestResultFromApi(response.data)
     },
-    onError: (error: any) => {
-      toast.error(error.response?.data?.title || 'Test başarısız')
+    onError: (error: unknown) => {
+      toast.error(ruleApiErrorMessage(error) || 'Test başarısız')
+    },
+  })
+}
+
+/**
+ * Kaydedilmemiş (taslak) kuralı test eder.
+ */
+export function useTestRuleDraft() {
+  return useMutation({
+    mutationFn: async (data: {
+      ruleType: string
+      conditionsJson: string
+      actionsJson: string
+      ruleName?: string
+      context: RuleTestContext
+    }) => {
+      const response = await api.post(`${rulesBase}/test-draft`, {
+        ruleType: data.ruleType,
+        conditionsJson: data.conditionsJson,
+        actionsJson: data.actionsJson,
+        ruleName: data.ruleName,
+        context: mapTestContextToApi(data.context),
+      })
+      return mapRuleTestResultFromApi(response.data)
+    },
+    onError: (error: unknown) => {
+      toast.error(ruleApiErrorMessage(error) || 'Taslak test başarısız')
     },
   })
 }

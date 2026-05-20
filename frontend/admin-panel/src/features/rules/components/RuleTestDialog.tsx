@@ -24,7 +24,7 @@ import {
 } from '@/components/ui/select'
 import { Switch } from '@/components/ui/switch'
 import { CheckCircle, XCircle, Clock, Play } from 'lucide-react'
-import { useTestRule } from '@/hooks/useRules'
+import { useTestRule, useTestRuleDraft } from '@/hooks/useRules'
 import type { RuleTestContext, RuleTestResult } from '@/types/api'
 import { dayLabels } from '../data/ruleTemplates'
 
@@ -41,21 +41,34 @@ const testContextSchema = z.object({
 
 type TestContextForm = z.infer<typeof testContextSchema>
 
+/** Kaydedilmemiş kural testi için taslak tanım. */
+export interface RuleTestDraftPayload {
+  ruleType: string
+  conditionsJson: string
+  actionsJson: string
+}
+
 interface RuleTestDialogProps {
   open: boolean
   onOpenChange: (open: boolean) => void
-  ruleId: string
   ruleName: string
+  /** Kayıtlı kural testi */
+  ruleId?: string
+  /** Taslak test (kaydetmeden) */
+  draftRule?: RuleTestDraftPayload
 }
 
 export function RuleTestDialog({
   open,
   onOpenChange,
-  ruleId,
   ruleName,
+  ruleId,
+  draftRule,
 }: RuleTestDialogProps) {
   const [result, setResult] = useState<RuleTestResult | null>(null)
   const testRuleMutation = useTestRule()
+  const testDraftMutation = useTestRuleDraft()
+  const isPending = testRuleMutation.isPending || testDraftMutation.isPending
 
   const {
     register,
@@ -81,14 +94,24 @@ export function RuleTestDialog({
 
   const onSubmit = async (data: TestContextForm) => {
     setResult(null)
+    const context = data as RuleTestContext
     try {
-      const testResult = await testRuleMutation.mutateAsync({
-        ruleId,
-        context: data as RuleTestContext,
-      })
-      setResult(testResult)
-    } catch (error) {
-      // Error handled by mutation
+      if (draftRule) {
+        const testResult = await testDraftMutation.mutateAsync({
+          ...draftRule,
+          ruleName,
+          context,
+        })
+        setResult(testResult)
+      } else if (ruleId) {
+        const testResult = await testRuleMutation.mutateAsync({
+          ruleId,
+          context,
+        })
+        setResult(testResult)
+      }
+    } catch {
+      // Mutation toast handles errors
     }
   }
 
@@ -98,7 +121,8 @@ export function RuleTestDialog({
         <DialogHeader>
           <DialogTitle>Kural Testi</DialogTitle>
           <DialogDescription>
-            "{ruleName}" kuralını örnek verilerle test edin
+            &quot;{ruleName}&quot; kuralını örnek verilerle test edin
+            {draftRule ? ' (kaydetmeden)' : ''}
           </DialogDescription>
         </DialogHeader>
 
@@ -136,7 +160,7 @@ export function RuleTestDialog({
               <Label>Müşteri Tipi</Label>
               <Select
                 value={watch('customerTier')}
-                onValueChange={(value) => setValue('customerTier', value as any)}
+                onValueChange={(value) => setValue('customerTier', value as TestContextForm['customerTier'])}
               >
                 <SelectTrigger>
                   <SelectValue />
@@ -153,7 +177,7 @@ export function RuleTestDialog({
               <Label>Gün</Label>
               <Select
                 value={watch('dayOfWeek').toString()}
-                onValueChange={(value) => setValue('dayOfWeek', parseInt(value))}
+                onValueChange={(value) => setValue('dayOfWeek', parseInt(value, 10))}
               >
                 <SelectTrigger>
                   <SelectValue />
@@ -201,9 +225,7 @@ export function RuleTestDialog({
             <div className="flex items-center justify-between">
               <div className="space-y-0.5">
                 <Label>Çocuklu Grup</Label>
-                <p className="text-sm text-muted-foreground">
-                  Grupta çocuk var mı?
-                </p>
+                <p className="text-sm text-muted-foreground">Grupta çocuk var mı?</p>
               </div>
               <Switch
                 checked={hasChildren}
@@ -211,7 +233,7 @@ export function RuleTestDialog({
               />
             </div>
 
-            {hasChildren && (
+            {hasChildren ? (
               <div className="space-y-2">
                 <Label htmlFor="childCount">Çocuk Sayısı</Label>
                 <Input
@@ -222,11 +244,10 @@ export function RuleTestDialog({
                   {...register('childCount', { valueAsNumber: true })}
                 />
               </div>
-            )}
+            ) : null}
           </div>
 
-          {/* Test Result */}
-          {result && (
+          {result ? (
             <Card className={result.triggered ? 'border-green-500' : 'border-muted'}>
               <CardContent className="p-4">
                 <div className="flex items-center justify-between mb-3">
@@ -246,56 +267,54 @@ export function RuleTestDialog({
                   </Badge>
                 </div>
 
-                {result.outcome && (
+                {result.outcome ? (
                   <div className="space-y-2 text-sm">
                     <div className="flex items-center justify-between">
                       <span className="text-muted-foreground">Aksiyon:</span>
-                      <Badge>{result.outcome.action}</Badge>
+                      <Badge>{String(result.outcome.action)}</Badge>
                     </div>
-                    {result.outcome.message && (
+                    {result.outcome.message ? (
                       <div>
                         <span className="text-muted-foreground">Mesaj: </span>
                         <span>{result.outcome.message}</span>
                       </div>
-                    )}
-                    {result.outcome.payload && (
-                      <div>
-                        <span className="text-muted-foreground">Ek Bilgi:</span>
-                        <pre className="mt-1 p-2 bg-muted rounded text-xs overflow-auto">
-                          {JSON.stringify(result.outcome.payload, null, 2)}
-                        </pre>
-                      </div>
-                    )}
+                    ) : null}
                   </div>
-                )}
+                ) : null}
 
-                {result.evaluationPath && result.evaluationPath.length > 0 && (
-                  <div className="mt-3 pt-3 border-t">
-                    <span className="text-sm text-muted-foreground">Değerlendirme Yolu:</span>
-                    <div className="flex flex-wrap gap-1 mt-1">
-                      {result.evaluationPath.map((step, index) => (
-                        <Badge key={index} variant="outline" className="text-xs">
-                          {step}
-                        </Badge>
+                {result.conditionEvaluations && result.conditionEvaluations.length > 0 ? (
+                  <div className="mt-3 pt-3 border-t space-y-2">
+                    <span className="text-sm font-medium">Koşul değerlendirmeleri</span>
+                    <div className="space-y-1">
+                      {result.conditionEvaluations.map((ev, index) => (
+                        <div
+                          key={`${ev.field}-${index}`}
+                          className="flex flex-wrap items-center gap-2 text-xs rounded-md bg-muted/50 px-2 py-1"
+                        >
+                          <code className="font-mono">{ev.field}</code>
+                          <span>{ev.op}</span>
+                          <Badge variant={ev.result ? 'default' : 'secondary'}>
+                            {ev.result ? '✓' : '✗'}
+                          </Badge>
+                        </div>
                       ))}
                     </div>
                   </div>
-                )}
+                ) : null}
               </CardContent>
             </Card>
-          )}
+          ) : null}
 
           <DialogFooter>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => onOpenChange(false)}
-            >
+            <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
               Kapat
             </Button>
-            <Button type="submit" disabled={testRuleMutation.isPending}>
+            <Button
+              type="submit"
+              disabled={isPending || (!ruleId && !draftRule)}
+            >
               <Play className="h-4 w-4 mr-2" />
-              {testRuleMutation.isPending ? 'Test ediliyor...' : 'Test Et'}
+              {isPending ? 'Test ediliyor...' : 'Test Et'}
             </Button>
           </DialogFooter>
         </form>
