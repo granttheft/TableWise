@@ -14,6 +14,8 @@ import type {
 import { generateIdempotencyKey } from './utils';
 import {
   mapAvailabilityFromApi,
+  mapEvaluateRequestToApi,
+  mapEvaluateResponseFromApi,
   mapVenueConfigFromApi,
 } from './bookingMappers';
 
@@ -72,11 +74,11 @@ export async function evaluateRules(
   slug: string,
   request: RuleEvaluationRequest
 ): Promise<RuleEvaluationResult> {
-  const response = await api.post<RuleEvaluationResult>(
+  const response = await api.post(
     `/api/v1/book/${slug}/evaluate`,
-    request
+    mapEvaluateRequestToApi(request)
   );
-  return response.data;
+  return mapEvaluateResponseFromApi(response.data);
 }
 
 export async function createReservation(

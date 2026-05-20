@@ -43,12 +43,18 @@ export function BookingPage() {
   // Evaluation for final step
   const dateStr = selectedDate?.toISOString().split('T')[0];
   const evaluationRequest =
-    selectedDate && selectedSlot && formData.customerName
+    selectedDate &&
+    selectedSlot &&
+    formData.customerName &&
+    formData.customerEmail &&
+    formData.customerPhone
       ? {
           date: dateStr!,
           time: selectedSlot.time,
           partySize,
           tableIds: selectedTableIds || undefined,
+          customerEmail: formData.customerEmail,
+          customerPhone: formData.customerPhone,
           customFieldValues: formData.customFieldValues,
         }
       : null;

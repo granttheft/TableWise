@@ -73,6 +73,8 @@ export interface RuleEvaluationRequest {
   time: string; // "HH:mm"
   partySize: number;
   tableIds?: string[];
+  customerEmail: string;
+  customerPhone: string;
   customFieldValues?: Record<string, string | number | boolean>;
 }
 

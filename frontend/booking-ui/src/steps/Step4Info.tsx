@@ -122,6 +122,8 @@ export function Step4Info({
           time: selectedSlot.time,
           partySize,
           tableIds: tableIds || undefined,
+          customerEmail: debouncedValues.customerEmail,
+          customerPhone: debouncedValues.customerPhone,
           customFieldValues: debouncedValues.customFieldValues,
         }
       : null;

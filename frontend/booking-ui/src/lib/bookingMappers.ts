@@ -1,6 +1,9 @@
 import type {
   AvailabilitySlot,
   AvailableTable,
+  RuleEvaluationRequest,
+  RuleEvaluationResult,
+  RuleAction,
   TableCombination,
   VenueConfig,
   VenueCustomField,
@@ -260,4 +263,84 @@ export function mapAvailabilityFromApi(data: AvailabilityResponseApi): Availabil
       tableCombinations: combinations,
     };
   });
+}
+
+interface EvaluateRulesRequestApi {
+  partySize: number;
+  reservedFor: string;
+  tableId?: string;
+  customerEmail?: string;
+  customerPhone?: string;
+}
+
+interface EvaluateRulesResponseApi {
+  isAllowed?: boolean;
+  blockReason?: string;
+  discountPercent?: number;
+  requiresDeposit?: boolean;
+  depositAmount?: number;
+  warnings?: string[];
+}
+
+/**
+ * UI evaluate istegini backend EvaluateRulesRequestDto formatina cevirir.
+ */
+export function mapEvaluateRequestToApi(
+  request: RuleEvaluationRequest
+): EvaluateRulesRequestApi {
+  const tableId = request.tableIds?.[0];
+
+  return {
+    partySize: request.partySize,
+    reservedFor: `${request.date}T${request.time}:00.000Z`,
+    tableId: tableId || undefined,
+    customerEmail: request.customerEmail,
+    customerPhone: request.customerPhone,
+  };
+}
+
+/**
+ * Backend evaluate yanitini UI RuleEvaluationResult formatina cevirir.
+ */
+export function mapEvaluateResponseFromApi(
+  data: EvaluateRulesResponseApi
+): RuleEvaluationResult {
+  const actions: RuleAction[] = [];
+
+  if (data.isAllowed === false && data.blockReason) {
+    actions.push({
+      actionType: 'BLOCK',
+      message: data.blockReason,
+    });
+  }
+
+  for (const warning of data.warnings ?? []) {
+    if (warning) {
+      actions.push({
+        actionType: 'WARN',
+        message: warning,
+      });
+    }
+  }
+
+  if (data.discountPercent != null && data.discountPercent > 0) {
+    actions.push({
+      actionType: 'DISCOUNT',
+      message: 'Indirim uygulanacak',
+      value: Number(data.discountPercent),
+    });
+  }
+
+  if (data.requiresDeposit && data.depositAmount != null) {
+    actions.push({
+      actionType: 'DEPOSIT',
+      message: 'Bu rezervasyon icin on odeme gerekmektedir.',
+      value: Number(data.depositAmount),
+    });
+  }
+
+  return {
+    actions,
+    canProceed: data.isAllowed !== false,
+  };
 }
