@@ -25,7 +25,10 @@
       "Bash(xargs grep -l \"Repository\\\\|UnitOfWork\")",
       "Bash(dotnet add *)",
       "Bash(dotnet ef *)",
-      "Bash(git add *)"
+      "Bash(git add *)",
+      "Bash(git commit -m '@ *)",
+      "Bash(git commit -m 'SendGrid ve WhatsApp uyari loglarini baslatmada bir kere sinirla *)",
+      "Bash(git commit -m 'Migration: AddWhatsAppEnabledToVenue *)"
     ]
   }
 }
