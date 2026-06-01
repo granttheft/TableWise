@@ -161,14 +161,14 @@ export function Step5Confirm({
           variant="outline"
           onClick={onBack}
           disabled={isSubmitting}
-          className="flex-1"
+          className="flex-1 h-11"
         >
           Geri
         </Button>
         <Button
           onClick={onSubmit}
           disabled={isSubmitting}
-          className="flex-1"
+          className="flex-1 h-11"
           size="lg"
         >
           {isSubmitting ? (
@@ -185,7 +185,7 @@ export function Step5Confirm({
       </div>
 
       {requiresDeposit && (
-        <p className="text-xs text-center text-muted-foreground">
+        <p className="text-xs sm:text-sm text-center text-muted-foreground">
           Bir sonraki adımda güvenli ödeme sayfasına yönlendirileceksiniz
         </p>
       )}

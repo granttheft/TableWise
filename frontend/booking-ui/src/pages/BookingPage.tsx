@@ -147,7 +147,7 @@ export function BookingPage() {
         <div className="max-w-2xl mx-auto px-4 py-8">
           <ProgressBar currentStep={currentStep} totalSteps={5} />
 
-          <div className="bg-white rounded-lg shadow-sm border p-6">
+          <div className="bg-white rounded-lg shadow-sm border p-4 sm:p-6">
             {currentStep === 1 && (
               <Step1Date
                 config={config}

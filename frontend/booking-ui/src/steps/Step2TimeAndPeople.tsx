@@ -84,18 +84,18 @@ export function Step2TimeAndPeople({
             <p className="text-muted-foreground mb-4">
               Bu tarih ve kişi sayısı için müsait saat bulunmamaktadır.
             </p>
-            <Button variant="outline" onClick={onBack}>
+            <Button variant="outline" onClick={onBack} className="w-full sm:w-auto">
               Farklı Tarih Seç
             </Button>
           </div>
         ) : (
-          <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
             {slots.map((slot) => (
               <button
                 key={slot.time}
                 onClick={() => onSlotSelect(slot)}
                 className={cn(
-                  'p-3 rounded-lg border-2 font-medium transition-all hover:scale-105',
+                  'p-3 min-h-[44px] rounded-lg border-2 font-medium transition-all hover:scale-105',
                   selectedSlot?.time === slot.time
                     ? 'border-primary bg-primary text-white'
                     : 'border-gray-200 hover:border-primary/50'

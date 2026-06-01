@@ -178,7 +178,7 @@ export function Step4Info({
           <Input
             id="customerName"
             {...register('customerName')}
-            className="mt-1"
+            className="mt-1 h-11"
           />
           {errors.customerName && (
             <p className="text-sm text-red-600 mt-1">
@@ -196,7 +196,7 @@ export function Step4Info({
             type="email"
             inputMode="email"
             {...register('customerEmail')}
-            className="mt-1"
+            className="mt-1 h-11"
           />
           {errors.customerEmail && (
             <p className="text-sm text-red-600 mt-1">
@@ -217,7 +217,7 @@ export function Step4Info({
             {...register('customerPhone', {
               setValueAs: (value) => parsePhoneNumber(value),
             })}
-            className="mt-1"
+            className="mt-1 h-11"
           />
           {errors.customerPhone && (
             <p className="text-sm text-red-600 mt-1">
@@ -285,7 +285,7 @@ export function Step4Info({
           onCheckedChange={(checked) => setValue('acceptsKvkk', checked === true ? true as const : false as any)}
           className="mt-1"
         />
-        <Label htmlFor="acceptsKvkk" className="text-sm leading-relaxed">
+        <Label htmlFor="acceptsKvkk" className="text-sm leading-relaxed cursor-pointer">
           Kişisel verilerimin işlenmesini ve gizlilik politikasını
           onaylıyorum. <span className="text-red-500">*</span>
         </Label>

@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { QRCodeModal } from './QRCodeModal'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -20,6 +21,7 @@ interface CustomField {
 
 export function BookingSettings() {
   const [bookingUrl] = useState('https://tablewise.com.tr/rezervasyon/demo-restoran')
+  const [qrOpen, setQrOpen] = useState(false)
   const [customFields, setCustomFields] = useState<CustomField[]>([
     {
       id: '1',
@@ -42,8 +44,7 @@ export function BookingSettings() {
   }
 
   const handleShowQR = () => {
-    toast.info('QR kod oluşturuluyor...')
-    // TODO: QR code generation modal
+    setQrOpen(true)
   }
 
   const addCustomField = () => {
@@ -72,6 +73,8 @@ export function BookingSettings() {
   }
 
   return (
+    <>
+    <QRCodeModal open={qrOpen} onOpenChange={setQrOpen} url={bookingUrl} />
     <div className="space-y-6">
       <Card>
         <CardHeader>
@@ -210,5 +213,6 @@ export function BookingSettings() {
         </CardContent>
       </Card>
     </div>
+    </>
   )
 }

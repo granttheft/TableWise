@@ -51,7 +51,7 @@ export function Step3Table({
         <CardContent className="pt-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+              <div className="w-11 h-11 rounded-full bg-primary/10 flex items-center justify-center">
                 <Users className="w-5 h-5 text-primary" />
               </div>
               <div>
@@ -94,7 +94,7 @@ export function Step3Table({
                   <CardContent className="py-4">
                     <div className="flex items-center justify-between">
                       <div>
-                        <h4 className="font-semibold">{table.tableName}</h4>
+                        <h4 className="font-semibold truncate">{table.tableName}</h4>
                         <div className="flex items-center gap-4 mt-1 text-sm text-muted-foreground">
                           <span className="flex items-center gap-1">
                             <Users className="w-4 h-4" />
@@ -147,7 +147,7 @@ export function Step3Table({
                   <CardContent className="py-4">
                     <div className="flex items-center justify-between">
                       <div>
-                        <h4 className="font-semibold">
+                        <h4 className="font-semibold break-words">
                           {combo.tables.map((t) => t.tableName).join(' + ')}
                         </h4>
                         <div className="flex items-center gap-1 mt-1 text-sm text-muted-foreground">
