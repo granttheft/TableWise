@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -8,6 +8,7 @@ import { Switch } from '@/components/ui/switch'
 import { Badge } from '@/components/ui/badge'
 import { Calendar, Plus, X } from 'lucide-react'
 import { toast } from 'sonner'
+import { useVenues, useUpdateVenue } from '@/hooks/useVenues'
 
 const daysOfWeek = [
   { value: 0, label: 'Pazar' },
@@ -27,6 +28,10 @@ interface DaySchedule {
 }
 
 export function WorkingHoursSettings() {
+  const { data: venues = [] } = useVenues()
+  const updateVenue = useUpdateVenue()
+  const venue = venues[0]
+
   const [schedule, setSchedule] = useState<DaySchedule[]>(
     daysOfWeek.map((d) => ({
       day: d.value,
@@ -36,6 +41,12 @@ export function WorkingHoursSettings() {
     }))
   )
   const [slotDuration, setSlotDuration] = useState('90')
+
+  useEffect(() => {
+    if (venue?.slotDurationMinutes) {
+      setSlotDuration(String(venue.slotDurationMinutes))
+    }
+  }, [venue?.slotDurationMinutes])
 
   const [closures] = useState<{ id: string; date: string; reason: string; isPartial: boolean }[]>([])
 
@@ -50,8 +61,14 @@ export function WorkingHoursSettings() {
   }
 
   const handleSave = () => {
-    console.log('Schedule:', schedule, 'Slot duration:', slotDuration)
-    toast.success('Çalışma saatleri kaydedildi')
+    if (!venue) {
+      toast.error('Mekan bulunamadı')
+      return
+    }
+    updateVenue.mutate({
+      venueId: venue.id,
+      updates: { slotDurationMinutes: Number(slotDuration) },
+    })
   }
 
   return (
@@ -121,8 +138,8 @@ export function WorkingHoursSettings() {
             )
           })}
 
-          <Button onClick={handleSave} className="mt-4">
-            Kaydet
+          <Button onClick={handleSave} className="mt-4" disabled={updateVenue.isPending}>
+            {updateVenue.isPending ? 'Kaydediliyor...' : 'Kaydet'}
           </Button>
         </CardContent>
       </Card>

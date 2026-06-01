@@ -11,7 +11,7 @@ import { RuleResultBanner } from '@/components/RuleResultBanner';
 import { useEvaluate } from '@/hooks/useEvaluate';
 import { useDebounce } from '@/hooks/useDebounce';
 import type { VenueConfig, AvailabilitySlot } from '@/types/api';
-import { parsePhoneNumber } from '@/lib/utils';
+import { parsePhoneNumber, toLocalDateString } from '@/lib/utils';
 
 interface Step4InfoProps {
   config: VenueConfig;
@@ -112,7 +112,7 @@ export function Step4Info({
   const debouncedValues = useDebounce(watchedValues, 500);
 
   // Build evaluation request
-  const dateStr = selectedDate.toISOString().split('T')[0];
+  const dateStr = toLocalDateString(selectedDate);
   const evaluationRequest =
     debouncedValues.customerName &&
     debouncedValues.customerEmail &&

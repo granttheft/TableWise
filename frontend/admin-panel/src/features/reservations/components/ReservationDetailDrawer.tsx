@@ -39,6 +39,7 @@ import {
   formatConfirmCode,
 } from '../utils/reservationHelpers'
 import { getRuleTypeLabel } from '@/features/rules/utils/ruleHumanReadable'
+import { parseISO, differenceInMinutes, formatDistanceToNow } from 'date-fns'
 import { tr } from 'date-fns/locale'
 
 interface ReservationDetailDrawerProps {

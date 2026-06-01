@@ -85,11 +85,34 @@ export async function createReservation(
   slug: string,
   request: ReservationRequest
 ): Promise<ReservationResponse> {
-  const response = await api.post<ReservationResponse>(
-    `/api/v1/book/${slug}/reserve`,
-    request
-  );
-  return response.data;
+  // Backend field adları UI field adlarından farklı — map ediyoruz
+  const body = {
+    guestName: request.customerName,
+    guestEmail: request.customerEmail || undefined,
+    guestPhone: request.customerPhone,
+    partySize: request.partySize,
+    reservedFor: new Date(`${request.date}T${request.time}:00`).toISOString(),
+    tableId: request.tableId || undefined,
+    tableCombinationId: request.tableCombinationId || undefined,
+    specialRequests: request.specialRequests || undefined,
+    customFieldAnswers: request.customFieldValues
+      ? Object.fromEntries(
+          Object.entries(request.customFieldValues).map(([k, v]) => [k, String(v)])
+        )
+      : undefined,
+    privacyPolicyAccepted: request.acceptsKvkk,
+  };
+
+  const response = await api.post<any>(`/api/v1/book/${slug}/reserve`, body);
+
+  // Backend confirmCode döndürüyor, UI confirmationCode bekliyor
+  return {
+    reservationId: response.data.reservationId,
+    confirmationCode: response.data.confirmCode,
+    status: (response.data.status || 'confirmed').toLowerCase() as ReservationResponse['status'],
+    depositRequired: response.data.depositRequired ?? false,
+    depositAmount: response.data.depositAmount,
+  };
 }
 
 export async function getReservationDetail(

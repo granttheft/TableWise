@@ -8,6 +8,7 @@ interface Step3TableProps {
   slot: AvailabilitySlot;
   selectedTableIds: string[] | null;
   onTableSelect: (tableIds: string[] | null) => void;
+  onCombinationSelect?: (combinationId: string | null) => void;
   onNext: () => void;
   onBack: () => void;
 }
@@ -16,6 +17,7 @@ export function Step3Table({
   slot,
   selectedTableIds,
   onTableSelect,
+  onCombinationSelect,
   onNext,
   onBack,
 }: Step3TableProps) {
@@ -23,10 +25,17 @@ export function Step3Table({
 
   const handleAutoSelect = () => {
     onTableSelect(null);
+    onCombinationSelect?.(null);
   };
 
   const handleTableSelect = (tableIds: string[]) => {
     onTableSelect(tableIds);
+    onCombinationSelect?.(null);
+  };
+
+  const handleCombinationSelect = (combinationId: string, tableIds: string[]) => {
+    onTableSelect(tableIds);
+    onCombinationSelect?.(combinationId);
   };
 
   return (
@@ -142,7 +151,7 @@ export function Step3Table({
                       ? 'border-primary bg-primary/5'
                       : 'border-gray-200 hover:border-gray-300'
                   )}
-                  onClick={() => handleTableSelect(comboTableIds)}
+                  onClick={() => handleCombinationSelect(combo.combinationId, comboTableIds)}
                 >
                   <CardContent className="py-4">
                     <div className="flex items-center justify-between">

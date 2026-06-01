@@ -94,7 +94,8 @@ export interface ReservationRequest {
   date: string;
   time: string;
   partySize: number;
-  tableIds?: string[];
+  tableId?: string;
+  tableCombinationId?: string;
   customerName: string;
   customerEmail: string;
   customerPhone: string;

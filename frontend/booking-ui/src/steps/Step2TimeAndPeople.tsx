@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { Minus, Plus, Loader2 } from 'lucide-react';
 import { useAvailability } from '@/hooks/useAvailability';
-import { cn, formatDate } from '@/lib/utils';
+import { cn, formatDate, toLocalDateString } from '@/lib/utils';
 import type { AvailabilitySlot } from '@/types/api';
 
 interface Step2TimeAndPeopleProps {
@@ -25,13 +25,22 @@ export function Step2TimeAndPeople({
   onNext,
   onBack,
 }: Step2TimeAndPeopleProps) {
-  const dateStr = selectedDate.toISOString().split('T')[0];
+  const dateStr = toLocalDateString(selectedDate);
 
   const { data: slots, isLoading } = useAvailability(
     slug,
     dateStr,
     partySize > 0 ? partySize : null
   );
+
+  const now = new Date();
+  const isToday = dateStr === toLocalDateString(now);
+  const visibleSlots = isToday
+    ? (slots ?? []).filter((slot) => {
+        const [h, m] = slot.time.split(':').map(Number);
+        return h * 60 + m > now.getHours() * 60 + now.getMinutes();
+      })
+    : (slots ?? []);
 
   return (
     <div className="space-y-6">
@@ -79,7 +88,7 @@ export function Step2TimeAndPeople({
           <div className="flex items-center justify-center py-12">
             <Loader2 className="w-6 h-6 animate-spin text-primary" />
           </div>
-        ) : !slots || slots.length === 0 ? (
+        ) : visibleSlots.length === 0 ? (
           <div className="text-center py-12 bg-gray-50 rounded-lg border border-dashed">
             <p className="text-muted-foreground mb-4">
               Bu tarih ve kişi sayısı için müsait saat bulunmamaktadır.
@@ -90,7 +99,7 @@ export function Step2TimeAndPeople({
           </div>
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
-            {slots.map((slot) => (
+            {visibleSlots.map((slot) => (
               <button
                 key={slot.time}
                 onClick={() => onSlotSelect(slot)}

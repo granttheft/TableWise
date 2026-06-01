@@ -56,3 +56,13 @@ export function parsePhoneNumber(phone: string): string {
   // Remove all non-digits
   return phone.replace(/\D/g, '');
 }
+
+// toISOString() UTC verir — Istanbul (UTC+3) kullanıcıları için
+// gece yarısı seçilen tarih bir önceki gün görünür.
+// Bu fonksiyon yerel tarihi YYYY-MM-DD formatında döndürür.
+export function toLocalDateString(date: Date): string {
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, '0');
+  const d = String(date.getDate()).padStart(2, '0');
+  return `${y}-${m}-${d}`;
+}

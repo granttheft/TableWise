@@ -15,6 +15,7 @@ import { useEvaluate } from '@/hooks/useEvaluate';
 import { Loader2 } from 'lucide-react';
 import type { AvailabilitySlot } from '@/types/api';
 import { handleApiError } from '@/lib/api';
+import { toLocalDateString } from '@/lib/utils';
 
 export function BookingPage() {
   const { slug } = useParams<{ slug: string }>();
@@ -29,6 +30,7 @@ export function BookingPage() {
   const [selectedTableIds, setSelectedTableIds] = useState<string[] | null>(
     null
   );
+  const [selectedCombinationId, setSelectedCombinationId] = useState<string | null>(null);
   const [formData, setFormData] = useState<FormData>({
     customerName: '',
     customerEmail: '',
@@ -41,7 +43,7 @@ export function BookingPage() {
   const reserveMutation = useReserve(slug!);
 
   // Evaluation for final step
-  const dateStr = selectedDate?.toISOString().split('T')[0];
+  const dateStr = selectedDate ? toLocalDateString(selectedDate) : undefined;
   const evaluationRequest =
     selectedDate &&
     selectedSlot &&
@@ -68,14 +70,17 @@ export function BookingPage() {
   const handleReserve = async () => {
     if (!selectedDate || !selectedSlot) return;
 
-    const dateStr = selectedDate.toISOString().split('T')[0];
+    const dateStr = toLocalDateString(selectedDate);
 
     try {
       const response = await reserveMutation.mutateAsync({
         date: dateStr,
         time: selectedSlot.time,
         partySize,
-        tableIds: selectedTableIds || undefined,
+        tableId: !selectedCombinationId && selectedTableIds?.length === 1
+          ? selectedTableIds[0]
+          : undefined,
+        tableCombinationId: selectedCombinationId || undefined,
         customerName: formData.customerName,
         customerEmail: formData.customerEmail,
         customerPhone: formData.customerPhone,
@@ -175,6 +180,7 @@ export function BookingPage() {
                 slot={selectedSlot}
                 selectedTableIds={selectedTableIds}
                 onTableSelect={setSelectedTableIds}
+                onCombinationSelect={setSelectedCombinationId}
                 onNext={() => setCurrentStep(4)}
                 onBack={() => setCurrentStep(2)}
               />
