@@ -24,7 +24,7 @@ public sealed class ReserveCommandHandler : IRequestHandler<ReserveCommand, Rese
     private readonly IRuleEvaluator _ruleEvaluator;
     private readonly IDistributedLockService _lockService;
     private readonly ICacheService _cacheService;
-    private readonly IEmailService _emailService;
+    private readonly IWhatsAppOrchestrator _whatsAppOrchestrator;
     private readonly ICurrentUser _currentUser;
     private readonly ILogger<ReserveCommandHandler> _logger;
 
@@ -43,7 +43,7 @@ public sealed class ReserveCommandHandler : IRequestHandler<ReserveCommand, Rese
         IRuleEvaluator ruleEvaluator,
         IDistributedLockService lockService,
         ICacheService cacheService,
-        IEmailService emailService,
+        IWhatsAppOrchestrator whatsAppOrchestrator,
         ICurrentUser currentUser,
         ILogger<ReserveCommandHandler> logger)
     {
@@ -52,7 +52,7 @@ public sealed class ReserveCommandHandler : IRequestHandler<ReserveCommand, Rese
         _ruleEvaluator = ruleEvaluator;
         _lockService = lockService;
         _cacheService = cacheService;
-        _emailService = emailService;
+        _whatsAppOrchestrator = whatsAppOrchestrator;
         _currentUser = currentUser;
         _logger = logger;
     }
@@ -238,8 +238,9 @@ public sealed class ReserveCommandHandler : IRequestHandler<ReserveCommand, Rese
             await _cacheService.IncrementAsync(countKey, TimeSpan.FromDays(35), cancellationToken)
                 .ConfigureAwait(false);
 
-            // 14. Email kuyruğa at (async fire-and-forget)
-            _ = SendConfirmationEmailAsync(reservation, venue.Name);
+            // 14. Bildirim gönder: WhatsApp (aktifse) veya email fallback
+            _ = _whatsAppOrchestrator.SendReservationReceivedAsync(
+                reservation, venue.Name, venue.WhatsAppEnabled);
 
             _logger.LogInformation(
                 "Rezervasyon oluşturuldu. Id: {ReservationId}, ConfirmCode: {ConfirmCode}, Venue: {VenueName}",
@@ -422,28 +423,7 @@ public sealed class ReserveCommandHandler : IRequestHandler<ReserveCommand, Rese
         return $"/payment/{reservationId}";
     }
 
-    private async Task SendConfirmationEmailAsync(Domain.Entities.Reservation reservation, string venueName)
-    {
-        if (string.IsNullOrEmpty(reservation.GuestEmail))
-            return;
-
-        try
-        {
-            await _emailService.SendReservationConfirmationAsync(
-                reservation.GuestEmail,
-                reservation.GuestName,
-                venueName,
-                reservation.ReservedFor,
-                reservation.ConfirmCode)
-                .ConfigureAwait(false);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Onay email'i gönderilemedi. ReservationId: {ReservationId}", reservation.Id);
-        }
-    }
-
-    /// <summary>
+/// <summary>
     /// Staff veya Owner yetkisi kontrolü.
     /// </summary>
     private bool IsStaffRequest()

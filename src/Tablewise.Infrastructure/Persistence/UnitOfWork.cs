@@ -33,6 +33,7 @@ internal class UnitOfWork : IUnitOfWork
     private IRepository<NotificationLog>? _notificationLogs;
     private IRepository<AuditLog>? _auditLogs;
     private IRepository<IdempotencyKey>? _idempotencyKeys;
+    private IRepository<WhatsAppMessage>? _whatsAppMessages;
 
     /// <summary>
     /// UnitOfWork constructor.
@@ -96,6 +97,9 @@ internal class UnitOfWork : IUnitOfWork
 
     /// <inheritdoc />
     public IRepository<IdempotencyKey> IdempotencyKeys => _idempotencyKeys ??= new GenericRepository<IdempotencyKey>(_context);
+
+    /// <inheritdoc />
+    public IRepository<WhatsAppMessage> WhatsAppMessages => _whatsAppMessages ??= new GenericRepository<WhatsAppMessage>(_context);
 
     /// <inheritdoc />
     public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)

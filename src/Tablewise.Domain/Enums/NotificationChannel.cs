@@ -18,5 +18,10 @@ public enum NotificationChannel
     /// <summary>
     /// Push bildirimi (gelecek özellik).
     /// </summary>
-    Push = 2
+    Push = 2,
+
+    /// <summary>
+    /// WhatsApp bildirimi (Faz 6.5).
+    /// </summary>
+    WhatsApp = 3
 }

@@ -90,6 +90,11 @@ public class Venue : TenantScopedEntity
     /// </summary>
     public string? Description { get; set; }
 
+    /// <summary>
+    /// WhatsApp bildirimleri aktif mi? False ise email'e fallback yapılır.
+    /// </summary>
+    public bool WhatsAppEnabled { get; set; } = false;
+
     // Navigation Properties
 
     /// <summary>

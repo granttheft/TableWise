@@ -10,6 +10,7 @@ using Tablewise.Domain.Interfaces;
 using Tablewise.Application.Settings;
 using Tablewise.Infrastructure.Auth;
 using Tablewise.Infrastructure.Cache;
+using Tablewise.Infrastructure.Messaging;
 using Tablewise.Infrastructure.Persistence;
 using Tablewise.Infrastructure.Persistence.Interceptors;
 using Tablewise.Infrastructure.Services;
@@ -92,6 +93,9 @@ public static class DependencyInjection
         // Email Services (Faz 4.1)
         AddEmailServices(services, configuration);
 
+        // WhatsApp Services (Faz 6.5)
+        AddWhatsAppServices(services, configuration);
+
         // Booking Services (Faz 2.2)
         services.AddScoped<IIdempotencyService, IdempotencyService>();
         services.AddScoped<ISlotAvailabilityService, SlotAvailabilityService>();
@@ -167,6 +171,17 @@ public static class DependencyInjection
         services.AddScoped<R2FileStorageService>();
         services.AddScoped<IFileStorageService>(sp => sp.GetRequiredService<R2FileStorageService>());
         services.AddScoped<IStorageService>(sp => sp.GetRequiredService<R2FileStorageService>());
+    }
+
+    /// <summary>
+    /// WhatsApp servislerini kaydeder (Twilio, orchestrator, reminder worker).
+    /// </summary>
+    private static void AddWhatsAppServices(IServiceCollection services, IConfiguration configuration)
+    {
+        services.Configure<WhatsAppSettings>(configuration.GetSection(WhatsAppSettings.SectionName));
+        services.AddScoped<IMessagingChannel, TwilioWhatsAppChannel>();
+        services.AddScoped<IWhatsAppOrchestrator, WhatsAppOrchestrator>();
+        services.AddHostedService<Tablewise.Infrastructure.HostedServices.WhatsAppReminderService>();
     }
 
     /// <summary>

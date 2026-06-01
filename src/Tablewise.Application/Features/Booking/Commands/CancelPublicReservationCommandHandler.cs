@@ -17,7 +17,7 @@ public sealed class CancelPublicReservationCommandHandler : IRequestHandler<Canc
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly ISlotAvailabilityService _slotService;
-    private readonly IEmailService _emailService;
+    private readonly IWhatsAppOrchestrator _whatsAppOrchestrator;
     private readonly ILogger<CancelPublicReservationCommandHandler> _logger;
 
     private const int CancellationDeadlineHours = 24;
@@ -28,12 +28,12 @@ public sealed class CancelPublicReservationCommandHandler : IRequestHandler<Canc
     public CancelPublicReservationCommandHandler(
         IUnitOfWork unitOfWork,
         ISlotAvailabilityService slotService,
-        IEmailService emailService,
+        IWhatsAppOrchestrator whatsAppOrchestrator,
         ILogger<CancelPublicReservationCommandHandler> logger)
     {
         _unitOfWork = unitOfWork;
         _slotService = slotService;
-        _emailService = emailService;
+        _whatsAppOrchestrator = whatsAppOrchestrator;
         _logger = logger;
     }
 
@@ -112,8 +112,12 @@ public sealed class CancelPublicReservationCommandHandler : IRequestHandler<Canc
         await _slotService.InvalidateCacheAsync(reservation.VenueId, reservation.ReservedFor.Date, cancellationToken)
             .ConfigureAwait(false);
 
-        // 9. Email gönder
-        _ = SendCancellationEmailAsync(reservation);
+        // 9. Bildirim gönder: WhatsApp (aktifse) veya email fallback
+        _ = _whatsAppOrchestrator.SendCancellationAsync(
+            reservation,
+            reservation.Venue?.Name ?? string.Empty,
+            bookingLink: string.Empty,
+            venueWhatsAppEnabled: reservation.Venue?.WhatsAppEnabled ?? false);
 
         _logger.LogInformation(
             "Rezervasyon müşteri tarafından iptal edildi. Id: {ReservationId}, ConfirmCode: {ConfirmCode}",
@@ -122,24 +126,4 @@ public sealed class CancelPublicReservationCommandHandler : IRequestHandler<Canc
         return true;
     }
 
-    private async Task SendCancellationEmailAsync(Domain.Entities.Reservation reservation)
-    {
-        if (string.IsNullOrEmpty(reservation.GuestEmail))
-            return;
-
-        try
-        {
-            await _emailService.SendReservationCancellationAsync(
-                reservation.GuestEmail,
-                reservation.GuestName,
-                reservation.Venue?.Name ?? string.Empty,
-                reservation.ReservedFor,
-                reservation.ConfirmCode)
-                .ConfigureAwait(false);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "İptal email'i gönderilemedi. ReservationId: {ReservationId}", reservation.Id);
-        }
-    }
 }

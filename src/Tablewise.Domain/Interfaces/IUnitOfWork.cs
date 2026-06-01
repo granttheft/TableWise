@@ -98,6 +98,11 @@ public interface IUnitOfWork : IDisposable
     IRepository<IdempotencyKey> IdempotencyKeys { get; }
 
     /// <summary>
+    /// WhatsAppMessage repository.
+    /// </summary>
+    IRepository<WhatsAppMessage> WhatsAppMessages { get; }
+
+    /// <summary>
     /// Tüm değişiklikleri veritabanına kaydeder.
     /// </summary>
     /// <param name="cancellationToken">Cancellation token</param>
