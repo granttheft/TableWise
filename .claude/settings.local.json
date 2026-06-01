@@ -15,7 +15,11 @@
       "Bash(Get-Content \"D:\\\\Projects\\\\TableWise\\\\frontend\\\\admin-panel\\\\.env.example\" -ErrorAction SilentlyContinue)",
       "Bash(Get-Content \"D:\\\\Projects\\\\TableWise\\\\frontend\\\\admin-panel\\\\.env\" -ErrorAction SilentlyContinue)",
       "Bash(npm install *)",
-      "Bash(Select-Object Name)"
+      "Bash(Select-Object Name)",
+      "Bash(Select-Object -First 20)",
+      "Bash(Select-Object -ExpandProperty FullName)",
+      "PowerShell(Get-ChildItem -Path \"D:\\\\Projects\\\\TableWise\\\\backend\" -Recurse -ErrorAction SilentlyContinue | Where-Object { $_.Name -match \"\\(GetAvailableSlots|SlotAvailability|Availability\\)\" } | Select-Object -First 20)",
+      "Bash(xargs grep -l \"useReservation\")"
     ]
   }
 }
