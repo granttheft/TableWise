@@ -24,6 +24,8 @@ public sealed class TwilioWhatsAppChannel : IMessagingChannel
     private readonly ResiliencePipeline _retryPipeline;
     private readonly bool _isConfigured;
 
+    private static bool _missingKeyWarningLogged;
+
     // Şablon metinleri (Türkçe)
     private static readonly Dictionary<WhatsAppMessageTemplate, string> Templates = new()
     {
@@ -62,8 +64,9 @@ public sealed class TwilioWhatsAppChannel : IMessagingChannel
         {
             TwilioClient.Init(_settings.AccountSid, _settings.AuthToken);
         }
-        else
+        else if (!_missingKeyWarningLogged)
         {
+            _missingKeyWarningLogged = true;
             _logger.LogWarning(
                 "WhatsApp:AccountSid veya AuthToken boş; WhatsApp gönderimi devre dışı. " +
                 "Production öncesi appsettings.Local.json'da yapılandırın.");

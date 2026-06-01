@@ -24,6 +24,9 @@ public sealed class SendGridEmailService
     private readonly SendGridSettings _settings;
     private readonly ResiliencePipeline _retryPipeline;
 
+    // Uyarı uygulama ömrü boyunca yalnızca bir kez basılır (servis Scoped olduğundan her request'te oluşturulur).
+    private static bool _missingKeyWarningLogged;
+
     /// <summary>
     /// SendGridEmailService constructor. ApiKey boşsa istemci oluşturulmaz; gönderimler no-op olur (yerel geliştirme).
     /// </summary>
@@ -41,8 +44,12 @@ public sealed class SendGridEmailService
         if (string.IsNullOrWhiteSpace(_settings.ApiKey))
         {
             _client = null;
-            _logger.LogWarning(
-                "SendGrid:ApiKey boş; email gönderimi devre dışı. Production öncesi anahtarı yapılandırın.");
+            if (!_missingKeyWarningLogged)
+            {
+                _missingKeyWarningLogged = true;
+                _logger.LogWarning(
+                    "SendGrid:ApiKey boş; email gönderimi devre dışı. Production öncesi anahtarı yapılandırın.");
+            }
         }
         else
         {
