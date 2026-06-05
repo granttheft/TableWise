@@ -37,6 +37,7 @@ export function BookingPage() {
     customerPhone: '',
     customFieldValues: {},
     acceptsKvkk: false,
+    whatsAppConsent: false,
   });
 
   const { data: config, isLoading, error } = useVenueConfig(slug!);
@@ -67,6 +68,15 @@ export function BookingPage() {
     currentStep === 5 && !!evaluationRequest
   );
 
+  // Türkiye telefon numarasını E.164 formatına normalize et
+  const normalizePhone = (phone: string): string => {
+    const digits = phone.replace(/\D/g, '');
+    if (digits.startsWith('90') && digits.length === 12) return '+' + digits;
+    if (digits.startsWith('0') && digits.length === 11) return '+9' + digits;
+    if (digits.length === 10) return '+90' + digits;
+    return '+' + digits;
+  };
+
   const handleReserve = async () => {
     if (!selectedDate || !selectedSlot) return;
 
@@ -83,10 +93,11 @@ export function BookingPage() {
         tableCombinationId: selectedCombinationId || undefined,
         customerName: formData.customerName,
         customerEmail: formData.customerEmail,
-        customerPhone: formData.customerPhone,
+        customerPhone: normalizePhone(formData.customerPhone),
         specialRequests: formData.specialRequests || undefined,
         customFieldValues: formData.customFieldValues,
         acceptsKvkk: formData.acceptsKvkk,
+        whatsAppConsent: formData.whatsAppConsent,
       });
 
       if (response.depositRequired) {

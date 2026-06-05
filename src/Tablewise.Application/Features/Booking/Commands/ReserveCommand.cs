@@ -67,4 +67,9 @@ public sealed record ReserveCommand : IRequest<ReserveResponseDto>
     /// Kural motorunu atla (sadece Owner/Staff için).
     /// </summary>
     public bool OverrideRules { get; init; }
+
+    /// <summary>
+    /// WhatsApp bildirimlerine açık rıza (KVKK uyumu).
+    /// </summary>
+    public bool WhatsAppConsent { get; init; } = false;
 }

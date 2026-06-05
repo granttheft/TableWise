@@ -28,6 +28,7 @@ public interface IApplicationDbContext
     DbSet<Plan> Plans { get; }
     DbSet<Subscription> Subscriptions { get; }
     DbSet<NotificationLog> NotificationLogs { get; }
+    DbSet<WhatsAppMessage> WhatsAppMessages { get; }
     DbSet<AuditLog> AuditLogs { get; }
     DbSet<IdempotencyKey> IdempotencyKeys { get; }
     DbSet<RevocableRefreshToken> RefreshTokens { get; }

@@ -78,6 +78,11 @@ public sealed record VenueDto
     public decimal? DepositPartialPercent { get; init; }
 
     /// <summary>
+    /// WhatsApp bildirimleri aktif mi?
+    /// </summary>
+    public required bool WhatsAppEnabled { get; init; }
+
+    /// <summary>
     /// Çalışma saatleri (JSON).
     /// </summary>
     public string? WorkingHours { get; init; }

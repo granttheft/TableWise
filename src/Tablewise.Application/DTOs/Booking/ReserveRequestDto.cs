@@ -74,6 +74,11 @@ public sealed record ReserveRequestDto
     /// Kural motorunu atla (sadece Owner/Staff için).
     /// </summary>
     public bool OverrideRules { get; init; }
+
+    /// <summary>
+    /// WhatsApp bildirimlerine açık rıza (KVKK uyumu). Opsiyonel; false ise WhatsApp gönderilmez.
+    /// </summary>
+    public bool WhatsAppConsent { get; init; } = false;
 }
 
 /// <summary>
@@ -145,4 +150,9 @@ public sealed record ReserveResponseDto
     /// Uyarı mesajları.
     /// </summary>
     public IReadOnlyList<string>? Warnings { get; init; }
+
+    /// <summary>
+    /// Misafir WhatsApp bildirimine onay verdi mi?
+    /// </summary>
+    public bool WhatsAppConsent { get; init; }
 }

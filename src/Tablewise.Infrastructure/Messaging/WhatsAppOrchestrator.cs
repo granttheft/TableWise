@@ -9,6 +9,7 @@ namespace Tablewise.Infrastructure.Messaging;
 /// <summary>
 /// WhatsApp bildirim orkestratörü.
 /// Venue.WhatsAppEnabled true ise WhatsApp, false ise email'e fallback yapar.
+/// Ayrıca her bildirim tipi için venue seviyesinde açma/kapama desteği sunar.
 /// </summary>
 public sealed class WhatsAppOrchestrator : IWhatsAppOrchestrator
 {
@@ -34,9 +35,10 @@ public sealed class WhatsAppOrchestrator : IWhatsAppOrchestrator
         Reservation reservation,
         string venueName,
         bool venueWhatsAppEnabled,
+        bool waNotify = true,
         CancellationToken ct = default)
     {
-        if (venueWhatsAppEnabled && !string.IsNullOrWhiteSpace(reservation.GuestPhone))
+        if (venueWhatsAppEnabled && waNotify && !string.IsNullOrWhiteSpace(reservation.GuestPhone))
         {
             var data = BuildBaseData(reservation, venueName);
             await SafeSendAsync(() => _whatsApp.SendTemplatedAsync(
@@ -63,9 +65,10 @@ public sealed class WhatsAppOrchestrator : IWhatsAppOrchestrator
         Reservation reservation,
         string venueName,
         bool venueWhatsAppEnabled,
+        bool waNotify = true,
         CancellationToken ct = default)
     {
-        if (venueWhatsAppEnabled && !string.IsNullOrWhiteSpace(reservation.GuestPhone))
+        if (venueWhatsAppEnabled && waNotify && !string.IsNullOrWhiteSpace(reservation.GuestPhone))
         {
             var data = BuildBaseData(reservation, venueName);
             await SafeSendAsync(() => _whatsApp.SendTemplatedAsync(
@@ -93,9 +96,10 @@ public sealed class WhatsAppOrchestrator : IWhatsAppOrchestrator
         string venueName,
         string? venueAddress,
         bool venueWhatsAppEnabled,
+        bool waNotify = true,
         CancellationToken ct = default)
     {
-        if (venueWhatsAppEnabled && !string.IsNullOrWhiteSpace(reservation.GuestPhone))
+        if (venueWhatsAppEnabled && waNotify && !string.IsNullOrWhiteSpace(reservation.GuestPhone))
         {
             var data = BuildBaseData(reservation, venueName);
             await SafeSendAsync(() => _whatsApp.SendTemplatedAsync(
@@ -124,9 +128,10 @@ public sealed class WhatsAppOrchestrator : IWhatsAppOrchestrator
         string venueName,
         string bookingLink,
         bool venueWhatsAppEnabled,
+        bool waNotify = true,
         CancellationToken ct = default)
     {
-        if (venueWhatsAppEnabled && !string.IsNullOrWhiteSpace(reservation.GuestPhone))
+        if (venueWhatsAppEnabled && waNotify && !string.IsNullOrWhiteSpace(reservation.GuestPhone))
         {
             var data = BuildBaseData(reservation, venueName);
             data["iadeBilgisi"] = string.Empty; // Faz 7.5'te iade bilgisi eklenecek

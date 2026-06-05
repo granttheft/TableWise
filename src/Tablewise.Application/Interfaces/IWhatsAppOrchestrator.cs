@@ -14,6 +14,7 @@ public interface IWhatsAppOrchestrator
         Reservation reservation,
         string venueName,
         bool venueWhatsAppEnabled,
+        bool waNotify = true,
         CancellationToken ct = default);
 
     /// <summary>
@@ -23,6 +24,7 @@ public interface IWhatsAppOrchestrator
         Reservation reservation,
         string venueName,
         bool venueWhatsAppEnabled,
+        bool waNotify = true,
         CancellationToken ct = default);
 
     /// <summary>
@@ -33,6 +35,7 @@ public interface IWhatsAppOrchestrator
         string venueName,
         string? venueAddress,
         bool venueWhatsAppEnabled,
+        bool waNotify = true,
         CancellationToken ct = default);
 
     /// <summary>
@@ -43,5 +46,6 @@ public interface IWhatsAppOrchestrator
         string venueName,
         string bookingLink,
         bool venueWhatsAppEnabled,
+        bool waNotify = true,
         CancellationToken ct = default);
 }

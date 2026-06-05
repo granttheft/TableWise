@@ -95,6 +95,26 @@ public class Venue : TenantScopedEntity
     /// </summary>
     public bool WhatsAppEnabled { get; set; } = false;
 
+    /// <summary>
+    /// Rezervasyon alındı bildirimi WhatsApp'tan gitsin mi?
+    /// </summary>
+    public bool WaNotifyReservationReceived { get; set; } = true;
+
+    /// <summary>
+    /// Rezervasyon onay bildirimi WhatsApp'tan gitsin mi?
+    /// </summary>
+    public bool WaNotifyReservationConfirmed { get; set; } = true;
+
+    /// <summary>
+    /// Hatırlatma bildirimi WhatsApp'tan gitsin mi?
+    /// </summary>
+    public bool WaNotifyReminder { get; set; } = true;
+
+    /// <summary>
+    /// İptal bildirimi WhatsApp'tan gitsin mi?
+    /// </summary>
+    public bool WaNotifyCancellation { get; set; } = true;
+
     // Navigation Properties
 
     /// <summary>

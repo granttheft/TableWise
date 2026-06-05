@@ -101,6 +101,7 @@ export async function createReservation(
         )
       : undefined,
     privacyPolicyAccepted: request.acceptsKvkk,
+    whatsAppConsent: request.whatsAppConsent ?? false,
   };
 
   const response = await api.post<any>(`/api/v1/book/${slug}/reserve`, body);
@@ -112,6 +113,7 @@ export async function createReservation(
     status: (response.data.status || 'confirmed').toLowerCase() as ReservationResponse['status'],
     depositRequired: response.data.depositRequired ?? false,
     depositAmount: response.data.depositAmount,
+    whatsAppConsent: response.data.whatsAppConsent ?? false,
   };
 }
 

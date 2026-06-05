@@ -1,7 +1,7 @@
 import { useParams, Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
-import { CheckCircle, Copy, Calendar, MapPin, Home } from 'lucide-react';
+import { CheckCircle, Copy, Calendar, MapPin, Home, MessageCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { useReservationDetail } from '@/hooks/useReservationDetail';
@@ -101,6 +101,12 @@ export function ConfirmPage() {
               </span>{' '}
               adresine gönderildi.
             </p>
+            {reservation.whatsAppConsent && (
+              <div className="mt-3 inline-flex items-center gap-2 text-sm text-green-700 bg-green-50 border border-green-100 rounded-lg px-3 py-2">
+                <MessageCircle className="w-4 h-4 flex-shrink-0" />
+                <span>WhatsApp'tan bildirim gönderildi.</span>
+              </div>
+            )}
           </motion.div>
 
           {/* Confirmation code */}

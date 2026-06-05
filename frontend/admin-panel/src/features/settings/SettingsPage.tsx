@@ -6,8 +6,15 @@ import { DepositSettings } from './components/DepositSettings'
 import { BookingSettings } from './components/BookingSettings'
 import { IntegrationSettings } from './components/IntegrationSettings'
 import { VenueSettings } from './components/VenueSettings'
+import { WhatsAppSettings } from './components/WhatsAppSettings'
+import { WhatsAppMessageHistory } from './components/WhatsAppMessageHistory'
+import { useVenues } from '@/hooks/useVenues'
 
 export function SettingsPage() {
+  const { data: venues } = useVenues()
+  // Tek venue varsa direkt onu kullan, birden fazla varsa ilkini al (Business plan için ileride venue seçici eklenecek)
+  const activeVenueId = venues?.[0]?.id
+
   return (
     <div className="space-y-6">
       <div>
@@ -16,11 +23,12 @@ export function SettingsPage() {
       </div>
 
       <Tabs defaultValue="general" className="space-y-4">
-        <TabsList>
+        <TabsList className="flex-wrap">
           <TabsTrigger value="general">Genel</TabsTrigger>
           <TabsTrigger value="venues">Mekanlar</TabsTrigger>
           <TabsTrigger value="working-hours">Çalışma Saatleri</TabsTrigger>
           <TabsTrigger value="notifications">Bildirimler</TabsTrigger>
+          <TabsTrigger value="whatsapp">WhatsApp</TabsTrigger>
           <TabsTrigger value="deposit">Kapora</TabsTrigger>
           <TabsTrigger value="booking">Booking</TabsTrigger>
           <TabsTrigger value="integration">Entegrasyon</TabsTrigger>
@@ -40,6 +48,11 @@ export function SettingsPage() {
 
         <TabsContent value="notifications">
           <NotificationSettings />
+        </TabsContent>
+
+        <TabsContent value="whatsapp" className="space-y-6">
+          <WhatsAppSettings venueId={activeVenueId} />
+          <WhatsAppMessageHistory />
         </TabsContent>
 
         <TabsContent value="deposit">

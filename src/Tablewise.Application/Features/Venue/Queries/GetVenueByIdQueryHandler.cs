@@ -45,6 +45,7 @@ public sealed class GetVenueByIdQueryHandler : IRequestHandler<GetVenueByIdQuery
                 DepositRefundPolicy = v.DepositRefundPolicy,
                 DepositRefundHours = v.DepositRefundHours,
                 DepositPartialPercent = v.DepositPartialPercent,
+                WhatsAppEnabled = v.WhatsAppEnabled,
                 WorkingHours = v.WorkingHours,
                 TableCount = v.Tables.Count(t => !t.IsDeleted),
                 CreatedAt = v.CreatedAt,

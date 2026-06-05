@@ -104,6 +104,7 @@ public sealed class WhatsAppReminderService : BackgroundService
                 reservation.Venue!.Name,
                 reservation.Venue.Address,
                 venueWhatsAppEnabled: true,
+                waNotify: reservation.Venue.WaNotifyReminder,
                 ct).ConfigureAwait(false);
         }
     }

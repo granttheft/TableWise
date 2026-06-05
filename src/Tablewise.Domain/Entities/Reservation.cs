@@ -45,6 +45,11 @@ public class Reservation : TenantScopedEntity
     public string GuestPhone { get; set; } = string.Empty;
 
     /// <summary>
+    /// Misafir WhatsApp bildirimlerine açık rıza verdi mi? (KVKK uyumu)
+    /// </summary>
+    public bool WhatsAppConsent { get; set; } = false;
+
+    /// <summary>
     /// Kişi sayısı (party size).
     /// </summary>
     public int PartySize { get; set; }

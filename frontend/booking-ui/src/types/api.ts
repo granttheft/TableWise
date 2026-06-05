@@ -102,6 +102,7 @@ export interface ReservationRequest {
   specialRequests?: string;
   customFieldValues?: Record<string, string | number | boolean>;
   acceptsKvkk: boolean;
+  whatsAppConsent?: boolean;
 }
 
 export interface ReservationResponse {
@@ -110,6 +111,7 @@ export interface ReservationResponse {
   status: ReservationStatus;
   depositRequired: boolean;
   depositAmount?: number;
+  whatsAppConsent?: boolean;
 }
 
 export type ReservationStatus = 
@@ -139,6 +141,7 @@ export interface ReservationDetail {
   discountApplied?: number;
   canModify: boolean;
   canCancel: boolean;
+  whatsAppConsent?: boolean;
 }
 
 export interface ModifyReservationRequest {

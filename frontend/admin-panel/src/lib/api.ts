@@ -117,3 +117,24 @@ api.interceptors.response.use(
 )
 
 export default api
+
+// ---- WhatsApp API ----
+
+import type {
+  VenueWhatsAppSettings,
+  WhatsAppHistoryParams,
+  WhatsAppMessageHistoryItem,
+  PagedResult,
+} from '@/types/whatsapp'
+
+export const getWhatsAppSettings = (venueId: string) =>
+  api.get<VenueWhatsAppSettings>(`/api/v1/venues/${venueId}/whatsapp`)
+
+export const updateWhatsAppSettings = (venueId: string, data: Omit<VenueWhatsAppSettings, 'isConnected'>) =>
+  api.put(`/api/v1/venues/${venueId}/whatsapp`, data)
+
+export const sendWhatsAppTest = (venueId: string, toPhone: string) =>
+  api.post(`/api/v1/venues/${venueId}/whatsapp/test`, { toPhone })
+
+export const getWhatsAppMessages = (params: WhatsAppHistoryParams) =>
+  api.get<PagedResult<WhatsAppMessageHistoryItem>>('/api/v1/whatsapp/messages', { params })

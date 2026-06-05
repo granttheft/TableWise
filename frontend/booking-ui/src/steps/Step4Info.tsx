@@ -32,6 +32,7 @@ export interface FormData {
   specialRequests?: string;
   customFieldValues: Record<string, string | number | boolean>;
   acceptsKvkk: boolean;
+  whatsAppConsent: boolean;
 }
 
 const createSchema = (customFields: VenueConfig['customFields']) => {
@@ -66,13 +67,17 @@ const createSchema = (customFields: VenueConfig['customFields']) => {
     customerEmail: z.string().email('Geçerli bir e-posta adresi girin'),
     customerPhone: z
       .string()
-      .min(10, 'Geçerli bir telefon numarası girin')
-      .regex(/^[0-9]{10,11}$/, 'Telefon numarası sadece rakam içermeli'),
+      .min(1, 'Telefon numarası zorunludur')
+      .refine(
+        (val) => /^(\+90|0)?5[0-9]{9}$/.test(val.replace(/[\s\-()]/g, '')),
+        'Geçerli bir Türkiye telefon numarası girin (örn: 05XX XXX XX XX)'
+      ),
     specialRequests: z.string().optional(),
     customFieldValues: z.object(customFieldValidation),
     acceptsKvkk: z.literal(true, {
       errorMap: () => ({ message: 'KVKK onayı zorunludur' }),
     }),
+    whatsAppConsent: z.boolean().optional().default(false),
   });
 };
 
@@ -105,6 +110,7 @@ export function Step4Info({
       specialRequests: formData.specialRequests || '',
       customFieldValues: formData.customFieldValues || {},
       acceptsKvkk: formData.acceptsKvkk || false,
+      whatsAppConsent: formData.whatsAppConsent || false,
     } as SchemaType,
   });
 
@@ -142,6 +148,7 @@ export function Step4Info({
     onFormDataChange({
       ...data,
       specialRequests: data.specialRequests || '',
+      whatsAppConsent: data.whatsAppConsent ?? false,
     });
     onNext();
   };
@@ -295,6 +302,30 @@ export function Step4Info({
           {errors.acceptsKvkk.message}
         </p>
       )}
+
+      {/* WhatsApp rızası — KVKK uyumu */}
+      <div className="flex items-start gap-2 p-3 bg-green-50 rounded-lg border border-green-100">
+        <Checkbox
+          id="whatsAppConsent"
+          checked={watchedValues.whatsAppConsent === true}
+          onCheckedChange={(checked) =>
+            setValue('whatsAppConsent', checked === true)
+          }
+          className="mt-0.5"
+        />
+        <Label htmlFor="whatsAppConsent" className="text-sm leading-relaxed cursor-pointer text-gray-700">
+          WhatsApp üzerinden rezervasyon bildirimlerini (onay, hatırlatma, iptal) almak
+          istiyorum.{' '}
+          <a
+            href="/gizlilik"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-green-600 underline underline-offset-2"
+          >
+            Gizlilik Politikası
+          </a>
+        </Label>
+      </div>
 
       <div className="flex gap-3">
         <Button

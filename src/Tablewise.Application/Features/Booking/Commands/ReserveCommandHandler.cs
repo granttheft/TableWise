@@ -180,6 +180,7 @@ public sealed class ReserveCommandHandler : IRequestHandler<ReserveCommand, Rese
                 GuestName = request.GuestName,
                 GuestEmail = request.GuestEmail,
                 GuestPhone = request.GuestPhone,
+                WhatsAppConsent = request.WhatsAppConsent,
                 PartySize = request.PartySize,
                 ReservedFor = request.ReservedFor,
                 EndTime = slotEndTime,
@@ -240,7 +241,7 @@ public sealed class ReserveCommandHandler : IRequestHandler<ReserveCommand, Rese
 
             // 14. Bildirim gönder: WhatsApp (aktifse) veya email fallback
             _ = _whatsAppOrchestrator.SendReservationReceivedAsync(
-                reservation, venue.Name, venue.WhatsAppEnabled);
+                reservation, venue.Name, venue.WhatsAppEnabled, venue.WaNotifyReservationReceived);
 
             _logger.LogInformation(
                 "Rezervasyon oluşturuldu. Id: {ReservationId}, ConfirmCode: {ConfirmCode}, Venue: {VenueName}",
@@ -261,7 +262,8 @@ public sealed class ReserveCommandHandler : IRequestHandler<ReserveCommand, Rese
                 DepositAmount = depositRequired ? depositAmount : null,
                 PaymentUrl = depositRequired ? GeneratePaymentUrl(reservation.Id) : null,
                 DiscountPercent = ruleResult.DiscountPercent,
-                Warnings = ruleResult.Warnings.ToList()
+                Warnings = ruleResult.Warnings.ToList(),
+                WhatsAppConsent = request.WhatsAppConsent
             };
         }
         finally

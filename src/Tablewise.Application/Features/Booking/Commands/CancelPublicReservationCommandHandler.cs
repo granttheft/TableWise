@@ -117,7 +117,8 @@ public sealed class CancelPublicReservationCommandHandler : IRequestHandler<Canc
             reservation,
             reservation.Venue?.Name ?? string.Empty,
             bookingLink: string.Empty,
-            venueWhatsAppEnabled: reservation.Venue?.WhatsAppEnabled ?? false);
+            venueWhatsAppEnabled: reservation.Venue?.WhatsAppEnabled ?? false,
+            waNotify: reservation.Venue?.WaNotifyCancellation ?? true);
 
         _logger.LogInformation(
             "Rezervasyon müşteri tarafından iptal edildi. Id: {ReservationId}, ConfirmCode: {ConfirmCode}",
