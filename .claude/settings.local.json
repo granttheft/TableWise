@@ -28,7 +28,8 @@
       "Bash(git add *)",
       "Bash(git commit -m '@ *)",
       "Bash(git commit -m 'SendGrid ve WhatsApp uyari loglarini baslatmada bir kere sinirla *)",
-      "Bash(git commit -m 'Migration: AddWhatsAppEnabledToVenue *)"
+      "Bash(git commit -m 'Migration: AddWhatsAppEnabledToVenue *)",
+      "Bash(git commit -m ' *)"
     ]
   }
 }
