@@ -117,6 +117,7 @@ public static class DependencyInjection
         services.Configure<AuthSettings>(configuration.GetSection(AuthSettings.SectionName));
 
         services.AddSingleton<IJwtTokenService, JwtTokenService>();
+        services.AddSingleton<IPlatformJwtTokenService, PlatformJwtTokenService>();
         services.AddScoped<IAuthService, AuthService>();
     }
 

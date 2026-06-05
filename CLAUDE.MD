@@ -13,23 +13,55 @@
 - Kod İngilizce, yorum Türkçe olabilir
 
 ## Şu Anki Durum
-- Faz 5 (Admin Panel): çalışıyor, küçük pürüzler var
-- Faz 6 (Booking UI): çalışıyor, küçük pürüzler var
-- Faz 6.5 (WhatsApp): tamamlandı
-- Sıradaki: Faz 6.7 (i18n) veya Faz 7 (İyzico)
+- Faz 5 (Admin Panel): ✅ Tamamlandı
+- Faz 6 (Booking UI): ✅ Tamamlandı
+- Faz 6.5 (WhatsApp): ✅ Tamamlandı
+- Sıradaki: Faz 8.5 Super Admin Panel
 
 ## Önemli Kararlar
 - Ödeme: sadece İyzico (Stripe yok)
-- WhatsApp: sadece bildirim, ödeme linki yok
+- WhatsApp: sadece bildirim kanalı, ödeme linki gönderilmez
 - Kapora: restoranın İyzico alt üye işyeri hesabına gider
+- WhatsApp: Tablewise ortak Twilio numarası (her restoran ayrı değil)
+- Business/Enterprise'da restoranın kendi numarası bağlanabilir (Faz 12)
+- Faz 7, 7.5, 8 atlanıyor — direkt Faz 8.5'e geçildi
+
+## Sık Yapılan Hatalar (Yapma!)
+- Migration oluşturmadan entity'e kolon ekleme
+- TenantId olmadan entity oluşturma
+- Soft delete eklemeden silme işlemi
+- Global Query Filter'a yeni entity eklemeyi unutma
+
+## Yeni Entity Şablonu
+Her yeni entity şunları içermeli:
+- Guid Id
+- Guid TenantId
+- bool IsDeleted
+- DateTime CreatedAt
+- DateTime UpdatedAt
+- DateTime? DeletedAt
+
+## Migration Hatırlatması
+Entity değişikliği = mutlaka migration!
+cd src/Tablewise.Api
+dotnet ef migrations add [İsim] --project ../Tablewise.Infrastructure
+dotnet ef database update --project ../Tablewise.Infrastructure
 
 ## Obsidian Entegrasyonu
 
-Vault: `C:\Users\hasan\Documents\Obsidian\Tablewise\`
+Vault: C:\Users\hasan\Documents\Obsidian\Tablewise\
 
-Her faz tamamlandığında şunları güncelle:
-1. `Fazlar/Faz XX.md` → Durum ✅, Ne Yapıldı doldur, Önemli Dosyalar ekle
-2. `01 - Faz Haritası.md` → ilgili satırı ✅ yap
-3. `00 - Ana Sayfa.md` → Son Tamamlanan Faz ve Sıradaki Adım güncelle
-4. `04 - Açık Buglar.md` → yeni bilinen bugları ekle, çözülenleri kaldır
-5. `03 - Alınan Kararlar.md` → önemli mimari/tasarım kararlarını ekle
+## Her Oturum Başında:
+Şu dosyaları oku ve bağlam olarak kullan:
+- 00 - Ana Sayfa.md (güncel durum, sıradaki adım)
+- 01 - Faz Haritası.md (hangi fazlar bitti)
+- 03 - Alınan Kararlar.md (mimari kararlar)
+- 04 - Açık Buglar.md (bilinen sorunlar)
+- Fazlar/ klasöründen aktif fazın dosyası
+
+## Her Görev Sonunda:
+1. Fazlar/[aktif faz].md güncelle
+2. 00 - Ana Sayfa.md güncelle
+3. Yeni karar → 03 - Alınan Kararlar.md ekle
+4. Yeni bug → 04 - Açık Buglar.md ekle
+5. Bug çözüldü → 04'ten kaldır

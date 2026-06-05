@@ -113,6 +113,22 @@ try
                 return Task.CompletedTask;
             }
         };
+    })
+    // Platform çalışanları için ayrı JWT scheme — mekan JWT'si ile karıştırılamaz (farklı audience/issuer).
+    .AddJwtBearer("Platform", options =>
+    {
+        options.MapInboundClaims = false;
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = "tablewise-platform",
+            ValidAudience = "tablewise-platform",
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.SecretKey)),
+            ClockSkew = TimeSpan.FromSeconds(jwtSettings.ClockSkewSeconds)
+        };
     });
 
     builder.Services.AddAuthorization();

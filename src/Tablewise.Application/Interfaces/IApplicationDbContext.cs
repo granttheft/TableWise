@@ -32,6 +32,8 @@ public interface IApplicationDbContext
     DbSet<AuditLog> AuditLogs { get; }
     DbSet<IdempotencyKey> IdempotencyKeys { get; }
     DbSet<RevocableRefreshToken> RefreshTokens { get; }
+    DbSet<PlatformUser> PlatformUsers { get; }
+    DbSet<PlatformNote> PlatformNotes { get; }
 
     /// <summary>
     /// Değişiklikleri veritabanına kaydeder.
