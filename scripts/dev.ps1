@@ -1,10 +1,10 @@
 <#
 .SYNOPSIS
-    Yerel gelistirme: Docker (Postgres + Redis), ardindan API, admin panel ve booking UI'yi baslatir.
+    Yerel gelistirme: Docker (Postgres + Redis), ardindan API, admin panel, super-admin ve booking UI'yi baslatir.
 .DESCRIPTION
-    Once 5086 / 3000 / 5174 portlarinda dinleyen surecleri sonlandirir (zaten calisiyorsa),
-    docker compose ile postgres ve redis'i ayaga kaldirir, sonra Tablewise.Api, admin-panel ve
-    booking-ui icin ayri terminal pencereleri acar.
+    Once 5086 / 3000 / 3001 / 5174 portlarinda dinleyen surecleri sonlandirir (zaten calisiyorsa),
+    docker compose ile postgres ve redis'i ayaga kaldirir, sonra Tablewise.Api, admin-panel,
+    super-admin ve booking-ui icin ayri terminal pencereleri acar.
 .PARAMETER SkipDocker
     Postgres/Redis compose adimini atlar (servisleri zaten calisiyorsa kullanin).
 #>
@@ -17,11 +17,13 @@ $RepoRoot = Split-Path -Parent $PSScriptRoot
 $DockerDir = Join-Path $RepoRoot 'docker'
 $ApiDir = Join-Path $RepoRoot 'src/Tablewise.Api'
 $AdminDir = Join-Path $RepoRoot 'frontend/admin-panel'
+$SuperAdminDir = Join-Path $RepoRoot 'frontend/super-admin'
 $BookingDir = Join-Path $RepoRoot 'frontend/booking-ui'
 
 # Yerel gelistirme portlari (vite.config / launchSettings ile uyumlu)
 $ApiPort = 5086
 $AdminPort = 3000
+$SuperAdminPort = 3001
 $BookingPort = 5174
 
 function Stop-ListenerOnPort {
@@ -76,6 +78,7 @@ Write-Host ''
 Write-Host 'Mevcut gelistirme surecleri kontrol ediliyor...'
 Stop-ListenerOnPort -Port $ApiPort -Label 'API'
 Stop-ListenerOnPort -Port $AdminPort -Label 'Admin panel'
+Stop-ListenerOnPort -Port $SuperAdminPort -Label 'Super Admin'
 Stop-ListenerOnPort -Port $BookingPort -Label 'Booking UI'
 Start-Sleep -Seconds 1
 Write-Host ''
@@ -102,6 +105,10 @@ if (-not (Test-Path (Join-Path $AdminDir 'node_modules'))) {
     Write-Warning ('admin-panel node_modules yok; once: cd ''{0}''; npm install' -f $AdminDir)
 }
 
+if (-not (Test-Path (Join-Path $SuperAdminDir 'node_modules'))) {
+    Write-Warning ('super-admin node_modules yok; once: cd ''{0}''; npm install' -f $SuperAdminDir)
+}
+
 if (-not (Test-Path (Join-Path $BookingDir 'node_modules'))) {
     Write-Warning ('booking-ui node_modules yok; once: cd ''{0}''; npm install' -f $BookingDir)
 }
@@ -114,14 +121,18 @@ Start-Process -FilePath $shellExe -ArgumentList @('-NoExit', '-NoProfile', '-Com
 $adminCmd = ('Set-Location -LiteralPath ''{0}''; npm run dev' -f $AdminDir)
 Start-Process -FilePath $shellExe -ArgumentList @('-NoExit', '-NoProfile', '-Command', $adminCmd)
 
+$superAdminCmd = ('Set-Location -LiteralPath ''{0}''; npm run dev' -f $SuperAdminDir)
+Start-Process -FilePath $shellExe -ArgumentList @('-NoExit', '-NoProfile', '-Command', $superAdminCmd)
+
 $bookingCmd = ('Set-Location -LiteralPath ''{0}''; npm run dev' -f $BookingDir)
 Start-Process -FilePath $shellExe -ArgumentList @('-NoExit', '-NoProfile', '-Command', $bookingCmd)
 
 Write-Host ''
 Write-Host ('API:     http://localhost:{0}' -f $ApiPort)
-Write-Host ('Admin:   http://localhost:{0}' -f $AdminPort)
-Write-Host ('Booking: http://localhost:{0}/rezervasyon/{{slug}}' -f $BookingPort)
+Write-Host ('Admin:       http://localhost:{0}' -f $AdminPort)
+Write-Host ('Super Admin: http://localhost:{0}' -f $SuperAdminPort)
+Write-Host ('Booking:     http://localhost:{0}/rezervasyon/{{slug}}' -f $BookingPort)
 Write-Host ''
-Write-Host 'Uc yeni terminal penceresi acildi; durdurmak icin her pencerede Ctrl+C kullanin.'
+Write-Host 'Dort yeni terminal penceresi acildi; durdurmak icin her pencerede Ctrl+C kullanin.'
 Write-Host 'Tekrar calistirirsaniz script once bu portlardaki surecleri kapatir.'
 Write-Host ''
