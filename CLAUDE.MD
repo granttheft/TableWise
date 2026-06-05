@@ -58,6 +58,12 @@ Vault: C:\Users\hasan\Documents\Obsidian\Tablewise\
 - 03 - Alınan Kararlar.md (mimari kararlar)
 - 04 - Açık Buglar.md (bilinen sorunlar)
 - Fazlar/ klasöründen aktif fazın dosyası
+- Docs/ klasöründen ilgili faz prompt dosyası:
+  - Faz 6.5 için: Docs/tablewise-cursor-prompts-faz-6.5.md
+  - Faz 6.7 için: Docs/tablewise-cursor-prompts-faz-6.7.md
+  - Faz 7, 8.5, 14 için: Docs/tablewise-cursor-prompts-faz-7-8.5-14.md
+  - Faz 15 için: Docs/tablewise-cursor-prompts-faz-15-oneriler.md
+  - Genel bağlam için: Docs/tablewise-cursor-prompts-v1.1.md
 
 ## Her Görev Sonunda:
 1. Fazlar/[aktif faz].md güncelle

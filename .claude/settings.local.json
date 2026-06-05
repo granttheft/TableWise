@@ -29,7 +29,11 @@
       "Bash(git commit -m '@ *)",
       "Bash(git commit -m 'SendGrid ve WhatsApp uyari loglarini baslatmada bir kere sinirla *)",
       "Bash(git commit -m 'Migration: AddWhatsAppEnabledToVenue *)",
-      "Bash(git commit -m ' *)"
+      "Bash(git commit -m ' *)",
+      "PowerShell(Get-ChildItem -Path \"D:\\\\Projects\\\\TableWise\\\\src\" -Recurse | Where-Object { $_.Extension -eq '.cs' } | Select-Object FullName)",
+      "PowerShell(Test-Path \"D:\\\\Projects\\\\TableWise\\\\src\"; \\(Get-Item \"D:\\\\Projects\\\\TableWise\\\\src\" -Force\\).Attributes)",
+      "PowerShell([IO.Directory]::GetFileSystemEntries\\(\"D:\\\\Projects\\\\TableWise\\\\src\"\\))",
+      "PowerShell(tree *)"
     ]
   }
 }

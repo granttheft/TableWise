@@ -38,6 +38,8 @@ public class DbSeeder
         {
             _logger.LogInformation("Seed data işlemi başlıyor...");
 
+            await SeedPlatformAdminAsync();
+
             var demoTenantExists = await _context.Tenants
                 .IgnoreQueryFilters()
                 .AnyAsync(t => t.Id == SeedIds.DemoTenantId);
@@ -70,6 +72,33 @@ public class DbSeeder
             _logger.LogError(ex, "Seed data işlemi sırasında hata oluştu.");
             throw;
         }
+    }
+
+    private async Task SeedPlatformAdminAsync()
+    {
+        var exists = await _context.PlatformUsers
+            .IgnoreQueryFilters()
+            .AnyAsync(u => u.Email == "admin@tablewise.com.tr");
+
+        if (exists)
+        {
+            _logger.LogInformation("Platform admin zaten mevcut, atlanıyor.");
+            return;
+        }
+
+        _context.PlatformUsers.Add(new PlatformUser
+        {
+            Id = Guid.Parse("a0000000-0000-0000-0000-000000000001"),
+            Email = "admin@tablewise.com.tr",
+            PasswordHash = BCrypt.Net.BCrypt.HashPassword("Admin123!"),
+            FullName = "Platform Admin",
+            Role = PlatformRole.SuperAdmin,
+            IsActive = true,
+            CreatedAt = DateTime.UtcNow
+        });
+
+        await _context.SaveChangesAsync();
+        _logger.LogInformation("Platform admin oluşturuldu.");
     }
 
     private async Task SeedPlansAsync()
