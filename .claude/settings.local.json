@@ -48,7 +48,13 @@
       "Bash(powershell *)",
       "Bash(echo \"Started PID: $!\")",
       "Bash(xargs grep -l \"Conflict\\\\|NotFound\")",
-      "Bash(docker exec *)"
+      "Bash(docker exec *)",
+      "Bash(xargs ls -la)",
+      "Bash(Get-Content \"D:\\\\Projects\\\\TableWise\\\\src\\\\Tablewise.Domain\\\\Exceptions\\\\NotFoundException.cs\")",
+      "Bash(Get-Content \"D:\\\\Projects\\\\TableWise\\\\src\\\\Tablewise.Domain\\\\Exceptions\\\\ValidationException.cs\")",
+      "PowerShell(dotnet build *)",
+      "Bash(xargs grep -l \"team\\\\|staff\\\\|invite\" -i)",
+      "PowerShell(Get-ChildItem -Path \"D:\\\\Projects\\\\TableWise\" -Recurse -Depth 3 | Where-Object {$_.Extension -eq \".cs\" -or $_.Extension -eq \".ts\" -or $_.Extension -eq \".tsx\"} | Select-Object -First 30 | ForEach-Object { $_.FullName })"
     ]
   }
 }

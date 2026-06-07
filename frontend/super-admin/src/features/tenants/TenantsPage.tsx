@@ -115,7 +115,7 @@ export function TenantsPage() {
               </tr>
             ) : (
               data?.items.map((tenant) => {
-                const badge = statusBadge[tenant.planStatus]
+                const badge = statusBadge[tenant.planStatus] ?? { label: tenant.planStatus, class: 'bg-zinc-500/20 text-zinc-300 border-zinc-500/30' }
                 return (
                   <tr
                     key={tenant.id}
