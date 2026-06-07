@@ -3,7 +3,7 @@
 ## Stack
 - Backend: .NET 8, Clean Architecture, CQRS, EF Core, PostgreSQL (port 5433)
 - Frontend: React 18, Vite, TailwindCSS, shadcn/ui, Zustand, React Query
-- Projeler: backend/, frontend/admin-panel/, frontend/booking-ui/
+- Projeler: backend/, frontend/admin-panel/, frontend/booking-ui/, frontend/super-admin/
 
 ## Mimari Kurallar
 - Soft delete her entity'de zorunlu (IsDeleted, DeletedAt, DeletedBy)
@@ -16,7 +16,9 @@
 - Faz 5 (Admin Panel): ✅ Tamamlandı
 - Faz 6 (Booking UI): ✅ Tamamlandı
 - Faz 6.5 (WhatsApp): ✅ Tamamlandı
-- Sıradaki: Faz 8.5 Super Admin Panel
+- Faz 8.5 (Super Admin): ✅ Tamamlandı
+- E2E Testler (Playwright): ✅ 67/67 geçiyor
+- Sıradaki: Faz 7 (İyzico) / Faz 9 (Güvenlik) / Faz 10 (Deployment)
 
 ## Önemli Kararlar
 - Ödeme: sadece İyzico (Stripe yok)
@@ -24,7 +26,7 @@
 - Kapora: restoranın İyzico alt üye işyeri hesabına gider
 - WhatsApp: Tablewise ortak Twilio numarası (her restoran ayrı değil)
 - Business/Enterprise'da restoranın kendi numarası bağlanabilir (Faz 12)
-- Faz 7, 7.5, 8 atlanıyor — direkt Faz 8.5'e geçildi
+- Faz 7, 7.5, 8 atlanmıştı — direkt Faz 8.5'e geçildi; şimdi Faz 7'ye dönülecek
 
 ## Sık Yapılan Hatalar (Yapma!)
 - Migration oluşturmadan entity'e kolon ekleme
