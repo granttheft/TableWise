@@ -97,6 +97,7 @@ export function CustomersPage() {
                   <th className="px-4 py-3 text-left text-sm font-medium">Telefon</th>
                   <th className="px-4 py-3 text-left text-sm font-medium">Tier</th>
                   <th className="px-4 py-3 text-right text-sm font-medium">Toplam Ziyaret</th>
+                  <th className="px-4 py-3 text-left text-sm font-medium">Son Mekan</th>
                   <th className="px-4 py-3 text-left text-sm font-medium">Son Rezervasyon</th>
                 </tr>
               </thead>
@@ -127,6 +128,7 @@ export function CustomersPage() {
                       </Badge>
                     </td>
                     <td className="px-4 py-3 text-right font-medium">{customer.totalVisits || 0}</td>
+                    <td className="px-4 py-3 text-sm text-muted-foreground">{customer.lastVisitedVenueName || '-'}</td>
                     <td className="px-4 py-3 text-sm text-muted-foreground">
                       {customer.lastReservationDate
                         ? new Date(customer.lastReservationDate).toLocaleDateString('tr-TR')

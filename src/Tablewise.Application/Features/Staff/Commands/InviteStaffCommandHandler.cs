@@ -88,9 +88,12 @@ public sealed class InviteStaffCommandHandler : IRequestHandler<InviteStaffComma
                 "ACTIVE_INVITATION_EXISTS");
         }
 
+        if (currentUserId == null)
+            throw new UnauthorizedException("Oturum bilgisi alınamadı.");
+
         // Davet eden kullanıcı bilgisini al
         var inviter = await _dbContext.Users
-            .Where(u => u.Id == currentUserId)
+            .Where(u => u.Id == currentUserId && !u.IsDeleted)
             .Select(u => new { u.FirstName, u.LastName })
             .FirstOrDefaultAsync(cancellationToken)
             .ConfigureAwait(false);

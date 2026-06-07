@@ -58,8 +58,14 @@ public sealed class GetTenantProfileQueryHandler : IRequestHandler<GetTenantProf
 
     private static string? ExtractLogoUrl(string settingsJson)
     {
-        // Settings JSON'dan logoUrl çıkar (basit implementation)
-        // Production'da System.Text.Json kullan
-        return null; // TODO: JSON parse
+        try
+        {
+            using var doc = System.Text.Json.JsonDocument.Parse(settingsJson);
+            return doc.RootElement.TryGetProperty("logoUrl", out var prop) ? prop.GetString() : null;
+        }
+        catch
+        {
+            return null;
+        }
     }
 }

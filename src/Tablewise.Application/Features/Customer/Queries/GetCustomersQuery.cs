@@ -78,7 +78,12 @@ public sealed class GetCustomersQueryHandler : IRequestHandler<GetCustomersQuery
                 BlacklistReason = c.BlacklistReason,
                 Notes = c.Notes,
                 CreatedAt = c.CreatedAt,
-                UpdatedAt = c.UpdatedAt
+                UpdatedAt = c.UpdatedAt,
+                LastVisitedVenueName = _context.Reservations
+                    .Where(r => r.CustomerId == c.Id && !r.IsDeleted)
+                    .OrderByDescending(r => r.ReservedFor)
+                    .Select(r => r.Venue != null ? r.Venue.Name : null)
+                    .FirstOrDefault()
             })
             .ToListAsync(cancellationToken);
 

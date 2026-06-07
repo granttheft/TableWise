@@ -56,6 +56,7 @@ public sealed class RuleEnginePipeline : IRuleEnginePipeline
         // Kuralları al (cache veya DB)
         var rules = await GetRulesAsync(tenantId, venueId, cancellationToken)
             .ConfigureAwait(false);
+        var triggeredRuleIds = new List<Guid>();
 
         if (rules.Count == 0)
         {
@@ -85,6 +86,7 @@ public sealed class RuleEnginePipeline : IRuleEnginePipeline
                 // Outcome'u sonuca ekle
                 result.AddOutcome(outcome);
                 ProcessOutcome(result, outcome, rule);
+                triggeredRuleIds.Add(rule.Id);
 
                 // Block durumunda pipeline'ı durdur
                 if (outcome.ActionType == RuleActionType.Block)
@@ -107,6 +109,31 @@ public sealed class RuleEnginePipeline : IRuleEnginePipeline
                     "Kural değerlendirme hatası. RuleId={RuleId}, RuleName={RuleName}",
                     rule.Id, rule.Name);
                 result.AddWarning($"Kural '{rule.Name}' değerlendirilirken hata oluştu.");
+            }
+        }
+
+        // Tetiklenen kuralların TimesTriggered sayacını güncelle (fire-and-forget, hata pipeline'ı durdurmaz)
+        if (triggeredRuleIds.Count > 0)
+        {
+            try
+            {
+                var now = DateTime.UtcNow;
+                var ids = triggeredRuleIds;
+                // Tracked load ederek güncelle
+                var trackedRules = await _dbContext.Rules
+                    .Where(r => ids.Contains(r.Id))
+                    .ToListAsync(cancellationToken)
+                    .ConfigureAwait(false);
+                foreach (var r in trackedRules)
+                {
+                    r.TimesTriggered++;
+                    r.UpdatedAt = now;
+                }
+                await _dbContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning(ex, "TimesTriggered güncellenirken hata oluştu, pipeline etkilenmedi.");
             }
         }
 

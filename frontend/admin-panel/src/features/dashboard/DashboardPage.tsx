@@ -49,8 +49,8 @@ export function DashboardPage() {
           value={
             stats
               ? stats.monthReservationsLimit
-                ? `${stats.monthReservations} / ${stats.monthReservationsLimit}`
-                : stats.monthReservations.toString()
+                ? `${stats.monthReservations} / Plan Limiti: ${stats.monthReservationsLimit}`
+                : `${stats.monthReservations} rezervasyon`
               : '0'
           }
           icon={FileCheck}

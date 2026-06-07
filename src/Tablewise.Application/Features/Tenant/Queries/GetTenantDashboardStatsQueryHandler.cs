@@ -53,7 +53,13 @@ public sealed class GetTenantDashboardStatsQueryHandler
         }
 
         var planTier = tenant.Tier;
-        var todayUtc = DateTime.UtcNow.Date;
+
+        // Rezervasyon saatleri UTC saklanıyor; Istanbul lokal zamanına göre gün sınırları belirlenmeli
+        var tz = TimeZoneInfo.FindSystemTimeZoneById(
+            OperatingSystem.IsWindows() ? "Turkey Standard Time" : "Europe/Istanbul");
+        var nowLocal = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, tz);
+        var todayLocalStart = new DateTime(nowLocal.Year, nowLocal.Month, nowLocal.Day, 0, 0, 0, DateTimeKind.Unspecified);
+        var todayUtc = TimeZoneInfo.ConvertTimeToUtc(todayLocalStart, tz);
         var tomorrowUtc = todayUtc.AddDays(1);
         var yesterdayUtc = todayUtc.AddDays(-1);
 
@@ -71,8 +77,9 @@ public sealed class GetTenantDashboardStatsQueryHandler
                 cancellationToken)
             .ConfigureAwait(false);
 
-        var monthStart = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, 1, 0, 0, 0, DateTimeKind.Utc);
-        var monthEnd = monthStart.AddMonths(1);
+        var monthLocalStart = new DateTime(nowLocal.Year, nowLocal.Month, 1, 0, 0, 0, DateTimeKind.Unspecified);
+        var monthStart = TimeZoneInfo.ConvertTimeToUtc(monthLocalStart, tz);
+        var monthEnd = TimeZoneInfo.ConvertTimeToUtc(monthLocalStart.AddMonths(1), tz);
 
         var monthCount = await CountReservationsAsync(
                 tenantId,

@@ -84,6 +84,8 @@ export interface Venue {
   slug: string
   isActive: boolean
   tableCount: number
+  slotDurationMinutes?: number
+  workingHours?: string | null
 }
 
 /** POST /api/v1/venue — CreateVenueDto ile uyumlu gövde. */
@@ -334,6 +336,7 @@ export interface Customer {
   notes?: string
   createdAt: string
   updatedAt: string
+  lastVisitedVenueName?: string | null
 }
 
 export interface TimeSlot {

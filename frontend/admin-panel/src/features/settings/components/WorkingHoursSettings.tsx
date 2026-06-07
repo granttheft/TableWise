@@ -6,18 +6,22 @@ import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Switch } from '@/components/ui/switch'
 import { Badge } from '@/components/ui/badge'
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog'
 import { Calendar, Plus, X } from 'lucide-react'
+import { format } from 'date-fns'
+import { tr } from 'date-fns/locale'
 import { toast } from 'sonner'
 import { useVenues, useUpdateVenue } from '@/hooks/useVenues'
+import { useVenueClosures, useCreateVenueClosure, useDeleteVenueClosure } from '@/hooks/useVenueClosures'
 
 const daysOfWeek = [
-  { value: 0, label: 'Pazar' },
-  { value: 1, label: 'Pazartesi' },
-  { value: 2, label: 'Salı' },
-  { value: 3, label: 'Çarşamba' },
-  { value: 4, label: 'Perşembe' },
-  { value: 5, label: 'Cuma' },
-  { value: 6, label: 'Cumartesi' },
+  { value: 0, label: 'Pazar', key: 'Sunday' },
+  { value: 1, label: 'Pazartesi', key: 'Monday' },
+  { value: 2, label: 'Salı', key: 'Tuesday' },
+  { value: 3, label: 'Çarşamba', key: 'Wednesday' },
+  { value: 4, label: 'Perşembe', key: 'Thursday' },
+  { value: 5, label: 'Cuma', key: 'Friday' },
+  { value: 6, label: 'Cumartesi', key: 'Saturday' },
 ]
 
 interface DaySchedule {
@@ -27,48 +31,82 @@ interface DaySchedule {
   closeTime: string
 }
 
+const defaultSchedule = (): DaySchedule[] =>
+  daysOfWeek.map((d) => ({ day: d.value, isOpen: true, openTime: '10:00', closeTime: '23:00' }))
+
+function parseWorkingHours(json: string | null | undefined): DaySchedule[] {
+  if (!json) return defaultSchedule()
+  try {
+    const parsed = JSON.parse(json) as Record<string, { isClosed?: boolean; open?: string; close?: string }>
+    return daysOfWeek.map((d) => {
+      const entry = parsed[d.key]
+      if (!entry || entry.isClosed) return { day: d.value, isOpen: false, openTime: '10:00', closeTime: '23:00' }
+      return { day: d.value, isOpen: true, openTime: entry.open ?? '10:00', closeTime: entry.close ?? '23:00' }
+    })
+  } catch {
+    return defaultSchedule()
+  }
+}
+
+function buildWorkingHoursJson(schedule: DaySchedule[]): string {
+  const obj: Record<string, unknown> = {}
+  daysOfWeek.forEach((d) => {
+    const s = schedule.find((x) => x.day === d.value)!
+    obj[d.key] = s.isOpen ? { open: s.openTime, close: s.closeTime } : { isClosed: true }
+  })
+  return JSON.stringify(obj)
+}
+
 export function WorkingHoursSettings() {
   const { data: venues = [] } = useVenues()
   const updateVenue = useUpdateVenue()
   const venue = venues[0]
 
-  const [schedule, setSchedule] = useState<DaySchedule[]>(
-    daysOfWeek.map((d) => ({
-      day: d.value,
-      isOpen: true,
-      openTime: '10:00',
-      closeTime: '23:00',
-    }))
-  )
+  const [schedule, setSchedule] = useState<DaySchedule[]>(defaultSchedule)
   const [slotDuration, setSlotDuration] = useState('90')
+  const [closureModalOpen, setClosureModalOpen] = useState(false)
+  const [closureDate, setClosureDate] = useState('')
+  const [closureReason, setClosureReason] = useState('')
+
+  const { data: closures = [] } = useVenueClosures(venue?.id)
+  const createClosure = useCreateVenueClosure(venue?.id)
+  const deleteClosure = useDeleteVenueClosure(venue?.id)
 
   useEffect(() => {
-    if (venue?.slotDurationMinutes) {
-      setSlotDuration(String(venue.slotDurationMinutes))
-    }
-  }, [venue?.slotDurationMinutes])
+    if (!venue) return
+    if (venue.slotDurationMinutes) setSlotDuration(String(venue.slotDurationMinutes))
+    setSchedule(parseWorkingHours(venue.workingHours))
+  }, [venue?.id, venue?.slotDurationMinutes, venue?.workingHours])
 
-  const [closures] = useState<{ id: string; date: string; reason: string; isPartial: boolean }[]>([])
+  const toggleDay = (day: number) =>
+    setSchedule(schedule.map((s) => (s.day === day ? { ...s, isOpen: !s.isOpen } : s)))
 
-  const toggleDay = (day: number) => {
-    setSchedule(
-      schedule.map((s) => (s.day === day ? { ...s, isOpen: !s.isOpen } : s))
-    )
-  }
-
-  const updateSchedule = (day: number, field: 'openTime' | 'closeTime', value: string) => {
+  const updateSchedule = (day: number, field: 'openTime' | 'closeTime', value: string) =>
     setSchedule(schedule.map((s) => (s.day === day ? { ...s, [field]: value } : s)))
-  }
 
   const handleSave = () => {
-    if (!venue) {
-      toast.error('Mekan bulunamadı')
-      return
-    }
+    if (!venue) { toast.error('Mekan bulunamadı'); return }
     updateVenue.mutate({
       venueId: venue.id,
-      updates: { slotDurationMinutes: Number(slotDuration) },
+      updates: {
+        slotDurationMinutes: Number(slotDuration),
+        workingHours: buildWorkingHoursJson(schedule),
+      },
     })
+  }
+
+  const handleAddClosure = () => {
+    if (!closureDate) { toast.error('Tarih seçiniz'); return }
+    createClosure.mutate(
+      { date: closureDate, reason: closureReason, isFullDay: true },
+      {
+        onSuccess: () => {
+          setClosureModalOpen(false)
+          setClosureDate('')
+          setClosureReason('')
+        },
+      }
+    )
   }
 
   return (
@@ -106,13 +144,8 @@ export function WorkingHoursSettings() {
             return (
               <div key={day.value} className="flex items-center gap-4">
                 <div className="flex w-32 items-center gap-2">
-                  <Switch
-                    checked={daySchedule.isOpen}
-                    onCheckedChange={() => toggleDay(day.value)}
-                  />
-                  <Label className="cursor-pointer" onClick={() => toggleDay(day.value)}>
-                    {day.label}
-                  </Label>
+                  <Switch checked={daySchedule.isOpen} onCheckedChange={() => toggleDay(day.value)} />
+                  <Label className="cursor-pointer" onClick={() => toggleDay(day.value)}>{day.label}</Label>
                 </div>
 
                 {daySchedule.isOpen ? (
@@ -151,7 +184,7 @@ export function WorkingHoursSettings() {
               <CardTitle>Kapalı Günler & Tatiller</CardTitle>
               <CardDescription>Özel kapalı günlerinizi işaretleyin</CardDescription>
             </div>
-            <Button size="sm">
+            <Button size="sm" onClick={() => setClosureModalOpen(true)}>
               <Plus className="mr-2 h-4 w-4" />
               Kapalı Gün Ekle
             </Button>
@@ -167,17 +200,23 @@ export function WorkingHoursSettings() {
           ) : (
             <div className="space-y-2">
               {closures.map((closure) => (
-                <div
-                  key={closure.id}
-                  className="flex items-center justify-between rounded-lg border p-3"
-                >
+                <div key={closure.id} className="flex items-center justify-between rounded-lg border p-3">
                   <div>
-                    <div className="font-medium">{closure.date}</div>
-                    <div className="text-sm text-muted-foreground">{closure.reason}</div>
+                    <div className="font-medium">
+                      {format(new Date(closure.date), 'd MMMM yyyy', { locale: tr })}
+                    </div>
+                    {closure.reason && (
+                      <div className="text-sm text-muted-foreground">{closure.reason}</div>
+                    )}
                   </div>
                   <div className="flex items-center gap-2">
-                    {closure.isPartial && <Badge variant="outline">Kısmi</Badge>}
-                    <Button variant="ghost" size="icon">
+                    {!closure.isFullDay && <Badge variant="outline">Kısmi</Badge>}
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => deleteClosure.mutate(closure.id)}
+                      disabled={deleteClosure.isPending}
+                    >
                       <X className="h-4 w-4" />
                     </Button>
                   </div>
@@ -187,6 +226,34 @@ export function WorkingHoursSettings() {
           )}
         </CardContent>
       </Card>
+
+      <Dialog open={closureModalOpen} onOpenChange={setClosureModalOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Kapalı Gün Ekle</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 py-2">
+            <div className="space-y-2">
+              <Label>Tarih</Label>
+              <Input type="date" value={closureDate} onChange={(e) => setClosureDate(e.target.value)} />
+            </div>
+            <div className="space-y-2">
+              <Label>Sebep (opsiyonel)</Label>
+              <Input
+                placeholder="Örn: Milli Bayram, Restorasyon..."
+                value={closureReason}
+                onChange={(e) => setClosureReason(e.target.value)}
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setClosureModalOpen(false)}>İptal</Button>
+            <Button onClick={handleAddClosure} disabled={createClosure.isPending}>
+              {createClosure.isPending ? 'Ekleniyor...' : 'Ekle'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

@@ -269,8 +269,16 @@ public sealed class SlotAvailabilityService : ISlotAvailabilityService
             return SlotAvailabilityResult.Unavailable("Mekan bu gün kapalı.");
         }
 
-        var slotTimeOfDay = startTime.TimeOfDay;
-        var endTimeOfDay = endTime.TimeOfDay;
+        // UTC → Istanbul dönüşümü; WorkingHours JSON'daki saatler local zaman olarak saklanıyor
+        var tz = TimeZoneInfo.FindSystemTimeZoneById(
+            OperatingSystem.IsWindows() ? "Turkey Standard Time" : "Europe/Istanbul");
+        var localStart = TimeZoneInfo.ConvertTimeFromUtc(
+            DateTime.SpecifyKind(startTime, DateTimeKind.Utc), tz);
+        var localEnd = TimeZoneInfo.ConvertTimeFromUtc(
+            DateTime.SpecifyKind(endTime, DateTimeKind.Utc), tz);
+
+        var slotTimeOfDay = localStart.TimeOfDay;
+        var endTimeOfDay = localEnd.TimeOfDay;
 
         if (slotTimeOfDay < openTime.Value || endTimeOfDay > closeTime.Value)
         {
