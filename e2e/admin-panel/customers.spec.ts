@@ -19,7 +19,7 @@ adminTest.describe('Admin Panel — Müşteriler', () => {
 
   adminTest('tier filtresi çalışıyor — VIP', async ({ authenticatedPage: page }) => {
     await page.goto('/customers')
-    const tierFilter = page.getByRole('combobox').filter({ hasText: /tier|tümü/i })
+    const tierFilter = page.getByRole('combobox').filter({ hasText: /tier/i }).first()
     await tierFilter.click()
     await page.getByRole('option', { name: /VIP/i }).click()
     await expect(page.getByText('VIP').first()).toBeVisible({ timeout: 8_000 })
@@ -27,9 +27,9 @@ adminTest.describe('Admin Panel — Müşteriler', () => {
 
   adminTest('müşteri detay drawer açılıyor', async ({ authenticatedPage: page }) => {
     await page.goto('/customers')
-    await page.getByText(SEED.customers.mehmet.name).click()
+    await page.getByText(SEED.customers.mehmet.name).first().click()
     await expect(page.locator('[role="dialog"], [class*="drawer"], [class*="sheet"]')).toBeVisible({ timeout: 6_000 })
-    await expect(page.getByText(SEED.customers.mehmet.name)).toBeVisible()
+    await expect(page.getByText(SEED.customers.mehmet.name).first()).toBeVisible()
   })
 
   adminTest('"Son Mekan" kolonu görünüyor', async ({ authenticatedPage: page }) => {

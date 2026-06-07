@@ -86,13 +86,16 @@ export function WorkingHoursSettings() {
 
   const handleSave = () => {
     if (!venue) { toast.error('Mekan bulunamadı'); return }
-    updateVenue.mutate({
-      venueId: venue.id,
-      updates: {
-        slotDurationMinutes: Number(slotDuration),
-        workingHours: buildWorkingHoursJson(schedule),
+    updateVenue.mutate(
+      {
+        venueId: venue.id,
+        updates: {
+          slotDurationMinutes: Number(slotDuration),
+          workingHours: buildWorkingHoursJson(schedule),
+        },
       },
-    })
+      { onSuccess: () => toast.success('Çalışma saatleri kaydedildi') }
+    )
   }
 
   const handleAddClosure = () => {

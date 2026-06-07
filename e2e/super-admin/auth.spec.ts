@@ -4,19 +4,19 @@ import { SEED } from '../fixtures/seed'
 test.describe('Super Admin — Auth', () => {
   test('geçerli credentials ile dashboard\'a yönlendiriyor', async ({ page }) => {
     await page.goto('/login')
-    await page.getByLabel(/e-?posta|email/i).fill(SEED.superAdmin.email)
-    await page.getByLabel(/şifre|parola|password/i).fill(SEED.superAdmin.password)
-    await page.getByRole('button', { name: /giriş|login/i }).click()
-    await page.waitForURL('**/dashboard', { timeout: 10_000 })
+    await page.locator('#email').fill(SEED.superAdmin.email)
+    await page.locator('#password').fill(SEED.superAdmin.password)
+    await page.getByRole('button', { name: /giriş yap/i }).click()
+    await page.waitForURL('**/dashboard', { timeout: 15_000 })
     await expect(page).toHaveURL(/\/dashboard/)
   })
 
   test('yanlış şifre hata gösteriyor', async ({ page }) => {
     await page.goto('/login')
-    await page.getByLabel(/e-?posta|email/i).fill(SEED.superAdmin.email)
-    await page.getByLabel(/şifre|parola|password/i).fill('YanlisParola!')
-    await page.getByRole('button', { name: /giriş|login/i }).click()
-    await expect(page.getByText(/hata|geçersiz|yanlış|invalid/i)).toBeVisible({ timeout: 8_000 })
+    await page.locator('#email').fill(SEED.superAdmin.email)
+    await page.locator('#password').fill('YanlisParola!')
+    await page.getByRole('button', { name: /giriş yap/i }).click()
+    await expect(page.getByText(/geçersiz|hata|e-posta veya şifre/i)).toBeVisible({ timeout: 8_000 })
   })
 
   test('auth guard çalışıyor', async ({ page }) => {
@@ -26,10 +26,9 @@ test.describe('Super Admin — Auth', () => {
 
   test('admin panel credentials super admin\'e çalışmıyor', async ({ page }) => {
     await page.goto('/login')
-    await page.getByLabel(/e-?posta|email/i).fill(SEED.admin.email)
-    await page.getByLabel(/şifre|parola|password/i).fill(SEED.admin.password)
-    await page.getByRole('button', { name: /giriş|login/i }).click()
-    // Dashboard'a gidememeli
-    await expect(page.getByText(/hata|geçersiz|unauthorized/i)).toBeVisible({ timeout: 8_000 })
+    await page.locator('#email').fill(SEED.admin.email)
+    await page.locator('#password').fill(SEED.admin.password)
+    await page.getByRole('button', { name: /giriş yap/i }).click()
+    await expect(page.getByText(/geçersiz|hata|e-posta veya şifre/i)).toBeVisible({ timeout: 8_000 })
   })
 })

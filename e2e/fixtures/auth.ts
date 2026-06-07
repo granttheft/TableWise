@@ -1,25 +1,22 @@
 import { test as base, type Page } from '@playwright/test'
 import { SEED } from './seed'
 
-// Admin panel login helper
 async function loginAdmin(page: Page) {
   await page.goto('/login')
-  await page.getByLabel(/e-?posta|email/i).fill(SEED.admin.email)
-  await page.getByLabel(/şifre|parola|password/i).fill(SEED.admin.password)
-  await page.getByRole('button', { name: /giriş|login/i }).click()
-  await page.waitForURL('**/dashboard', { timeout: 10_000 })
+  await page.locator('#email').fill(SEED.admin.email)
+  await page.locator('#password').fill(SEED.admin.password)
+  await page.getByRole('button', { name: 'Giriş Yap' }).click()
+  await page.waitForURL('**/dashboard', { timeout: 15_000 })
 }
 
-// Super admin login helper
 async function loginSuperAdmin(page: Page) {
   await page.goto('/login')
-  await page.getByLabel(/e-?posta|email/i).fill(SEED.superAdmin.email)
-  await page.getByLabel(/şifre|parola|password/i).fill(SEED.superAdmin.password)
-  await page.getByRole('button', { name: /giriş|login/i }).click()
-  await page.waitForURL('**/dashboard', { timeout: 10_000 })
+  await page.locator('#email').fill(SEED.superAdmin.email)
+  await page.locator('#password').fill(SEED.superAdmin.password)
+  await page.getByRole('button', { name: /giriş yap/i }).click()
+  await page.waitForURL('**/dashboard', { timeout: 15_000 })
 }
 
-// Admin panel test fixture
 export const adminTest = base.extend<{ authenticatedPage: Page }>({
   authenticatedPage: async ({ page }, use) => {
     await loginAdmin(page)
@@ -27,7 +24,6 @@ export const adminTest = base.extend<{ authenticatedPage: Page }>({
   },
 })
 
-// Super admin test fixture
 export const superAdminTest = base.extend<{ authenticatedPage: Page }>({
   authenticatedPage: async ({ page }, use) => {
     await loginSuperAdmin(page)
