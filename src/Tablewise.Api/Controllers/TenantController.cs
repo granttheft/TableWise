@@ -2,7 +2,9 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Tablewise.Api.Authorization;
+using Tablewise.Application.DTOs.Platform;
 using Tablewise.Application.DTOs.Tenant;
+using Tablewise.Application.Features.Platform.Queries;
 using Tablewise.Application.Features.Tenant.Commands;
 using Tablewise.Application.Features.Tenant.Queries;
 
@@ -211,6 +213,17 @@ public sealed class TenantController : ControllerBase
         };
 
         var result = await _mediator.Send(query, cancellationToken);
+        return Ok(result);
+    }
+
+    /// <summary>
+    /// Mevcut plan fiyatlarını getirir (abonelik sayfası için).
+    /// </summary>
+    [HttpGet("plans")]
+    [ProducesResponseType(typeof(IReadOnlyList<PlanPricingDto>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetPlans(CancellationToken cancellationToken)
+    {
+        var result = await _mediator.Send(new GetPricingPlansQuery(), cancellationToken);
         return Ok(result);
     }
 
