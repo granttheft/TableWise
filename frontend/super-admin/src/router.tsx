@@ -5,16 +5,24 @@ import { LoginPage } from '@/features/auth/LoginPage'
 import { DashboardPage } from '@/features/dashboard/DashboardPage'
 import { TenantsPage } from '@/features/tenants/TenantsPage'
 import { TenantDetailPage } from '@/features/tenants/TenantDetailPage'
+import { PricingPage } from '@/features/pricing/PricingPage'
+import { CouponsPage } from '@/features/coupons/CouponsPage'
+import type { PlatformRole } from '@/types/api'
 
 interface ProtectedRouteProps {
   children: React.ReactNode
+  allowedRoles?: PlatformRole[]
 }
 
-function ProtectedRoute({ children }: ProtectedRouteProps) {
-  const { isAuthenticated } = useAuth()
+function ProtectedRoute({ children, allowedRoles }: ProtectedRouteProps) {
+  const { isAuthenticated, user } = useAuth()
 
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />
+  }
+
+  if (allowedRoles && user && !allowedRoles.includes(user.role)) {
+    return <Navigate to="/dashboard" replace />
   }
 
   return <>{children}</>
@@ -37,6 +45,22 @@ export function AppRouter() {
         <Route path="dashboard" element={<DashboardPage />} />
         <Route path="tenants" element={<TenantsPage />} />
         <Route path="tenants/:id" element={<TenantDetailPage />} />
+        <Route
+          path="pricing"
+          element={
+            <ProtectedRoute allowedRoles={['SuperAdmin', 'Finance']}>
+              <PricingPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="coupons"
+          element={
+            <ProtectedRoute allowedRoles={['SuperAdmin', 'Marketing', 'Finance']}>
+              <CouponsPage />
+            </ProtectedRoute>
+          }
+        />
         <Route path="*" element={<Navigate to="/dashboard" replace />} />
       </Route>
     </Routes>

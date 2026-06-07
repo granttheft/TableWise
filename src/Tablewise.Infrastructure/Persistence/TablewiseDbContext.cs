@@ -61,6 +61,7 @@ public class TablewiseDbContext : DbContext, IApplicationDbContext
     public DbSet<WhatsAppMessage> WhatsAppMessages => Set<WhatsAppMessage>();
     public DbSet<PlatformUser> PlatformUsers => Set<PlatformUser>();
     public DbSet<PlatformNote> PlatformNotes => Set<PlatformNote>();
+    public DbSet<Coupon> Coupons => Set<Coupon>();
 
     /// <summary>
     /// Model yapılandırması. Assembly'den tüm IEntityTypeConfiguration'ları uygular.

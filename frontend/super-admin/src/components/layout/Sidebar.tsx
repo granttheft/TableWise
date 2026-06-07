@@ -26,8 +26,8 @@ interface NavItem {
 const navItems: NavItem[] = [
   { label: 'Dashboard', icon: LayoutDashboard, to: '/dashboard' },
   { label: 'Müşteriler', icon: Building2, to: '/tenants' },
-  { label: 'Fiyatlandırma', icon: CreditCard, to: '/pricing', soon: true },
-  { label: 'Kuponlar', icon: Tag, to: '/coupons', soon: true },
+  { label: 'Fiyatlandırma', icon: CreditCard, to: '/pricing', hideForRoles: ['Marketing'] },
+  { label: 'Kuponlar', icon: Tag, to: '/coupons' },
   { label: 'Ödemeler', icon: Receipt, to: '/payments', soon: true },
   { label: 'Cihazlar', icon: Monitor, to: '/devices', soon: true, hideForRoles: ['Marketing', 'Finance'] },
   { label: 'Ekip', icon: Users, to: '/team', soon: true, hideForRoles: ['Marketing', 'Finance'] },

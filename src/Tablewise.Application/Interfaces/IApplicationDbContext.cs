@@ -34,6 +34,7 @@ public interface IApplicationDbContext
     DbSet<RevocableRefreshToken> RefreshTokens { get; }
     DbSet<PlatformUser> PlatformUsers { get; }
     DbSet<PlatformNote> PlatformNotes { get; }
+    DbSet<Coupon> Coupons { get; }
 
     /// <summary>
     /// Değişiklikleri veritabanına kaydeder.

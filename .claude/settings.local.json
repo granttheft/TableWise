@@ -33,7 +33,22 @@
       "PowerShell(Get-ChildItem -Path \"D:\\\\Projects\\\\TableWise\\\\src\" -Recurse | Where-Object { $_.Extension -eq '.cs' } | Select-Object FullName)",
       "PowerShell(Test-Path \"D:\\\\Projects\\\\TableWise\\\\src\"; \\(Get-Item \"D:\\\\Projects\\\\TableWise\\\\src\" -Force\\).Attributes)",
       "PowerShell([IO.Directory]::GetFileSystemEntries\\(\"D:\\\\Projects\\\\TableWise\\\\src\"\\))",
-      "PowerShell(tree *)"
+      "PowerShell(tree *)",
+      "PowerShell(Get-ChildItem -Path \"D:\\\\Projects\\\\TableWise\\\\frontend\\\\super-admin\\\\src\" -Recurse | Select-Object FullName, @{Name='Type'; Expression={if\\($_.PSIsContainer\\){'Folder'}else{'File'}}} | Sort-Object FullName)",
+      "Bash(xargs grep -l \"PlatformUser\\\\|PlatformNote\")",
+      "Bash(dir \"D:\\\\Projects\\\\TableWise\\\\src\\\\Tablewise.Domain\\\\Entities\")",
+      "Bash(cat scripts/dev.ps1)",
+      "Bash(ls scripts/)",
+      "Bash(curl -s -X POST http://localhost:5086/api/platform/auth/login -H \"Content-Type: application/json\" -d '{\"email\":\"admin@tablewise.com.tr\",\"password\":\"Admin123!\"}')",
+      "Bash(dotnet run *)",
+      "Bash(echo \"Backend başlatıldı, PID: $!\")",
+      "Bash(pkill -f \"Tablewise.Api\")",
+      "Bash(echo \"PID: $!\")",
+      "Bash(curl -s -X POST http://localhost:5086/api/platform/auth/login -H 'Content-Type: application/json' -d '{\"email\":\"admin@tablewise.com.tr\",\"password\":\"Admin123!\"}')",
+      "Bash(powershell *)",
+      "Bash(echo \"Started PID: $!\")",
+      "Bash(xargs grep -l \"Conflict\\\\|NotFound\")",
+      "Bash(docker exec *)"
     ]
   }
 }
