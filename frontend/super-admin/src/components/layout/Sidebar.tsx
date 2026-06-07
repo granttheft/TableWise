@@ -28,9 +28,9 @@ const navItems: NavItem[] = [
   { label: 'Müşteriler', icon: Building2, to: '/tenants' },
   { label: 'Fiyatlandırma', icon: CreditCard, to: '/pricing', hideForRoles: ['Marketing'] },
   { label: 'Kuponlar', icon: Tag, to: '/coupons' },
-  { label: 'Ödemeler', icon: Receipt, to: '/payments', soon: true },
-  { label: 'Cihazlar', icon: Monitor, to: '/devices', soon: true, hideForRoles: ['Marketing', 'Finance'] },
-  { label: 'Ekip', icon: Users, to: '/team', soon: true, hideForRoles: ['Marketing', 'Finance'] },
+  { label: 'Ödemeler', icon: Receipt, to: '/payments', hideForRoles: ['Marketing'] },
+  { label: 'Cihazlar', icon: Monitor, to: '/devices', hideForRoles: ['Marketing', 'Finance'] },
+  { label: 'Ekip', icon: Users, to: '/team', hideForRoles: ['Marketing', 'Finance'] },
 ]
 
 export function Sidebar() {

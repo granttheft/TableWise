@@ -53,6 +53,27 @@ export interface TenantDetailDto extends TenantSummaryDto {
   subscriptionPeriodEnd?: string
 }
 
+export interface PlatformUserDto {
+  id: string
+  email: string
+  fullName: string
+  role: PlatformRole
+  isActive: boolean
+  lastLoginAt: string | null
+  createdAt: string
+}
+
+export interface InvitePlatformUserDto {
+  email: string
+  fullName: string
+  role: PlatformRole
+  password: string
+}
+
+export interface UpdatePlatformUserRoleDto {
+  newRole: PlatformRole
+}
+
 export interface PagedResult<T> {
   items: T[]
   totalCount: number

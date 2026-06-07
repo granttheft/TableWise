@@ -7,6 +7,9 @@ import { TenantsPage } from '@/features/tenants/TenantsPage'
 import { TenantDetailPage } from '@/features/tenants/TenantDetailPage'
 import { PricingPage } from '@/features/pricing/PricingPage'
 import { CouponsPage } from '@/features/coupons/CouponsPage'
+import { TeamPage } from '@/features/team/TeamPage'
+import { PaymentsPage } from '@/features/payments/PaymentsPage'
+import { DevicesPage } from '@/features/devices/DevicesPage'
 import type { PlatformRole } from '@/types/api'
 
 interface ProtectedRouteProps {
@@ -58,6 +61,30 @@ export function AppRouter() {
           element={
             <ProtectedRoute allowedRoles={['SuperAdmin', 'Marketing', 'Finance']}>
               <CouponsPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="payments"
+          element={
+            <ProtectedRoute allowedRoles={['SuperAdmin', 'Finance']}>
+              <PaymentsPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="devices"
+          element={
+            <ProtectedRoute allowedRoles={['SuperAdmin']}>
+              <DevicesPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="team"
+          element={
+            <ProtectedRoute allowedRoles={['SuperAdmin']}>
+              <TeamPage />
             </ProtectedRoute>
           }
         />
