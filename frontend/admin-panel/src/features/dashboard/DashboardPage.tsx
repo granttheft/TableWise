@@ -9,6 +9,8 @@ import { WeeklyChart } from './components/WeeklyChart'
 import { TodayReservationsList } from './components/TodayReservationsList'
 import { RecentActivity } from './components/RecentActivity'
 import { TopRules } from './components/TopRules'
+import { PlanUsageWidget } from './components/PlanUsageWidget'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
 export function DashboardPage() {
   const { data: stats, isLoading: statsLoading } = useDashboardStats()
@@ -72,10 +74,18 @@ export function DashboardPage() {
         <TodayReservationsList data={todayReservations} isLoading={todayLoading} />
       </div>
 
-      {/* Recent Activity + Top Rules */}
-      <div className="grid gap-4 md:grid-cols-2">
+      {/* Recent Activity + Top Rules + Plan Usage */}
+      <div className="grid gap-4 md:grid-cols-3">
         <RecentActivity data={auditLogs} isLoading={auditLoading} />
         <TopRules data={ruleStats} isLoading={rulesLoading} />
+        <Card>
+          <CardHeader className="pb-3">
+            <CardTitle className="text-sm font-medium">Plan Kullanımı</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <PlanUsageWidget />
+          </CardContent>
+        </Card>
       </div>
     </div>
   )

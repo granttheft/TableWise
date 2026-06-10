@@ -106,10 +106,15 @@ export interface CreateVenuePayload {
 }
 
 export interface PlanLimits {
+  maxVenues: number | null
+  currentVenueCount: number
   maxTables: number | null
   currentTableCount: number
   maxRules: number | null
   currentRuleCount: number
+  maxReservationsPerMonth: number | null
+  currentReservationCount: number
+  hasCustomLimits: boolean
 }
 
 // Rule Types

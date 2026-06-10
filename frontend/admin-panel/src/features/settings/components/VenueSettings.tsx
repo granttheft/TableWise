@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Store } from 'lucide-react'
 import { useVenues, useCreateVenue } from '@/hooks/useVenues'
+import { usePlanLimits, isAtLimit } from '@/hooks/usePlanLimits'
 
 const createVenueSchema = z.object({
   name: z.string().min(2, 'En az 2 karakter').max(100, 'En fazla 100 karakter'),
@@ -21,6 +22,8 @@ type CreateVenueForm = z.infer<typeof createVenueSchema>
 export function VenueSettings() {
   const { data: venues = [], isLoading } = useVenues()
   const createVenue = useCreateVenue()
+  const { data: planLimits } = usePlanLimits()
+  const venueAtLimit = isAtLimit(planLimits?.currentVenueCount ?? 0, planLimits?.maxVenues ?? null)
 
   const {
     register,
@@ -95,9 +98,21 @@ export function VenueSettings() {
               <Input id="venue-address" {...register('address')} disabled={createVenue.isPending} />
               {errors.address && <p className="text-sm text-destructive">{errors.address.message}</p>}
             </div>
-            <Button type="submit" disabled={createVenue.isPending}>
+            <Button
+              type="submit"
+              disabled={createVenue.isPending || venueAtLimit}
+              title={venueAtLimit
+                ? `Mekan limitinize ulaştınız (${planLimits?.currentVenueCount}/${planLimits?.maxVenues})`
+                : undefined}
+            >
               {createVenue.isPending ? 'Oluşturuluyor…' : 'Mekan oluştur'}
             </Button>
+            {venueAtLimit && (
+              <p className="text-sm text-destructive">
+                Mekan limitinize ulaştınız ({planLimits?.currentVenueCount}/{planLimits?.maxVenues}).
+                Planınızı yükseltin.
+              </p>
+            )}
           </form>
         </CardContent>
       </Card>

@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import api from '@/lib/api'
 import { toast } from 'sonner'
-import type { Rule, RuleTestContext, RuleTestResult } from '@/types/api'
+import type { Rule, RuleTestContext } from '@/types/api'
 import {
   mapRuleFormToApiPayload,
   type RuleBuilderSubmitPayload,
