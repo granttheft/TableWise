@@ -86,6 +86,14 @@ public class Tenant : BaseEntity
     /// </summary>
     public bool IsActive { get; set; } = true;
 
+    /// <summary>
+    /// Tenant'a özel limit override'ları (JSONB).
+    /// Null ise plan limitleri geçerlidir.
+    /// Sadece override edilmek istenen anahtarlar girilir, diğerleri plan'dan okunur.
+    /// Format: { "maxVenues": 10, "maxTables": -1 }
+    /// </summary>
+    public string? CustomLimitsJson { get; set; }
+
     // Navigation Properties
 
     /// <summary>

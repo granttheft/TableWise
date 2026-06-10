@@ -86,6 +86,23 @@ public sealed class PlatformTenantsController : ControllerBase
     }
 
     /// <summary>
+    /// Tenant'a özel limit override'larını günceller.
+    /// Tüm alanlar null gönderilirse custom limitler temizlenir (plan limitine dönüş).
+    /// </summary>
+    [HttpPut("{tenantId:guid}/custom-limits")]
+    [RequirePlatformRole(PlatformRole.SuperAdmin)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> UpdateCustomLimits(
+        Guid tenantId,
+        [FromBody] UpdateTenantCustomLimitsDto dto,
+        CancellationToken cancellationToken)
+    {
+        await _mediator.Send(new UpdateTenantCustomLimitsCommand(tenantId, dto), cancellationToken);
+        return NoContent();
+    }
+
+    /// <summary>
     /// Tenant'a iç not ekler.
     /// </summary>
     [HttpPost("{tenantId:guid}/notes")]

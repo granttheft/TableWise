@@ -61,36 +61,35 @@ public sealed class GetPlanLimitsQueryHandler : IRequestHandler<GetPlanLimitsQue
             .Where(r => r.TenantId == tenantId && r.CreatedAt >= monthStart && !r.IsDeleted)
             .CountAsync(cancellationToken);
 
-        var featuresJson = tenant.Plan?.FeaturesJson;
+        var customLimitsJson = tenant.CustomLimitsJson;
         var limitsJson = tenant.Plan?.LimitsJson;
 
         return new PlanLimitsDto
         {
-            MaxVenues = ReadPlanLimit(featuresJson, limitsJson, "maxVenues"),
+            MaxVenues = ReadPlanLimit(customLimitsJson, limitsJson, "maxVenues"),
             CurrentVenueCount = venueCount,
-            MaxTables = ReadPlanLimit(featuresJson, limitsJson, "maxTables"),
+            MaxTables = ReadPlanLimit(customLimitsJson, limitsJson, "maxTables"),
             CurrentTableCount = tableCount,
-            MaxRules = ReadPlanLimit(featuresJson, limitsJson, "maxRules"),
+            MaxRules = ReadPlanLimit(customLimitsJson, limitsJson, "maxRules"),
             CurrentRuleCount = ruleCount,
-            MaxReservationsPerMonth = ReadPlanLimit(featuresJson, limitsJson, "maxReservationsPerMonth"),
-            CurrentReservationCount = reservationCount
+            MaxReservationsPerMonth = ReadPlanLimit(customLimitsJson, limitsJson, "maxReservationsPerMonth"),
+            CurrentReservationCount = reservationCount,
+            HasCustomLimits = !string.IsNullOrWhiteSpace(customLimitsJson) && customLimitsJson != "{}"
         };
     }
 
     /// <summary>
-    /// Plan limit anahtarını okur: önce FeaturesJson (seed burada), sonra LimitsJson.
-    /// Negatif veya JSON null değer sınırsız kabul edilir (null döner).
+    /// Limit çözümleme: önce customLimitsJson (tenant özel), sonra planLimitsJson (plan geneli).
+    /// Negatif değer sınırsız kabul edilir (null döner).
     /// </summary>
-    private static int? ReadPlanLimit(string? featuresJson, string? limitsJson, string key)
+    private static int? ReadPlanLimit(string? customLimitsJson, string? planLimitsJson, string key)
     {
-        var fromFeatures = TryReadIntProperty(featuresJson, key);
-        if (fromFeatures.HasValue)
-        {
-            return NormalizeLimit(fromFeatures.Value);
-        }
+        var custom = TryReadIntProperty(customLimitsJson, key);
+        if (custom.HasValue)
+            return NormalizeLimit(custom.Value);
 
-        var fromLimits = TryReadIntProperty(limitsJson, key);
-        return fromLimits.HasValue ? NormalizeLimit(fromLimits.Value) : null;
+        var fromPlan = TryReadIntProperty(planLimitsJson, key);
+        return fromPlan.HasValue ? NormalizeLimit(fromPlan.Value) : null;
     }
 
     private static int? NormalizeLimit(int value) => value < 0 ? null : value;

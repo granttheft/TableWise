@@ -33,3 +33,10 @@ public record TenantDetailDto : TenantSummaryDto
     // Faz 8 CRM bağımlılığı — rezervasyon geçmişi burada null
     public object? ReservationHistory { get; init; } = null;
 }
+
+public record UpdateTenantCustomLimitsDto(
+    int? MaxVenues,
+    int? MaxTables,
+    int? MaxRules,
+    int? MaxReservationsPerMonth,
+    int? MaxStaffAccounts);

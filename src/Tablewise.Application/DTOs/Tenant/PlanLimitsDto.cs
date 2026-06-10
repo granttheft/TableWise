@@ -13,4 +13,5 @@ public sealed class PlanLimitsDto
     public int CurrentVenueCount { get; set; }
     public int? MaxReservationsPerMonth { get; set; }
     public int CurrentReservationCount { get; set; }
+    public bool HasCustomLimits { get; set; }
 }
