@@ -29,8 +29,12 @@ public record PlanPricingDto(
     string Tier,
     decimal MonthlyPriceTry,
     decimal YearlyPriceTry,
-    bool IsVisible);
+    bool IsVisible,
+    string LimitsJson,
+    string FeaturesJson);
 
 public record UpdatePlanPricingDto(
     decimal MonthlyPriceTry,
-    decimal YearlyPriceTry);
+    decimal YearlyPriceTry,
+    string? LimitsJson,
+    string? FeaturesJson);

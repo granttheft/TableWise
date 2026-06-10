@@ -8,6 +8,24 @@ interface ApiPlan {
   monthlyPriceTry: number
   yearlyPriceTry: number
   isVisible: boolean
+  limitsJson: string
+  featuresJson: string
+}
+
+export interface PlanLimits {
+  maxVenues: number
+  maxTables: number
+  maxRules: number
+  maxReservationsPerMonth: number
+  maxStaffAccounts: number
+}
+
+export interface PlanFeatures {
+  depositEnabled: boolean
+  signalREnabled: boolean
+  apiEnabled: boolean
+  customWhatsAppEnabled: boolean
+  analyticsEnabled: boolean
 }
 
 export interface NormalizedPlan {
@@ -15,6 +33,24 @@ export interface NormalizedPlan {
   planName: string
   monthlyPrice: number
   yearlyPrice: number
+  limits: PlanLimits
+  features: PlanFeatures
+}
+
+const DEFAULT_LIMITS: PlanLimits = {
+  maxVenues: 1, maxTables: 50, maxRules: 5, maxReservationsPerMonth: 200, maxStaffAccounts: 3,
+}
+const DEFAULT_FEATURES: PlanFeatures = {
+  depositEnabled: false, signalREnabled: true, apiEnabled: false,
+  customWhatsAppEnabled: false, analyticsEnabled: false,
+}
+
+function parseLimits(json: string): PlanLimits {
+  try { return { ...DEFAULT_LIMITS, ...JSON.parse(json) } } catch { return DEFAULT_LIMITS }
+}
+
+function parseFeatures(json: string): PlanFeatures {
+  try { return { ...DEFAULT_FEATURES, ...JSON.parse(json) } } catch { return DEFAULT_FEATURES }
 }
 
 export function usePricing() {
@@ -36,6 +72,8 @@ export function usePricing() {
             planName: p.name,
             monthlyPrice: p.monthlyPriceTry,
             yearlyPrice: p.yearlyPriceTry,
+            limits:   parseLimits(p.limitsJson),
+            features: parseFeatures(p.featuresJson),
           }))
         setPlans(normalized)
         setLoading(false)
@@ -47,7 +85,7 @@ export function usePricing() {
   }, [])
 
   const effectivePlans: NormalizedPlan[] = error || (!loading && plans.length === 0)
-    ? FALLBACK_PLANS.map((p, i) => ({ id: String(i), planName: p.planName, monthlyPrice: p.monthlyPrice, yearlyPrice: p.yearlyPrice }))
+    ? FALLBACK_PLANS.map((p, i) => ({ id: String(i), ...p }))
     : plans
 
   return { plans: effectivePlans, loading, error }

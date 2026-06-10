@@ -6,38 +6,59 @@ import { ADMIN_PANEL_URL } from '@/config'
 const PLAN_META: Record<string, {
   subtitle: string
   highlight: boolean
-  features: string[]
   cta: string
-  ctaHref: (plan: string) => string
+  ctaHref: () => string
 }> = {
   Starter: {
     subtitle: 'Tek mekan, temel özellikler',
     highlight: false,
-    features: ['1 mekan, 50 masa', 'Rezervasyon yönetimi', 'WhatsApp bildirimleri', 'Email destek'],
     cta: 'Başla',
     ctaHref: () => `${ADMIN_PANEL_URL}/register?plan=starter`,
   },
   Pro: {
     subtitle: 'Büyüyen mekanlar için',
     highlight: true,
-    features: ['3 mekan, sınırsız masa', 'Kural motoru (tam erişim)', 'Raporlama & analitik', 'Öncelikli destek'],
     cta: '14 Gün Ücretsiz Dene',
     ctaHref: () => `${ADMIN_PANEL_URL}/register?plan=pro`,
   },
   Business: {
     subtitle: 'Zincir mekanlar için',
     highlight: false,
-    features: ['Sınırsız mekan', 'API & Webhook erişimi', 'Özel entegrasyonlar', 'Dedicated destek'],
     cta: 'Başla',
     ctaHref: () => `${ADMIN_PANEL_URL}/register?plan=business`,
   },
   Enterprise: {
     subtitle: 'Grup ve zincirler için özel çözüm',
     highlight: false,
-    features: ['Sınırsız her şey', 'Kendi WhatsApp numaranız', 'White-label seçeneği', 'Dedicated account manager'],
     cta: 'Bize Yazın',
     ctaHref: () => 'mailto:hello@tablewise.com.tr',
   },
+}
+
+function buildFeatureList(plan: NormalizedPlan): string[] {
+  const items: string[] = []
+  const { limits, features } = plan
+
+  items.push(limits.maxVenues === -1 ? 'Sınırsız mekan' : `${limits.maxVenues} mekan`)
+  items.push(limits.maxTables === -1 ? 'Sınırsız masa' : `${limits.maxTables} masa`)
+  items.push(
+    limits.maxReservationsPerMonth === -1
+      ? 'Sınırsız rezervasyon/ay'
+      : `${limits.maxReservationsPerMonth} rezervasyon/ay`
+  )
+  items.push(
+    limits.maxStaffAccounts === -1
+      ? 'Sınırsız personel hesabı'
+      : `${limits.maxStaffAccounts} personel hesabı`
+  )
+
+  if (features.signalREnabled)        items.push('Gerçek zamanlı masa takibi')
+  if (features.analyticsEnabled)      items.push('Gelişmiş analitik')
+  if (features.apiEnabled)            items.push('API erişimi')
+  if (features.customWhatsAppEnabled) items.push('Kendi WhatsApp numaranız')
+  if (features.depositEnabled)        items.push('Kapora modülü (isteğe bağlı)')
+
+  return items
 }
 
 function SkeletonCard() {
@@ -57,6 +78,7 @@ function PlanCard({ plan, yearly }: { plan: NormalizedPlan; yearly: boolean }) {
   const meta = PLAN_META[plan.planName] ?? PLAN_META['Starter']
   const price = yearly ? plan.yearlyPrice : plan.monthlyPrice
   const isEnterprise = plan.planName === 'Enterprise'
+  const featureList = buildFeatureList(plan)
 
   return (
     <div
@@ -94,8 +116,8 @@ function PlanCard({ plan, yearly }: { plan: NormalizedPlan; yearly: boolean }) {
       </div>
 
       <ul className="space-y-2.5 flex-1 mb-6">
-        {meta.features.map(f => (
-          <li key={f} className="flex gap-2.5">
+        {featureList.map((f, i) => (
+          <li key={i} className="flex gap-2.5">
             <Check size={14} className="text-landing-gold shrink-0 mt-0.5" />
             <span className="text-sm text-landing-muted">{f}</span>
           </li>
@@ -103,7 +125,7 @@ function PlanCard({ plan, yearly }: { plan: NormalizedPlan; yearly: boolean }) {
       </ul>
 
       <a
-        href={meta.ctaHref(plan.planName)}
+        href={meta.ctaHref()}
         className={`block text-center text-sm font-semibold py-2.5 rounded-lg transition-colors ${
           meta.highlight
             ? 'bg-landing-gold hover:bg-landing-gold-hover text-landing-bg'
@@ -129,7 +151,6 @@ export default function Pricing() {
             Mekanınıza uygun plan
           </h2>
 
-          {/* Toggle */}
           <div className="inline-flex items-center gap-3 bg-landing-surface border border-landing-border rounded-lg p-1">
             <button
               onClick={() => setYearly(false)}

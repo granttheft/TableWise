@@ -20,10 +20,25 @@ public sealed class UpdatePlanPricingCommandHandler : IRequestHandler<UpdatePlan
 
         plan.MonthlyPriceTry = request.Dto.MonthlyPriceTry;
         plan.YearlyPriceTry = request.Dto.YearlyPriceTry;
+
+        if (request.Dto.LimitsJson is not null)
+        {
+            try { System.Text.Json.JsonDocument.Parse(request.Dto.LimitsJson); }
+            catch { throw new ArgumentException("LimitsJson geçerli bir JSON değil."); }
+            plan.LimitsJson = request.Dto.LimitsJson;
+        }
+
+        if (request.Dto.FeaturesJson is not null)
+        {
+            try { System.Text.Json.JsonDocument.Parse(request.Dto.FeaturesJson); }
+            catch { throw new ArgumentException("FeaturesJson geçerli bir JSON değil."); }
+            plan.FeaturesJson = request.Dto.FeaturesJson;
+        }
+
         plan.UpdatedAt = DateTime.UtcNow;
 
         await _db.SaveChangesAsync(cancellationToken);
 
-        return new PlanPricingDto(plan.Id, plan.Name, plan.Tier.ToString(), plan.MonthlyPriceTry, plan.YearlyPriceTry, plan.IsVisible);
+        return new PlanPricingDto(plan.Id, plan.Name, plan.Tier.ToString(), plan.MonthlyPriceTry, plan.YearlyPriceTry, plan.IsVisible, plan.LimitsJson, plan.FeaturesJson);
     }
 }

@@ -16,7 +16,7 @@ public sealed class GetPricingPlansQueryHandler : IRequestHandler<GetPricingPlan
         return await _db.Plans
             .Where(p => !p.IsDeleted)
             .OrderBy(p => p.Tier)
-            .Select(p => new PlanPricingDto(p.Id, p.Name, p.Tier.ToString(), p.MonthlyPriceTry, p.YearlyPriceTry, p.IsVisible))
+            .Select(p => new PlanPricingDto(p.Id, p.Name, p.Tier.ToString(), p.MonthlyPriceTry, p.YearlyPriceTry, p.IsVisible, p.LimitsJson, p.FeaturesJson))
             .ToListAsync(cancellationToken);
     }
 }

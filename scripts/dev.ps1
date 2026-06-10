@@ -19,12 +19,14 @@ $ApiDir = Join-Path $RepoRoot 'src/Tablewise.Api'
 $AdminDir = Join-Path $RepoRoot 'frontend/admin-panel'
 $SuperAdminDir = Join-Path $RepoRoot 'frontend/super-admin'
 $BookingDir = Join-Path $RepoRoot 'frontend/booking-ui'
+$LandingDir = Join-Path $RepoRoot 'frontend/landing'
 
 # Yerel gelistirme portlari (vite.config / launchSettings ile uyumlu)
 $ApiPort = 5086
 $AdminPort = 3000
 $SuperAdminPort = 3001
 $BookingPort = 5174
+$LandingPort = 4000
 
 function Stop-ListenerOnPort {
     param(
@@ -80,6 +82,7 @@ Stop-ListenerOnPort -Port $ApiPort -Label 'API'
 Stop-ListenerOnPort -Port $AdminPort -Label 'Admin panel'
 Stop-ListenerOnPort -Port $SuperAdminPort -Label 'Super Admin'
 Stop-ListenerOnPort -Port $BookingPort -Label 'Booking UI'
+Stop-ListenerOnPort -Port $LandingPort -Label 'Landing'
 Start-Sleep -Seconds 1
 Write-Host ''
 
@@ -113,6 +116,10 @@ if (-not (Test-Path (Join-Path $BookingDir 'node_modules'))) {
     Write-Warning ('booking-ui node_modules yok; once: cd ''{0}''; npm install' -f $BookingDir)
 }
 
+if (-not (Test-Path (Join-Path $LandingDir 'node_modules'))) {
+    Write-Warning ('landing node_modules yok; once: cd ''{0}''; npm install' -f $LandingDir)
+}
+
 $shellExe = if (Get-Command pwsh -ErrorAction SilentlyContinue) { (Get-Command pwsh).Source } else { (Get-Command powershell).Source }
 
 $apiCmd = ('Set-Location -LiteralPath ''{0}''; dotnet run --launch-profile http' -f $ApiDir)
@@ -127,12 +134,16 @@ Start-Process -FilePath $shellExe -ArgumentList @('-NoExit', '-NoProfile', '-Com
 $bookingCmd = ('Set-Location -LiteralPath ''{0}''; npm run dev' -f $BookingDir)
 Start-Process -FilePath $shellExe -ArgumentList @('-NoExit', '-NoProfile', '-Command', $bookingCmd)
 
+$landingCmd = ('Set-Location -LiteralPath ''{0}''; npm run dev' -f $LandingDir)
+Start-Process -FilePath $shellExe -ArgumentList @('-NoExit', '-NoProfile', '-Command', $landingCmd)
+
 Write-Host ''
 Write-Host ('API:     http://localhost:{0}' -f $ApiPort)
 Write-Host ('Admin:       http://localhost:{0}' -f $AdminPort)
 Write-Host ('Super Admin: http://localhost:{0}' -f $SuperAdminPort)
 Write-Host ('Booking:     http://localhost:{0}/rezervasyon/{{slug}}' -f $BookingPort)
+Write-Host ('Landing:     http://localhost:{0}' -f $LandingPort)
 Write-Host ''
-Write-Host 'Dort yeni terminal penceresi acildi; durdurmak icin her pencerede Ctrl+C kullanin.'
+Write-Host 'Bes yeni terminal penceresi acildi; durdurmak icin her pencerede Ctrl+C kullanin.'
 Write-Host 'Tekrar calistirirsaniz script once bu portlardaki surecleri kapatir.'
 Write-Host ''

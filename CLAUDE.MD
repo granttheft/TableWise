@@ -73,3 +73,24 @@ Vault: C:\Users\hasan\Documents\Obsidian\Tablewise\
 3. Yeni karar → 03 - Alınan Kararlar.md ekle
 4. Yeni bug → 04 - Açık Buglar.md ekle
 5. Bug çözüldü → 04'ten kaldır
+
+## Frontend Design Skill
+
+UI/landing page/component geliştirirken `.claude/skills/frontend-design/SKILL.md`
+dosyasını oku ve tasarım kararlarını bu rehbere göre al.
+
+Tetikleyiciler:
+- Landing page bileşenleri yazarken
+- Yeni React component tasarlarken
+- Mevcut UI'ı yeniden şekillendirirken
+- Renk, tipografi, layout kararı verirken
+
+## graphify
+
+This project has a knowledge graph at graphify-out/ with god nodes, community structure, and cross-file relationships.
+
+Rules:
+- For codebase questions, first run `graphify query "<question>"` when graphify-out/graph.json exists. Use `graphify path "<A>" "<B>"` for relationships and `graphify explain "<concept>"` for focused concepts. These return a scoped subgraph, usually much smaller than GRAPH_REPORT.md or raw grep output.
+- If graphify-out/wiki/index.md exists, use it for broad navigation instead of raw source browsing.
+- Read graphify-out/GRAPH_REPORT.md only for broad architecture review or when query/path/explain do not surface enough context.
+- After modifying code, run `graphify update .` to keep the graph current (AST-only, no API cost).
