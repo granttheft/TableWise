@@ -51,7 +51,8 @@ public sealed class GetTenantDetailQueryHandler : IRequestHandler<GetTenantDetai
             PlanRenewsAt = tenant.PlanRenewsAt,
             VenueCount = tenant.Venues.Count,
             UserCount = tenant.Users.Count,
-            Notes = notes
+            Notes = notes,
+            CustomLimitsJson = tenant.CustomLimitsJson
         };
     }
 }

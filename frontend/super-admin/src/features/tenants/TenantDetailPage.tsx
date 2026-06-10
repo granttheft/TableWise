@@ -1,9 +1,10 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { useQueryClient } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import {
   ArrowLeft, Building2, Users, MapPin, Calendar,
   FileText, MessageSquare, AlertTriangle, Loader2,
+  Settings2, Save, X,
 } from 'lucide-react'
 import { format } from 'date-fns'
 import { tr } from 'date-fns/locale'
@@ -12,6 +13,7 @@ import { useTenantDetail } from '@/hooks/useTenantDetail'
 import { useAuth } from '@/hooks/useAuth'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
@@ -23,12 +25,51 @@ import {
 import api from '@/lib/api'
 import type { PlanStatus } from '@/types/api'
 
+interface CustomLimits {
+  maxVenues: number | null
+  maxTables: number | null
+  maxRules: number | null
+  maxReservationsPerMonth: number | null
+  maxStaffAccounts: number | null
+}
+
+interface PlanLimitsResponse {
+  maxVenues: number | null
+  currentVenueCount: number
+  maxTables: number | null
+  currentTableCount: number
+  maxRules: number | null
+  currentRuleCount: number
+  maxReservationsPerMonth: number | null
+  currentReservationCount: number
+  hasCustomLimits: boolean
+}
+
+const EMPTY_LIMITS: CustomLimits = {
+  maxVenues: null, maxTables: null, maxRules: null,
+  maxReservationsPerMonth: null, maxStaffAccounts: null,
+}
+
+function parseCustomLimits(json: string | null | undefined): CustomLimits {
+  if (!json) return EMPTY_LIMITS
+  try {
+    const p = JSON.parse(json)
+    return {
+      maxVenues:               p.maxVenues               ?? null,
+      maxTables:               p.maxTables               ?? null,
+      maxRules:                p.maxRules                ?? null,
+      maxReservationsPerMonth: p.maxReservationsPerMonth ?? null,
+      maxStaffAccounts:        p.maxStaffAccounts        ?? null,
+    }
+  } catch { return EMPTY_LIMITS }
+}
+
 const statusBadge: Record<PlanStatus, { label: string; class: string }> = {
-  Active: { label: 'Aktif', class: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30' },
-  TrialActive: { label: 'Trial', class: 'bg-blue-500/20 text-blue-300 border-blue-500/30' },
-  TrialExpired: { label: 'Trial Bitti', class: 'bg-orange-500/20 text-orange-300 border-orange-500/30' },
-  Suspended: { label: 'Askıda', class: 'bg-red-500/20 text-red-300 border-red-500/30' },
-  Cancelled: { label: 'İptal', class: 'bg-zinc-500/20 text-zinc-300 border-zinc-500/30' },
+  Active:      { label: 'Aktif',      class: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30' },
+  TrialActive: { label: 'Trial',      class: 'bg-blue-500/20 text-blue-300 border-blue-500/30' },
+  TrialExpired:{ label: 'Trial Bitti',class: 'bg-orange-500/20 text-orange-300 border-orange-500/30' },
+  Suspended:   { label: 'Askıda',     class: 'bg-red-500/20 text-red-300 border-red-500/30' },
+  Cancelled:   { label: 'İptal',      class: 'bg-zinc-500/20 text-zinc-300 border-zinc-500/30' },
 }
 
 function InfoRow({
@@ -56,11 +97,12 @@ function fmt(dateStr?: string | null) {
 }
 
 const PLAN_OPTIONS = [
-  { label: 'Starter', value: 'starter' },
-  { label: 'Pro', value: 'pro' },
-  { label: 'Business', value: 'business' },
+  { label: 'Starter',    value: 'starter' },
+  { label: 'Pro',        value: 'pro' },
+  { label: 'Business',   value: 'business' },
   { label: 'Enterprise', value: 'enterprise' },
 ]
+
 
 export function TenantDetailPage() {
   const { id } = useParams<{ id: string }>()
@@ -81,29 +123,39 @@ export function TenantDetailPage() {
   const [noteContent, setNoteContent] = useState('')
   const [noteLoading, setNoteLoading] = useState(false)
 
+  // Özel limitler
+  const [customLimits, setCustomLimits] = useState<CustomLimits>(EMPTY_LIMITS)
+  const [savingLimits, setSavingLimits] = useState(false)
+
+  const { data: planLimits } = useQuery<PlanLimitsResponse>({
+    queryKey: ['tenant-plan-limits', id],
+    queryFn: () => api.get(`/api/platform/tenants/${id}/plan-limits`).then(r => r.data),
+    enabled: !!id,
+    staleTime: 30_000,
+  })
+
+  useEffect(() => {
+    if (tenant?.customLimitsJson) {
+      setCustomLimits(parseCustomLimits(tenant.customLimitsJson))
+    }
+  }, [tenant])
+
   const canChangePlan = isSuperAdmin || isFinance
   const canSuspend = isSuperAdmin
 
   const invalidateTenant = () => {
-    queryClient.invalidateQueries({ queryKey: ['tenant', id] })
+    queryClient.invalidateQueries({ queryKey: ['tenant-detail', id] })
   }
 
   async function handlePlanUpdate() {
     if (!selectedPlanName || !id) return
-    // Backend expects a PlanId guid — for now we fetch plans to match by name
-    // Simple approach: send planName as text and let backend resolve
-    // Backend UpdateTenantPlanCommand takes PlanId guid
-    // We need to get the plan ID from the pricing endpoint
     try {
       setPlanLoading(true)
       const plansRes = await api.get<{ id: string; name: string }[]>('/api/platform/pricing')
       const plan = plansRes.data.find(
         (p) => p.name.toLowerCase() === selectedPlanName.toLowerCase(),
       )
-      if (!plan) {
-        toast.error('Plan bulunamadı.')
-        return
-      }
+      if (!plan) { toast.error('Plan bulunamadı.'); return }
       await api.put(`/api/platform/tenants/${id}/plan`, { planId: plan.id })
       toast.success('Plan güncellendi.')
       invalidateTenant()
@@ -145,6 +197,46 @@ export function TenantDetailPage() {
     }
   }
 
+  async function handleSaveLimits() {
+    if (!id) return
+    try {
+      setSavingLimits(true)
+      await api.put(`/api/platform/tenants/${id}/custom-limits`, {
+        maxVenues:               customLimits.maxVenues,
+        maxTables:               customLimits.maxTables,
+        maxRules:                customLimits.maxRules,
+        maxReservationsPerMonth: customLimits.maxReservationsPerMonth,
+        maxStaffAccounts:        customLimits.maxStaffAccounts,
+      })
+      toast.success('Özel limitler kaydedildi.')
+      queryClient.invalidateQueries({ queryKey: ['tenant-detail', id] })
+      queryClient.invalidateQueries({ queryKey: ['tenant-plan-limits', id] })
+    } catch {
+      toast.error('Limitler kaydedilirken hata oluştu.')
+    } finally {
+      setSavingLimits(false)
+    }
+  }
+
+  async function handleResetLimits() {
+    if (!id) return
+    try {
+      setSavingLimits(true)
+      await api.put(`/api/platform/tenants/${id}/custom-limits`, {
+        maxVenues: null, maxTables: null, maxRules: null,
+        maxReservationsPerMonth: null, maxStaffAccounts: null,
+      })
+      setCustomLimits(EMPTY_LIMITS)
+      toast.success('Tüm özel limitler kaldırıldı. Plan limitleri geçerli.')
+      queryClient.invalidateQueries({ queryKey: ['tenant-detail', id] })
+      queryClient.invalidateQueries({ queryKey: ['tenant-plan-limits', id] })
+    } catch {
+      toast.error('Limitler sıfırlanırken hata oluştu.')
+    } finally {
+      setSavingLimits(false)
+    }
+  }
+
   if (isLoading) {
     return (
       <div className="space-y-4">
@@ -168,6 +260,7 @@ export function TenantDetailPage() {
 
   const badge = statusBadge[tenant.planStatus]
   const isSuspended = tenant.planStatus === 'Suspended'
+  const hasCustom = planLimits?.hasCustomLimits ?? !!tenant.customLimitsJson
 
   return (
     <div className="space-y-6">
@@ -183,6 +276,11 @@ export function TenantDetailPage() {
             <span className={`rounded-full border px-2 py-0.5 text-xs font-medium ${badge.class}`}>
               {badge.label}
             </span>
+            {hasCustom && (
+              <span className="rounded-full border border-amber-500/30 px-2 py-0.5 text-xs font-medium text-amber-500">
+                Özel limit aktif
+              </span>
+            )}
           </div>
           <p className="text-sm text-muted-foreground">{tenant.email}</p>
         </div>
@@ -194,6 +292,7 @@ export function TenantDetailPage() {
           <TabsTrigger value="general">Genel</TabsTrigger>
           <TabsTrigger value="subscription">Abonelik</TabsTrigger>
           <TabsTrigger value="actions">Aksiyonlar</TabsTrigger>
+          <TabsTrigger value="limits">Özel Limitler</TabsTrigger>
           <TabsTrigger value="notes">Notlar</TabsTrigger>
         </TabsList>
 
@@ -205,10 +304,10 @@ export function TenantDetailPage() {
                 <CardTitle className="text-base">Tenant Bilgileri</CardTitle>
               </CardHeader>
               <CardContent className="divide-y divide-border">
-                <InfoRow icon={MapPin} label="Slug" value={tenant.slug} />
-                <InfoRow icon={Calendar} label="Kayıt Tarihi" value={fmt(tenant.createdAt)} />
-                <InfoRow icon={Calendar} label="Trial Bitiş" value={fmt(tenant.trialEndsAt)} />
-                <InfoRow icon={Calendar} label="Plan Yenileme" value={fmt(tenant.planRenewsAt)} />
+                <InfoRow icon={MapPin}    label="Slug"          value={tenant.slug} />
+                <InfoRow icon={Calendar}  label="Kayıt Tarihi"  value={fmt(tenant.createdAt)} />
+                <InfoRow icon={Calendar}  label="Trial Bitiş"   value={fmt(tenant.trialEndsAt)} />
+                <InfoRow icon={Calendar}  label="Plan Yenileme" value={fmt(tenant.planRenewsAt)} />
               </CardContent>
             </Card>
 
@@ -217,9 +316,9 @@ export function TenantDetailPage() {
                 <CardTitle className="text-base">Kullanım</CardTitle>
               </CardHeader>
               <CardContent className="divide-y divide-border">
-                <InfoRow icon={Building2} label="Mekan Sayısı" value={tenant.venueCount} />
-                <InfoRow icon={Users} label="Kullanıcı Sayısı" value={tenant.userCount} />
-                <InfoRow icon={FileText} label="Bu Ay Rezervasyon" value={tenant.reservationCountThisMonth} />
+                <InfoRow icon={Building2} label="Mekan Sayısı"        value={tenant.venueCount} />
+                <InfoRow icon={Users}     label="Kullanıcı Sayısı"    value={tenant.userCount} />
+                <InfoRow icon={FileText}  label="Bu Ay Rezervasyon"   value={tenant.reservationCountThisMonth} />
               </CardContent>
             </Card>
           </div>
@@ -233,7 +332,7 @@ export function TenantDetailPage() {
             </CardHeader>
             <CardContent>
               <div className="divide-y divide-border">
-                <InfoRow icon={FileText} label="Plan" value={tenant.planName} />
+                <InfoRow icon={FileText}  label="Plan" value={tenant.planName} />
                 {tenant.subscriptionAmount && (
                   <InfoRow
                     icon={FileText}
@@ -242,7 +341,7 @@ export function TenantDetailPage() {
                   />
                 )}
                 <InfoRow icon={Calendar} label="Dönem Başlangıç" value={fmt(tenant.subscriptionPeriodStart)} />
-                <InfoRow icon={Calendar} label="Dönem Bitiş" value={fmt(tenant.subscriptionPeriodEnd)} />
+                <InfoRow icon={Calendar} label="Dönem Bitiş"     value={fmt(tenant.subscriptionPeriodEnd)} />
               </div>
               <div className="mt-6 rounded-lg border border-border bg-muted/30 p-4">
                 <p className="text-sm text-muted-foreground">
@@ -256,7 +355,6 @@ export function TenantDetailPage() {
         {/* Aksiyonlar */}
         <TabsContent value="actions">
           <div className="grid gap-4 md:grid-cols-2">
-            {/* Plan değiştir */}
             {canChangePlan ? (
               <Card>
                 <CardHeader>
@@ -292,16 +390,13 @@ export function TenantDetailPage() {
               </Card>
             ) : (
               <Card className="opacity-50">
-                <CardHeader>
-                  <CardTitle className="text-base">Plan Değiştir</CardTitle>
-                </CardHeader>
+                <CardHeader><CardTitle className="text-base">Plan Değiştir</CardTitle></CardHeader>
                 <CardContent>
                   <p className="text-sm text-muted-foreground">Bu işlem için yetkiniz yok.</p>
                 </CardContent>
               </Card>
             )}
 
-            {/* Hesap Durumu */}
             {canSuspend ? (
               <Card>
                 <CardHeader>
@@ -336,15 +431,110 @@ export function TenantDetailPage() {
               </Card>
             ) : (
               <Card className="opacity-50">
-                <CardHeader>
-                  <CardTitle className="text-base">Hesap Durumu</CardTitle>
-                </CardHeader>
+                <CardHeader><CardTitle className="text-base">Hesap Durumu</CardTitle></CardHeader>
                 <CardContent>
                   <p className="text-sm text-muted-foreground">Bu işlem için yetkiniz yok.</p>
                 </CardContent>
               </Card>
             )}
           </div>
+        </TabsContent>
+
+        {/* Özel Limitler */}
+        <TabsContent value="limits">
+          <Card>
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-base flex items-center gap-2">
+                  <Settings2 className="h-4 w-4" />
+                  Özel Limitler
+                </CardTitle>
+                {hasCustom && (
+                  <span className="rounded-full border border-amber-500/30 px-2 py-0.5 text-xs font-medium text-amber-500">
+                    Özel limit aktif
+                  </span>
+                )}
+              </div>
+              <p className="text-sm text-muted-foreground mt-1">
+                Boş bırakılan alanlar için plan limitleri geçerlidir. -1 girerek sınırsız yapabilirsiniz.
+              </p>
+            </CardHeader>
+            <CardContent>
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {([
+                  { key: 'maxVenues'              as const, label: 'Maks. Mekan',             planVal: planLimits?.maxVenues },
+                  { key: 'maxTables'              as const, label: 'Maks. Masa',              planVal: planLimits?.maxTables },
+                  { key: 'maxRules'               as const, label: 'Maks. Kural',             planVal: planLimits?.maxRules },
+                  { key: 'maxReservationsPerMonth'as const, label: 'Aylık Maks. Rezervasyon', planVal: planLimits?.maxReservationsPerMonth },
+                  { key: 'maxStaffAccounts'       as const, label: 'Maks. Personel',          planVal: null as number | null | undefined },
+                ]).map(({ key, label, planVal }) => {
+                  const val = customLimits[key]
+                  return (
+                    <div key={key} className="space-y-1.5">
+                      <label className="text-xs text-muted-foreground">{label}</label>
+                      <div className="flex items-center gap-2">
+                        <Input
+                          type="number"
+                          min="-1"
+                          placeholder={
+                            planVal === null
+                              ? 'Plan: Sınırsız'
+                              : planVal === undefined
+                              ? 'Plan: —'
+                              : `Plan: ${planVal}`
+                          }
+                          value={val ?? ''}
+                          onChange={e => {
+                            const raw = e.target.value
+                            const parsed = raw === '' ? null : parseInt(raw)
+                            setCustomLimits(prev => ({ ...prev, [key]: isNaN(parsed as number) ? null : parsed }))
+                          }}
+                          className="h-8 text-sm"
+                          disabled={!isSuperAdmin}
+                        />
+                        {val !== null && (
+                          <button
+                            onClick={() => setCustomLimits(prev => ({ ...prev, [key]: null }))}
+                            className="text-muted-foreground hover:text-foreground transition-colors"
+                            title="Plan limitine dön"
+                            disabled={!isSuperAdmin}
+                          >
+                            <X className="h-3.5 w-3.5" />
+                          </button>
+                        )}
+                      </div>
+                      {val === -1 && (
+                        <p className="text-xs text-emerald-500">Sınırsız</p>
+                      )}
+                      {val !== null && val !== -1 && (
+                        <p className="text-xs text-amber-500">Özel: {val}</p>
+                      )}
+                    </div>
+                  )
+                })}
+              </div>
+
+              {isSuperAdmin && (
+                <div className="flex items-center gap-3 mt-6 pt-4 border-t">
+                  <Button size="sm" disabled={savingLimits} onClick={handleSaveLimits}>
+                    {savingLimits
+                      ? <Loader2 className="mr-2 h-3 w-3 animate-spin" />
+                      : <Save className="mr-2 h-3 w-3" />}
+                    Limitleri Kaydet
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    disabled={savingLimits}
+                    onClick={handleResetLimits}
+                    className="text-muted-foreground"
+                  >
+                    Tüm Limitleri Sıfırla
+                  </Button>
+                </div>
+              )}
+            </CardContent>
+          </Card>
         </TabsContent>
 
         {/* Notlar */}
@@ -354,7 +544,6 @@ export function TenantDetailPage() {
               <CardTitle className="text-base">Platform Notları</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              {/* Not ekleme formu */}
               <div className="space-y-2">
                 <Textarea
                   placeholder="İç not ekleyin... (müşteriye görünmez)"

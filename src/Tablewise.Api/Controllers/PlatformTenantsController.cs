@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Tablewise.Api.Authorization;
 using Tablewise.Application.DTOs.Common;
 using Tablewise.Application.DTOs.Platform;
+using Tablewise.Application.DTOs.Tenant;
 using Tablewise.Application.Features.Platform.Commands;
 using Tablewise.Application.Features.Platform.Queries;
 using Tablewise.Domain.Enums;
@@ -83,6 +84,21 @@ public sealed class PlatformTenantsController : ControllerBase
     {
         await _mediator.Send(new SuspendTenantCommand(tenantId, request.Suspend), cancellationToken);
         return NoContent();
+    }
+
+    /// <summary>
+    /// Belirli bir tenant'ın efektif plan limitlerini döner (custom override + plan).
+    /// </summary>
+    [HttpGet("{tenantId:guid}/plan-limits")]
+    [RequirePlatformRole(PlatformRole.SuperAdmin, PlatformRole.Finance)]
+    [ProducesResponseType(typeof(PlanLimitsDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<PlanLimitsDto>> GetTenantPlanLimits(
+        Guid tenantId,
+        CancellationToken cancellationToken)
+    {
+        var result = await _mediator.Send(new GetTenantPlanLimitsByIdQuery(tenantId), cancellationToken);
+        return Ok(result);
     }
 
     /// <summary>

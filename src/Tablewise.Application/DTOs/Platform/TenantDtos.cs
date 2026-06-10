@@ -32,6 +32,7 @@ public record TenantDetailDto : TenantSummaryDto
     public IReadOnlyList<PlatformNoteDto> Notes { get; init; } = [];
     // Faz 8 CRM bağımlılığı — rezervasyon geçmişi burada null
     public object? ReservationHistory { get; init; } = null;
+    public string? CustomLimitsJson { get; init; }
 }
 
 public record UpdateTenantCustomLimitsDto(

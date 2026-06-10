@@ -51,6 +51,7 @@ export interface TenantDetailDto extends TenantSummaryDto {
   subscriptionAmount?: number
   subscriptionPeriodStart?: string
   subscriptionPeriodEnd?: string
+  customLimitsJson?: string | null
 }
 
 export interface PlatformUserDto {
