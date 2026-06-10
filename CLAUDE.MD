@@ -85,6 +85,16 @@ Tetikleyiciler:
 - Mevcut UI'ı yeniden şekillendirirken
 - Renk, tipografi, layout kararı verirken
 
+## Ek Skill'ler
+
+- ui-ux-pro-max: UI/UX geliştirme, erişilebilirlik denetimi, renk/tipografi kararlarında kullan
+- seo: Landing page meta etiketleri, şema markup, teknik SEO denetiminde kullan
+- ECC: Güvenlik taraması için kullan — Faz 9 öncesi npx ecc-agentshield scan çalıştır
+- superpowers: Yeni faz başlarken brainstorm → plan → subagent uygulama akışı için kullan
+- gstack: Slash komutları — /plan-ceo-review (ürün kararı), /plan-eng-review (teknik karar), /review (kod incelemesi), /ship (deployment), /retro (faz sonrası)
+- marketingskills: Landing page CRO, conversion copy, email sequence için kullan
+- financial-services: İyzico entegrasyon fazında (Faz 7) finansal akış kararlarında kullan (finance-billing-ops skill olarak kurulu)
+
 ## graphify
 
 This project has a knowledge graph at graphify-out/ with god nodes, community structure, and cross-file relationships.

@@ -1,0 +1,4362 @@
+{
+  ".claude/settings.json": {
+    "mtime": 1781124415.125812,
+    "ast_hash": "af5683cedca023035194f9ad92eb0eef",
+    "semantic_hash": ""
+  },
+  ".claude/settings.local.json": {
+    "mtime": 1781124421.6142623,
+    "ast_hash": "e4f20e7b547b4f99025d9fa1bccdf829",
+    "semantic_hash": ""
+  },
+  ".vscode/launch.json": {
+    "mtime": 1776721596.0308886,
+    "ast_hash": "8536c0b1b0a5a6da1637feed7ca91d43",
+    "semantic_hash": ""
+  },
+  ".vscode/tasks.json": {
+    "mtime": 1779313019.0677981,
+    "ast_hash": "3130ade4b550daa75332de41e4e1619d",
+    "semantic_hash": ""
+  },
+  "Tablewise.slnx": {
+    "mtime": 1778794879.0940018,
+    "ast_hash": "7622f100349f02331433ab84e595a4d8",
+    "semantic_hash": ""
+  },
+  "e2e/admin-panel/auth.spec.ts": {
+    "mtime": 1780866751.5487776,
+    "ast_hash": "cc30fb439b64e74a162fc5485f8a955d",
+    "semantic_hash": ""
+  },
+  "e2e/admin-panel/customers.spec.ts": {
+    "mtime": 1780869029.8586464,
+    "ast_hash": "f637bf99c782ae82b799eadf36d8b6e8",
+    "semantic_hash": ""
+  },
+  "e2e/admin-panel/dashboard.spec.ts": {
+    "mtime": 1780869021.416096,
+    "ast_hash": "7095aed524b9fe3f9c63d30946ec0b89",
+    "semantic_hash": ""
+  },
+  "e2e/admin-panel/reservations.spec.ts": {
+    "mtime": 1780869042.343263,
+    "ast_hash": "8e8df28dd394f593e940c4c80b6d05e3",
+    "semantic_hash": ""
+  },
+  "e2e/admin-panel/rules.spec.ts": {
+    "mtime": 1780870311.5015535,
+    "ast_hash": "f7aeef441ecec78577c781e1eb0182b0",
+    "semantic_hash": ""
+  },
+  "e2e/admin-panel/settings.spec.ts": {
+    "mtime": 1780870320.475846,
+    "ast_hash": "b754c2d4a0ed05892b10c076f8b4b682",
+    "semantic_hash": ""
+  },
+  "e2e/admin-panel/staff.spec.ts": {
+    "mtime": 1780869877.0041637,
+    "ast_hash": "5c9d6ac01a05877173b687f5bc173a0c",
+    "semantic_hash": ""
+  },
+  "e2e/admin-panel/tables.spec.ts": {
+    "mtime": 1780869815.0961168,
+    "ast_hash": "16eaff51fa328321811270f44979731a",
+    "semantic_hash": ""
+  },
+  "e2e/booking-ui/booking-flow.spec.ts": {
+    "mtime": 1780871302.275976,
+    "ast_hash": "2f878b27c3f2414438ed49f530ca0a8c",
+    "semantic_hash": ""
+  },
+  "e2e/booking-ui/validation.spec.ts": {
+    "mtime": 1780871247.7443125,
+    "ast_hash": "db5a7f2c08c0e5a96615374988e97c7a",
+    "semantic_hash": ""
+  },
+  "e2e/booking-ui/view-modify-cancel.spec.ts": {
+    "mtime": 1780871309.7190626,
+    "ast_hash": "df2adb157e3f5154c2302ba2b5f7e47a",
+    "semantic_hash": ""
+  },
+  "e2e/fixtures/auth.ts": {
+    "mtime": 1780866741.423662,
+    "ast_hash": "2334f2161501b9475ba55e006cd40c24",
+    "semantic_hash": ""
+  },
+  "e2e/fixtures/seed.ts": {
+    "mtime": 1780864088.922587,
+    "ast_hash": "2459df9856c7cd4ce2d30824a728b9e4",
+    "semantic_hash": ""
+  },
+  "e2e/package.json": {
+    "mtime": 1780864069.651683,
+    "ast_hash": "55f490f882a6970f4d45de74a82109eb",
+    "semantic_hash": ""
+  },
+  "e2e/playwright-report/trace/assets/codeMirrorModule-Ds_H_9Yq.js": {
+    "mtime": 1780864533.0590317,
+    "ast_hash": "4b5bb9360a70164402969ce286ddbfe6",
+    "semantic_hash": ""
+  },
+  "e2e/playwright-report/trace/assets/defaultSettingsView-D31xz8zv.js": {
+    "mtime": 1780864533.0820365,
+    "ast_hash": "71d5f05e3c60b87705b3097f2228de34",
+    "semantic_hash": ""
+  },
+  "e2e/playwright-report/trace/assets/urlMatch-BYQrIQwR.js": {
+    "mtime": 1780864533.1213384,
+    "ast_hash": "e559942926cfb0d16e9ed9068a2d4b04",
+    "semantic_hash": ""
+  },
+  "e2e/playwright-report/trace/index.BCnMPevh.js": {
+    "mtime": 1780864533.0963287,
+    "ast_hash": "ee76be0d8e771db176fc5ab34fa7314c",
+    "semantic_hash": ""
+  },
+  "e2e/playwright-report/trace/snapshot.v8KI4P3m.js": {
+    "mtime": 1780864533.115338,
+    "ast_hash": "9031335d9410fa6f2e4407ff20c593d0",
+    "semantic_hash": ""
+  },
+  "e2e/playwright-report/trace/sw.bundle.js": {
+    "mtime": 1780864533.1193397,
+    "ast_hash": "eacd98dca82392603e7f5c589e04e30a",
+    "semantic_hash": ""
+  },
+  "e2e/playwright-report/trace/uiMode.C2Efnu2P.js": {
+    "mtime": 1780864533.1203382,
+    "ast_hash": "8e8326d7ad5ea0d3df069a933ea12984",
+    "semantic_hash": ""
+  },
+  "e2e/playwright.config.ts": {
+    "mtime": 1780864078.24826,
+    "ast_hash": "00884d60b4e108f31ee6ca0ddd699d1c",
+    "semantic_hash": ""
+  },
+  "e2e/super-admin/auth.spec.ts": {
+    "mtime": 1780866830.1090238,
+    "ast_hash": "c2619009357df4f57995f4641911d9a1",
+    "semantic_hash": ""
+  },
+  "e2e/super-admin/pricing-coupons.spec.ts": {
+    "mtime": 1780869108.9592998,
+    "ast_hash": "902b8f63219980c253e64401e5d7ac2e",
+    "semantic_hash": ""
+  },
+  "e2e/super-admin/team.spec.ts": {
+    "mtime": 1780869947.9213078,
+    "ast_hash": "0863961e80e8ad1d574bf97612a8369f",
+    "semantic_hash": ""
+  },
+  "e2e/super-admin/tenants.spec.ts": {
+    "mtime": 1780871452.7592316,
+    "ast_hash": "12b0463da3396a0e50131c90e12d0d37",
+    "semantic_hash": ""
+  },
+  "e2e/test-results/.last-run.json": {
+    "mtime": 1780871583.199741,
+    "ast_hash": "f196824657d8858bc7fa44eecbba38b1",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/package.json": {
+    "mtime": 1780343269.7603352,
+    "ast_hash": "b178bbdb865c7abfcc2cec2724da0c15",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/postcss.config.js": {
+    "mtime": 1778445961.4776006,
+    "ast_hash": "5b84f4567208c7c747079c0477373231",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/src/App.tsx": {
+    "mtime": 1778446020.466947,
+    "ast_hash": "0f8b192cdd80f628458bb2ebd9fa51c7",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/src/components/common/TrialBanner.tsx": {
+    "mtime": 1778787131.4119236,
+    "ast_hash": "9ba50b101ff83df1868da570ee3991b3",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/src/components/layout/AppLayout.tsx": {
+    "mtime": 1778446463.5994616,
+    "ast_hash": "2bc8ac3666dc7b5f7489f49b3e65c756",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/src/components/layout/Sidebar.tsx": {
+    "mtime": 1778446088.683445,
+    "ast_hash": "98ea0725f1944d45c1f7b07e904518f6",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/src/components/layout/TopBar.tsx": {
+    "mtime": 1778446091.7702606,
+    "ast_hash": "9f90aa2e5091184702648be8b9a88dea",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/src/components/ui/alert.tsx": {
+    "mtime": 1778450995.2943423,
+    "ast_hash": "cceb87a7a4f0f1bdf80db3d0d584834d",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/src/components/ui/avatar.tsx": {
+    "mtime": 1778450986.221407,
+    "ast_hash": "468a8602bde30f7b248e37570bbdb178",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/src/components/ui/badge.tsx": {
+    "mtime": 1778446054.4694314,
+    "ast_hash": "3fe0275e10b80b683ab4ed6bd99fde78",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/src/components/ui/button.tsx": {
+    "mtime": 1778446042.5587313,
+    "ast_hash": "54e12f0053706cd01697344b04ef388a",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/src/components/ui/card.tsx": {
+    "mtime": 1778446051.42682,
+    "ast_hash": "42ab531a954ce6bbad56f74505122acc",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/src/components/ui/checkbox.tsx": {
+    "mtime": 1778446780.4396963,
+    "ast_hash": "61f292b6b4cfc6301e598072d7a3ccdb",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/src/components/ui/dialog.tsx": {
+    "mtime": 1778446725.4505348,
+    "ast_hash": "2b8d8a3c297d14c63a48dbb7c73da969",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/src/components/ui/dropdown-menu.tsx": {
+    "mtime": 1778451012.2441819,
+    "ast_hash": "f2d5e6dad10543e77112a6ae7036dfc3",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/src/components/ui/input.tsx": {
+    "mtime": 1778446044.6992939,
+    "ast_hash": "3bed856e96fe5705b472e2b307417b59",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/src/components/ui/label.tsx": {
+    "mtime": 1778446046.8354738,
+    "ast_hash": "4fa72f012f853d3b3f3e4bbac7fee368",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/src/components/ui/progress.tsx": {
+    "mtime": 1778450990.5736787,
+    "ast_hash": "136535e855506045c75d8351eccf5e8a",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/src/components/ui/select.tsx": {
+    "mtime": 1778446710.8644361,
+    "ast_hash": "912fee058e50484142c10a04f7de96e8",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/src/components/ui/separator.tsx": {
+    "mtime": 1778450988.447448,
+    "ast_hash": "dfa5200ffc7108d2012722a1bfc020ee",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/src/components/ui/sheet.tsx": {
+    "mtime": 1778448625.515803,
+    "ast_hash": "64d6c007165bc0f913e4cfb1c604aa6d",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/src/components/ui/skeleton.tsx": {
+    "mtime": 1778446319.1899722,
+    "ast_hash": "9bcb462d2a12df592d63b61168bd41ce",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/src/components/ui/slider.tsx": {
+    "mtime": 1778448260.3812132,
+    "ast_hash": "c1ab0b3a5ef195def7390a77647320e9",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/src/components/ui/switch.tsx": {
+    "mtime": 1778446714.0129092,
+    "ast_hash": "a99d887a70d3acfbfa31acadf440b11e",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/src/components/ui/tabs.tsx": {
+    "mtime": 1778446730.1349502,
+    "ast_hash": "ffad2fcdd775eb361065ead158be36e2",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/src/components/ui/textarea.tsx": {
+    "mtime": 1778446716.3294508,
+    "ast_hash": "575785b3f4297fcb4cb096cddf5286a2",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/src/features/auth/ForgotPasswordPage.tsx": {
+    "mtime": 1778446132.2781713,
+    "ast_hash": "b73af0d1794bad22c3e15f2895be6410",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/src/features/auth/InvitePage.tsx": {
+    "mtime": 1779307074.198787,
+    "ast_hash": "24318c7f978a34c46bead2b5727f43ca",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/src/features/auth/LoginPage.tsx": {
+    "mtime": 1778457373.4695294,
+    "ast_hash": "ee4a5024679e9b55c60a3e46bd3a669c",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/src/features/auth/RegisterPage.tsx": {
+    "mtime": 1778455689.5337117,
+    "ast_hash": "1f0c493aac37ea955d56789caa14d5a2",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/src/features/auth/ResetPasswordPage.tsx": {
+    "mtime": 1779307044.9008865,
+    "ast_hash": "db467f3f8e4432bafb95483d099bf8e4",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/src/features/auth/VerifyEmailPage.tsx": {
+    "mtime": 1779307106.7903233,
+    "ast_hash": "a2beddc933b343d01cf65c76ae651fae",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/src/features/auth/components/AuthPageShell.tsx": {
+    "mtime": 1779306977.3348236,
+    "ast_hash": "d1ae3637450c6063df28dde13b1acd97",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/src/features/auth/schemas/passwordSchema.ts": {
+    "mtime": 1779306978.7467575,
+    "ast_hash": "8bb2218efa7057988345cb392421cc8d",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/src/features/customers/CustomersPage.tsx": {
+    "mtime": 1780856863.63834,
+    "ast_hash": "7af900a55d6e2d14dbc92f3405b77dae",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/src/features/customers/components/CustomerDetailDrawer.tsx": {
+    "mtime": 1778787078.5505438,
+    "ast_hash": "2638d61dd46a837d1d6cf38ad0f8512c",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/src/features/dashboard/DashboardPage.tsx": {
+    "mtime": 1780856167.4901912,
+    "ast_hash": "e23fdf452e5e8b9979c6cc0818ebe779",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/src/features/dashboard/components/RecentActivity.tsx": {
+    "mtime": 1778446361.389049,
+    "ast_hash": "37788617e084e632fd577117dc1fa83e",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/src/features/dashboard/components/StatCard.tsx": {
+    "mtime": 1778446331.920086,
+    "ast_hash": "72cb003b608da101cd0841aa0e011c9e",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/src/features/dashboard/components/TodayReservationsList.tsx": {
+    "mtime": 1778787127.4093866,
+    "ast_hash": "399e8826144de08997484280edcb3619",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/src/features/dashboard/components/TopRules.tsx": {
+    "mtime": 1778446369.0724335,
+    "ast_hash": "8b7fe1f2af55e5ab1b104e547be1702b",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/src/features/dashboard/components/WeeklyChart.tsx": {
+    "mtime": 1778446340.0625393,
+    "ast_hash": "4a1af03443bbb773ba41e8fb33690c64",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/src/features/onboarding/OnboardingPage.tsx": {
+    "mtime": 1778450960.4200733,
+    "ast_hash": "c62e43cd7f85c36b261fdaaf036401ac",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/src/features/reservations/ReservationsPage.tsx": {
+    "mtime": 1779310336.6361542,
+    "ast_hash": "c0f3ad1037a09b5f1ada5525ab54e20e",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/src/features/reservations/components/ManualReservationDialog.tsx": {
+    "mtime": 1779310561.90811,
+    "ast_hash": "534abfe8ff8c03664b58b9c31a20c1c5",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/src/features/reservations/components/ReservationDetailDrawer.tsx": {
+    "mtime": 1780347362.959221,
+    "ast_hash": "771ba8a62f0c71532e3af953ccaaf3f4",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/src/features/reservations/utils/manualReservationPayload.ts": {
+    "mtime": 1779311506.5490308,
+    "ast_hash": "378c28a4a9b693a095fbcff262f19e2f",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/src/features/reservations/utils/reservationHelpers.ts": {
+    "mtime": 1778786982.7369397,
+    "ast_hash": "5022001e797802c00fd28bd375ba3501",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/src/features/rules/RulesPage.tsx": {
+    "mtime": 1778787179.483404,
+    "ast_hash": "b6d44408b4602587cdec1bc114fe0dff",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/src/features/rules/components/CustomConditionActionsEditor.tsx": {
+    "mtime": 1779305171.0610907,
+    "ast_hash": "d792d867fd61a2b42bf12cbbe88644ee",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/src/features/rules/components/CustomConditionFieldReferencePanel.tsx": {
+    "mtime": 1779305146.1974251,
+    "ast_hash": "2b8d41753aaaecef76a0f9dfbbb723b8",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/src/features/rules/components/CustomConditionJsonEditor.tsx": {
+    "mtime": 1779305173.5319407,
+    "ast_hash": "7299fe4eb76e760bad4130777701a708",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/src/features/rules/components/RuleBuilderDialog.tsx": {
+    "mtime": 1779305343.6404698,
+    "ast_hash": "ca3a6f9e7db07bb4976299b9fe10c222",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/src/features/rules/components/RuleCard.tsx": {
+    "mtime": 1778794307.592884,
+    "ast_hash": "7d14b991523b4fdfac1bf98d5ad08221",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/src/features/rules/components/RuleTemplateGalleryDialog.tsx": {
+    "mtime": 1778794298.3159635,
+    "ast_hash": "16eaa27ecb5d8d7cba8726ee54c2361a",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/src/features/rules/components/RuleTestDialog.tsx": {
+    "mtime": 1779307033.5409026,
+    "ast_hash": "23038ece8bac46af56415a1fdbdcce31",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/src/features/rules/constants/customConditionExamples.ts": {
+    "mtime": 1779305110.7999623,
+    "ast_hash": "87b1591f05e23cf8bdf31da3d8be919f",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/src/features/rules/constants/customConditionFieldReference.ts": {
+    "mtime": 1779305102.0971785,
+    "ast_hash": "889f88765ac4dc7792f81c156e0f1268",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/src/features/rules/constants/groupCompositionRule.ts": {
+    "mtime": 1778794213.6085997,
+    "ast_hash": "b21c59bfb26d53fd4a657550ec4069dc",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/src/features/rules/data/ruleTemplates.ts": {
+    "mtime": 1778794288.7750118,
+    "ast_hash": "b6035eaf7ea47a145d4b09880128b9af",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/src/features/rules/utils/customActionsForm.ts": {
+    "mtime": 1779305135.5190637,
+    "ast_hash": "00cd417084701b9ac68793f865f5985e",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/src/features/rules/utils/mapApiRuleDto.ts": {
+    "mtime": 1779305205.53915,
+    "ast_hash": "3b5b4e4c64ba130fdabaacb70ea1e491",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/src/features/rules/utils/mapRuleFormToApiPayload.ts": {
+    "mtime": 1779305210.5464616,
+    "ast_hash": "da50281f6164c4b0b694576b054ad1f1",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/src/features/rules/utils/mapRuleTestApi.ts": {
+    "mtime": 1779307034.4901793,
+    "ast_hash": "0ee507db41be226adeeaf0edb882e77f",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/src/features/rules/utils/normalizeRuleType.ts": {
+    "mtime": 1778794216.0335035,
+    "ast_hash": "0ce5431ed3a0921d1b8088409246b3fb",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/src/features/rules/utils/parseGroupCompositionConditions.ts": {
+    "mtime": 1778794219.719441,
+    "ast_hash": "57de631ec5ba1b7f9cf520fd2dcf1269",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/src/features/rules/utils/ruleHumanReadable.ts": {
+    "mtime": 1778794381.1597736,
+    "ast_hash": "b7fbbb0704db242a6e57af782d39b2c3",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/src/features/rules/utils/validateCustomActionsJson.ts": {
+    "mtime": 1779305131.0236118,
+    "ast_hash": "63d4895bdfd65ff3ea3a4537aaad0e4e",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/src/features/rules/utils/validateCustomConditionJson.ts": {
+    "mtime": 1779305126.439604,
+    "ast_hash": "ebd2ab064239cee7f38fffada55d3d51",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/src/features/settings/SettingsPage.tsx": {
+    "mtime": 1780690408.59038,
+    "ast_hash": "59500c34a0b0d0f8b285ea48b502b04b",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/src/features/settings/components/BookingSettings.tsx": {
+    "mtime": 1780343299.071035,
+    "ast_hash": "4d4d75cba1d1b159c4fc0619ab5bb6d4",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/src/features/settings/components/DepositSettings.tsx": {
+    "mtime": 1778450547.142089,
+    "ast_hash": "4a902458173f63fe826e2a404260bc2e",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/src/features/settings/components/GeneralSettings.tsx": {
+    "mtime": 1778450507.2165928,
+    "ast_hash": "da777dfc4b88127b07418fdcf9662071",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/src/features/settings/components/IntegrationSettings.tsx": {
+    "mtime": 1778787243.9807708,
+    "ast_hash": "68319a36701760f6d119f9c7fe82d07b",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/src/features/settings/components/NotificationSettings.tsx": {
+    "mtime": 1778450761.4665246,
+    "ast_hash": "a2da9d19ee3dc2b15407087734e66a12",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/src/features/settings/components/QRCodeModal.tsx": {
+    "mtime": 1780343279.8952978,
+    "ast_hash": "813ec360d3aa65a289fe00b2295a8564",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/src/features/settings/components/VenueSettings.tsx": {
+    "mtime": 1778783506.9629977,
+    "ast_hash": "fa884c87461e6c47858798c520d66764",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/src/features/settings/components/WhatsAppMessageHistory.tsx": {
+    "mtime": 1780690560.3378663,
+    "ast_hash": "728262e5666fab8800fe81087c66f124",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/src/features/settings/components/WhatsAppSettings.tsx": {
+    "mtime": 1780690367.0766075,
+    "ast_hash": "16430f589961cbbc7f034f2595d9809c",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/src/features/settings/components/WorkingHoursSettings.tsx": {
+    "mtime": 1780869796.8605294,
+    "ast_hash": "8f719ab38393f0d7639bc6f22a0dd7f9",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/src/features/staff/StaffPage.tsx": {
+    "mtime": 1779307105.183778,
+    "ast_hash": "9eb4db7b6d8675c631dac7ee5cbab355",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/src/features/staff/components/InviteStaffDialog.tsx": {
+    "mtime": 1779307101.4759645,
+    "ast_hash": "5429ba5ce037d8cb9dcfdd30f9fe7d23",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/src/features/subscription/SubscriptionPage.tsx": {
+    "mtime": 1780873488.6958003,
+    "ast_hash": "8c2541177ae271a9310d3e2e602e2ded",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/src/features/tables/TablesPage.tsx": {
+    "mtime": 1778793899.4035397,
+    "ast_hash": "8fd7292cf1088b6ecf7f4bf90fa6ab31",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/src/features/tables/components/TableCard.tsx": {
+    "mtime": 1778446744.5401208,
+    "ast_hash": "af3ed9fbd7915bfb3b4a8f0e381d18c0",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/src/features/tables/components/TableCombinationDialog.tsx": {
+    "mtime": 1778787236.5350811,
+    "ast_hash": "a54a587545bd15207f7f2a026453da9d",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/src/features/tables/components/TableFormDialog.tsx": {
+    "mtime": 1778446759.5115874,
+    "ast_hash": "768dcb16761c6e76f11dc9235d194516",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/src/hooks/useAuditLogRecent.ts": {
+    "mtime": 1778455116.8226721,
+    "ast_hash": "c00e36399220db3b53597dc5db171ec7",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/src/hooks/useAuth.ts": {
+    "mtime": 1778446005.7803695,
+    "ast_hash": "385018749ebe0b3cd304f7e36a8295cf",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/src/hooks/useCurrentTenant.ts": {
+    "mtime": 1778446007.718107,
+    "ast_hash": "4e00856d580655ca06ac3cb9ecf05d92",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/src/hooks/useCustomers.ts": {
+    "mtime": 1778452021.4732015,
+    "ast_hash": "bb78c1c961e2cfeea4fef2998506aa9e",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/src/hooks/useDashboardStats.ts": {
+    "mtime": 1778455110.5132823,
+    "ast_hash": "95ef9470ad02007ea97242b5ec5a2d18",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/src/hooks/usePlanLimits.ts": {
+    "mtime": 1778452022.664551,
+    "ast_hash": "0679af66fa9555989b4b2c0929f0bf32",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/src/hooks/useReservations.ts": {
+    "mtime": 1779310564.7915545,
+    "ast_hash": "eccd57c682707de8fba3e11bf226ce8e",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/src/hooks/useRuleStats.ts": {
+    "mtime": 1778455118.2978,
+    "ast_hash": "bd9e6a54d9b2ade0daa6c2532845f423",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/src/hooks/useRules.ts": {
+    "mtime": 1779307032.701468,
+    "ast_hash": "ef4b469c603b8dc2dc5fd61300fdde6c",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/src/hooks/useStaff.ts": {
+    "mtime": 1779306990.3516042,
+    "ast_hash": "a496e19bdcc2e39406d22b5b55585262",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/src/hooks/useTableCombinations.ts": {
+    "mtime": 1778783924.29239,
+    "ast_hash": "936dd67e208499f568717bf5207a4c3a",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/src/hooks/useTables.ts": {
+    "mtime": 1778789532.4018497,
+    "ast_hash": "32854b336d4e407e2fe2c5c1c1db0ebe",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/src/hooks/useTodayReservations.ts": {
+    "mtime": 1778455113.9832766,
+    "ast_hash": "ba664bcb946366a6b8818c00bb38b71f",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/src/hooks/useVenueClosures.ts": {
+    "mtime": 1780854477.2211878,
+    "ast_hash": "c084aca52583aae34ce6aeb8fec17915",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/src/hooks/useVenues.ts": {
+    "mtime": 1778783506.959999,
+    "ast_hash": "0e2ac948606de0f4bff0e23b418209c6",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/src/hooks/useWeeklyData.ts": {
+    "mtime": 1778455111.3047495,
+    "ast_hash": "c8e1ab3e9176f514f1864b4077d5dfb8",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/src/hooks/useWhatsAppSettings.ts": {
+    "mtime": 1780690330.9938903,
+    "ast_hash": "2f5358a272eb140015c33e304b397fe2",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/src/lib/api.ts": {
+    "mtime": 1780690322.2308333,
+    "ast_hash": "a796806f58bb514dd63f2ee241b2f5e8",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/src/lib/cn.ts": {
+    "mtime": 1778445974.6218743,
+    "ast_hash": "f7661958c02b4285cbce48efc6d51a7f",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/src/lib/mapAuthResult.ts": {
+    "mtime": 1778457365.1095576,
+    "ast_hash": "1fb6502623d632c3cc211bcc1a057cd2",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/src/main.tsx": {
+    "mtime": 1778446019.1553106,
+    "ast_hash": "25616483b83f96069acd7bf477f060a2",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/src/router.tsx": {
+    "mtime": 1778451034.616216,
+    "ast_hash": "7ca1b9c93f1d5b9938372389eb9e41f3",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/src/stores/authStore.ts": {
+    "mtime": 1778446002.7953646,
+    "ast_hash": "c421893add73e48132ce2dae9bc332d9",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/src/stores/uiStore.ts": {
+    "mtime": 1778446004.7046297,
+    "ast_hash": "1f3e8c42f5081c96234e83d7add1a2d8",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/src/types/api.ts": {
+    "mtime": 1780856885.8187861,
+    "ast_hash": "90a18f4f4154d9cc2f07c71b0ff4f8ef",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/src/types/whatsapp.ts": {
+    "mtime": 1780690311.018852,
+    "ast_hash": "f582748737a9d8fd16f8e8694adac49d",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/src/vite-env.d.ts": {
+    "mtime": 1778455681.4513633,
+    "ast_hash": "c95f8ccacf2f52ed3474a1a64814bd06",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/tailwind.config.ts": {
+    "mtime": 1778445961.1099703,
+    "ast_hash": "2d933ac2ff8959ede347479dabeccac4",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/tsconfig.json": {
+    "mtime": 1778445950.368366,
+    "ast_hash": "cbe38bf2e2a68a8398a1ef13f181c25d",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/tsconfig.node.json": {
+    "mtime": 1778445950.4354146,
+    "ast_hash": "281e378713152cccc7860c818db55849",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/vite.config.ts": {
+    "mtime": 1779308949.3538952,
+    "ast_hash": "48ed9a454791b488aef2daf0780cf87a",
+    "semantic_hash": ""
+  },
+  "frontend/booking-ui/components.json": {
+    "mtime": 1779312068.4286952,
+    "ast_hash": "af6f89362d140b46b5009401db923b3c",
+    "semantic_hash": ""
+  },
+  "frontend/booking-ui/package.json": {
+    "mtime": 1779312053.744214,
+    "ast_hash": "09d020a32604371f457b72c0fc40a6b3",
+    "semantic_hash": ""
+  },
+  "frontend/booking-ui/postcss.config.js": {
+    "mtime": 1779312067.033419,
+    "ast_hash": "5b84f4567208c7c747079c0477373231",
+    "semantic_hash": ""
+  },
+  "frontend/booking-ui/src/App.tsx": {
+    "mtime": 1779313291.91271,
+    "ast_hash": "ec904070c21a65c27fbdc3cb90f3e885",
+    "semantic_hash": ""
+  },
+  "frontend/booking-ui/src/components/CustomFieldRenderer.tsx": {
+    "mtime": 1779312233.137218,
+    "ast_hash": "223a30e71374f96605569785c5e6ef08",
+    "semantic_hash": ""
+  },
+  "frontend/booking-ui/src/components/DepositInfo.tsx": {
+    "mtime": 1779312237.7209866,
+    "ast_hash": "c8c8027be4c3b7a5e5960f8b0a0cd19d",
+    "semantic_hash": ""
+  },
+  "frontend/booking-ui/src/components/GroupCompositionPicker.tsx": {
+    "mtime": 1779312221.3407104,
+    "ast_hash": "87c3380341df0e4dc9ab9ca7f7b82b30",
+    "semantic_hash": ""
+  },
+  "frontend/booking-ui/src/components/ProgressBar.tsx": {
+    "mtime": 1779312188.6374803,
+    "ast_hash": "14055f1945861c231d1f2de651be2ae1",
+    "semantic_hash": ""
+  },
+  "frontend/booking-ui/src/components/RuleResultBanner.tsx": {
+    "mtime": 1779312201.5404093,
+    "ast_hash": "cb0ca27fc015d80682be81dae8df4cee",
+    "semantic_hash": ""
+  },
+  "frontend/booking-ui/src/components/VenueHeader.tsx": {
+    "mtime": 1779312193.671272,
+    "ast_hash": "ff7b8fea4f55171bad3481262738dba6",
+    "semantic_hash": ""
+  },
+  "frontend/booking-ui/src/components/ui/button.tsx": {
+    "mtime": 1779312132.8782296,
+    "ast_hash": "65de7dad8ad964a0c887fad18eba173c",
+    "semantic_hash": ""
+  },
+  "frontend/booking-ui/src/components/ui/calendar.tsx": {
+    "mtime": 1779312182.6569016,
+    "ast_hash": "0171d56220edf06cd75603513d8b3811",
+    "semantic_hash": ""
+  },
+  "frontend/booking-ui/src/components/ui/card.tsx": {
+    "mtime": 1779312170.8216007,
+    "ast_hash": "a0cd1e16f5d012cf5b8005c1644c2e91",
+    "semantic_hash": ""
+  },
+  "frontend/booking-ui/src/components/ui/checkbox.tsx": {
+    "mtime": 1779312140.3758018,
+    "ast_hash": "2697762f155a23e3f9a8a7c16d0aec25",
+    "semantic_hash": ""
+  },
+  "frontend/booking-ui/src/components/ui/dialog.tsx": {
+    "mtime": 1779312165.785565,
+    "ast_hash": "6698242d7ed32c8dee7a22f9b927368b",
+    "semantic_hash": ""
+  },
+  "frontend/booking-ui/src/components/ui/input.tsx": {
+    "mtime": 1779312135.058651,
+    "ast_hash": "4ceef8d7865576f2ce96d322f50bc81a",
+    "semantic_hash": ""
+  },
+  "frontend/booking-ui/src/components/ui/label.tsx": {
+    "mtime": 1779312137.3623514,
+    "ast_hash": "2e981b7997ab19eee2eb1ef7f266261d",
+    "semantic_hash": ""
+  },
+  "frontend/booking-ui/src/components/ui/select.tsx": {
+    "mtime": 1779312154.1287339,
+    "ast_hash": "d2306aa648d836c93def8566536c8570",
+    "semantic_hash": ""
+  },
+  "frontend/booking-ui/src/components/ui/textarea.tsx": {
+    "mtime": 1779312156.2198074,
+    "ast_hash": "c327530cbe820ae83b753ea59c7a6a06",
+    "semantic_hash": ""
+  },
+  "frontend/booking-ui/src/hooks/useAvailability.ts": {
+    "mtime": 1779312117.7921944,
+    "ast_hash": "979bc39f2adb3bf5e35e889e9fd445d7",
+    "semantic_hash": ""
+  },
+  "frontend/booking-ui/src/hooks/useDebounce.ts": {
+    "mtime": 1779312320.643167,
+    "ast_hash": "ffcee37dae5c3e37d55eb16a2ebef39f",
+    "semantic_hash": ""
+  },
+  "frontend/booking-ui/src/hooks/useEvaluate.ts": {
+    "mtime": 1779312119.7434144,
+    "ast_hash": "3c37e0fcfc2da5b012386ce14f569850",
+    "semantic_hash": ""
+  },
+  "frontend/booking-ui/src/hooks/useReservationDetail.ts": {
+    "mtime": 1779312124.4981155,
+    "ast_hash": "590de0f34d9ed3e511958aa57703eba6",
+    "semantic_hash": ""
+  },
+  "frontend/booking-ui/src/hooks/useReserve.ts": {
+    "mtime": 1779312121.1092944,
+    "ast_hash": "9928f3dc1b407e8bcd20a1deaa7ee609",
+    "semantic_hash": ""
+  },
+  "frontend/booking-ui/src/hooks/useVenueConfig.ts": {
+    "mtime": 1779312115.883454,
+    "ast_hash": "7842c99884618a23d7c2d9116a3fe401",
+    "semantic_hash": ""
+  },
+  "frontend/booking-ui/src/lib/api.ts": {
+    "mtime": 1780690500.8324528,
+    "ast_hash": "b1757c70a1027cd5ec82970331bc0dae",
+    "semantic_hash": ""
+  },
+  "frontend/booking-ui/src/lib/bookingMappers.ts": {
+    "mtime": 1780340866.71323,
+    "ast_hash": "f583f93740ebd1a8c5db38133504112c",
+    "semantic_hash": ""
+  },
+  "frontend/booking-ui/src/lib/utils.ts": {
+    "mtime": 1780346124.2328138,
+    "ast_hash": "853e6b0752d03db1f3a1fa0d149e8e2c",
+    "semantic_hash": ""
+  },
+  "frontend/booking-ui/src/main.tsx": {
+    "mtime": 1779312465.2983189,
+    "ast_hash": "1b8296b338f8be9d25ded862d541c06f",
+    "semantic_hash": ""
+  },
+  "frontend/booking-ui/src/pages/BookingPage.tsx": {
+    "mtime": 1780690478.803591,
+    "ast_hash": "27530bb9d9faeeea59044399a2cabf2e",
+    "semantic_hash": ""
+  },
+  "frontend/booking-ui/src/pages/CancelPage.tsx": {
+    "mtime": 1779312433.2074661,
+    "ast_hash": "0a61bc16c185810a3ac4e8b0a2459f08",
+    "semantic_hash": ""
+  },
+  "frontend/booking-ui/src/pages/ConfirmPage.tsx": {
+    "mtime": 1780690531.18302,
+    "ast_hash": "647eb79e68b7fb0e2b18fe267c4e70f1",
+    "semantic_hash": ""
+  },
+  "frontend/booking-ui/src/pages/ModifyPage.tsx": {
+    "mtime": 1779312455.879712,
+    "ast_hash": "7a2d9faee99f7f55d3e6c86463eaa1bd",
+    "semantic_hash": ""
+  },
+  "frontend/booking-ui/src/pages/ViewPage.tsx": {
+    "mtime": 1779312409.0065405,
+    "ast_hash": "866b15fb24733b64794023949b9c8926",
+    "semantic_hash": ""
+  },
+  "frontend/booking-ui/src/steps/Step1Date.tsx": {
+    "mtime": 1779313478.2455895,
+    "ast_hash": "92c970514635cd60fa1fe9f2c83584e3",
+    "semantic_hash": ""
+  },
+  "frontend/booking-ui/src/steps/Step2TimeAndPeople.tsx": {
+    "mtime": 1780347382.8433077,
+    "ast_hash": "a41c8fa5027e44810fbfa05dfb75ed99",
+    "semantic_hash": ""
+  },
+  "frontend/booking-ui/src/steps/Step3Table.tsx": {
+    "mtime": 1780344895.7866988,
+    "ast_hash": "37c921f8b4e3f7e5e32df70dff493611",
+    "semantic_hash": ""
+  },
+  "frontend/booking-ui/src/steps/Step4Info.tsx": {
+    "mtime": 1780690456.2322392,
+    "ast_hash": "549aab044d120a1dc07fed225ec5343c",
+    "semantic_hash": ""
+  },
+  "frontend/booking-ui/src/steps/Step5Confirm.tsx": {
+    "mtime": 1780343227.0915008,
+    "ast_hash": "64d5f28252fff22b83b6f9b6ac10da2d",
+    "semantic_hash": ""
+  },
+  "frontend/booking-ui/src/types/api.ts": {
+    "mtime": 1780690537.9169753,
+    "ast_hash": "9d12a3a7321367db73a366cae853f7d5",
+    "semantic_hash": ""
+  },
+  "frontend/booking-ui/src/vite-env.d.ts": {
+    "mtime": 1779312466.552506,
+    "ast_hash": "cddc16edee4845500f141dc9130ada73",
+    "semantic_hash": ""
+  },
+  "frontend/booking-ui/tailwind.config.js": {
+    "mtime": 1779312066.0895152,
+    "ast_hash": "d9c79405d0c702d3eaba65447e41be1c",
+    "semantic_hash": ""
+  },
+  "frontend/booking-ui/tsconfig.json": {
+    "mtime": 1779312056.574285,
+    "ast_hash": "c6ff67f5ca2244130a1c2701768f5592",
+    "semantic_hash": ""
+  },
+  "frontend/booking-ui/tsconfig.node.json": {
+    "mtime": 1779312057.452314,
+    "ast_hash": "281e378713152cccc7860c818db55849",
+    "semantic_hash": ""
+  },
+  "frontend/booking-ui/vite.config.ts": {
+    "mtime": 1779313291.346007,
+    "ast_hash": "1af8918ea2e5214b4d1f9caf24d242e5",
+    "semantic_hash": ""
+  },
+  "frontend/super-admin/package.json": {
+    "mtime": 1780695700.9591255,
+    "ast_hash": "31918fe3160b82c09a376c415e0472be",
+    "semantic_hash": ""
+  },
+  "frontend/super-admin/postcss.config.js": {
+    "mtime": 1780695729.6031928,
+    "ast_hash": "ef3ba2a81ba19f8ea5ddf625521e96f0",
+    "semantic_hash": ""
+  },
+  "frontend/super-admin/src/App.tsx": {
+    "mtime": 1780695751.4882958,
+    "ast_hash": "85173357d6f657446b6e1c383941743d",
+    "semantic_hash": ""
+  },
+  "frontend/super-admin/src/components/layout/AppLayout.tsx": {
+    "mtime": 1780696304.5788915,
+    "ast_hash": "a3b47851b58c8f38ef578018e6ca98ef",
+    "semantic_hash": ""
+  },
+  "frontend/super-admin/src/components/layout/Sidebar.tsx": {
+    "mtime": 1780850084.5940197,
+    "ast_hash": "78c7861601f7b831278a7224de83ee1d",
+    "semantic_hash": ""
+  },
+  "frontend/super-admin/src/components/layout/TopBar.tsx": {
+    "mtime": 1780696300.7393217,
+    "ast_hash": "24788fe974f58006d3b519f06a710162",
+    "semantic_hash": ""
+  },
+  "frontend/super-admin/src/components/ui/badge.tsx": {
+    "mtime": 1780695826.1378908,
+    "ast_hash": "637818e87136ba28c045d3968f0cc3e0",
+    "semantic_hash": ""
+  },
+  "frontend/super-admin/src/components/ui/button.tsx": {
+    "mtime": 1780695820.6783793,
+    "ast_hash": "f18d2dddc41be1fa47d84447f89a1f25",
+    "semantic_hash": ""
+  },
+  "frontend/super-admin/src/components/ui/card.tsx": {
+    "mtime": 1780695833.6559303,
+    "ast_hash": "99ffb891dde1f66bcffe5f490c8f5775",
+    "semantic_hash": ""
+  },
+  "frontend/super-admin/src/components/ui/dialog.tsx": {
+    "mtime": 1780845011.6673608,
+    "ast_hash": "2b8d8a3c297d14c63a48dbb7c73da969",
+    "semantic_hash": ""
+  },
+  "frontend/super-admin/src/components/ui/input.tsx": {
+    "mtime": 1780695850.6125712,
+    "ast_hash": "52809f5bf2c7d7650dc27c6a7e57adc5",
+    "semantic_hash": ""
+  },
+  "frontend/super-admin/src/components/ui/label.tsx": {
+    "mtime": 1780695855.3442636,
+    "ast_hash": "e901eea03cf9afce7f3f8e9e68b734af",
+    "semantic_hash": ""
+  },
+  "frontend/super-admin/src/components/ui/select.tsx": {
+    "mtime": 1780695880.3881743,
+    "ast_hash": "eacea0b7a961a121a50c974f4d6c9d2d",
+    "semantic_hash": ""
+  },
+  "frontend/super-admin/src/components/ui/separator.tsx": {
+    "mtime": 1780696269.2341945,
+    "ast_hash": "073d08e3151d98f3b73d2d919cf4a2d9",
+    "semantic_hash": ""
+  },
+  "frontend/super-admin/src/components/ui/skeleton.tsx": {
+    "mtime": 1780696272.9140816,
+    "ast_hash": "4fd71741ea3e6625a7dd3e155b51bd3f",
+    "semantic_hash": ""
+  },
+  "frontend/super-admin/src/components/ui/tabs.tsx": {
+    "mtime": 1780695863.1256068,
+    "ast_hash": "b35948d8356c04a12863d32fa0c32252",
+    "semantic_hash": ""
+  },
+  "frontend/super-admin/src/components/ui/textarea.tsx": {
+    "mtime": 1780845011.6908243,
+    "ast_hash": "575785b3f4297fcb4cb096cddf5286a2",
+    "semantic_hash": ""
+  },
+  "frontend/super-admin/src/features/auth/LoginPage.tsx": {
+    "mtime": 1780696325.7923336,
+    "ast_hash": "dbfe7b90838f4b58962f8a01763a96f8",
+    "semantic_hash": ""
+  },
+  "frontend/super-admin/src/features/coupons/CouponsPage.tsx": {
+    "mtime": 1780846080.7231028,
+    "ast_hash": "220225c23ce426aabda5f8ada7f98a1c",
+    "semantic_hash": ""
+  },
+  "frontend/super-admin/src/features/dashboard/DashboardPage.tsx": {
+    "mtime": 1780696362.1236699,
+    "ast_hash": "f7c91680c55246f5dbcab65a957d10c4",
+    "semantic_hash": ""
+  },
+  "frontend/super-admin/src/features/dashboard/components/PlanDistChart.tsx": {
+    "mtime": 1780696341.000665,
+    "ast_hash": "b82a8082c87b3cb14b716f2e4a534844",
+    "semantic_hash": ""
+  },
+  "frontend/super-admin/src/features/dashboard/components/RevenueChart.tsx": {
+    "mtime": 1780696350.898947,
+    "ast_hash": "19992ceb4ad22cbefb7325753aff5833",
+    "semantic_hash": ""
+  },
+  "frontend/super-admin/src/features/dashboard/components/StatCard.tsx": {
+    "mtime": 1780696332.0274575,
+    "ast_hash": "1abaca73d743ce3559067ace9cb7c002",
+    "semantic_hash": ""
+  },
+  "frontend/super-admin/src/features/devices/DevicesPage.tsx": {
+    "mtime": 1780850058.1472478,
+    "ast_hash": "64f697f48e4e8ddeb1bd2a21db2534ef",
+    "semantic_hash": ""
+  },
+  "frontend/super-admin/src/features/payments/PaymentsPage.tsx": {
+    "mtime": 1780850053.038394,
+    "ast_hash": "ab709c34448f7a40b050e8c05ac5bbba",
+    "semantic_hash": ""
+  },
+  "frontend/super-admin/src/features/pricing/PricingPage.tsx": {
+    "mtime": 1780846030.1515205,
+    "ast_hash": "fa54dd1090ebd4dcaae9c1920bb1f7ca",
+    "semantic_hash": ""
+  },
+  "frontend/super-admin/src/features/team/TeamPage.tsx": {
+    "mtime": 1780850045.34406,
+    "ast_hash": "3280c20cd2050260d3982bbc62ff22d3",
+    "semantic_hash": ""
+  },
+  "frontend/super-admin/src/features/tenants/TenantDetailPage.tsx": {
+    "mtime": 1780846001.3621686,
+    "ast_hash": "0ce0c370a3cfca2397e6dd5c6c773f88",
+    "semantic_hash": ""
+  },
+  "frontend/super-admin/src/features/tenants/TenantsPage.tsx": {
+    "mtime": 1780851457.174529,
+    "ast_hash": "58511648412d7c035dba4f1a6dfb1d75",
+    "semantic_hash": ""
+  },
+  "frontend/super-admin/src/hooks/useAuth.ts": {
+    "mtime": 1780695783.0631008,
+    "ast_hash": "4543eb81ec41c3e4fda135629b692e20",
+    "semantic_hash": ""
+  },
+  "frontend/super-admin/src/hooks/usePlatformStats.ts": {
+    "mtime": 1780695787.8530266,
+    "ast_hash": "ce205f87ef2e03c791effe7512141fbc",
+    "semantic_hash": ""
+  },
+  "frontend/super-admin/src/hooks/usePlatformUsers.ts": {
+    "mtime": 1780849988.7835615,
+    "ast_hash": "4d3c1e286345aac807bd7610ea86fbe7",
+    "semantic_hash": ""
+  },
+  "frontend/super-admin/src/hooks/useTenantDetail.ts": {
+    "mtime": 1780695799.5553658,
+    "ast_hash": "fe4419b93c9b3c82aa5c8fbd0bcc0236",
+    "semantic_hash": ""
+  },
+  "frontend/super-admin/src/hooks/useTenants.ts": {
+    "mtime": 1780695794.89309,
+    "ast_hash": "3866f4b31020547b1c3411a225c0dcb5",
+    "semantic_hash": ""
+  },
+  "frontend/super-admin/src/lib/api.ts": {
+    "mtime": 1780697211.7619567,
+    "ast_hash": "b86dfb1f637189c1711139cb2137d22d",
+    "semantic_hash": ""
+  },
+  "frontend/super-admin/src/lib/cn.ts": {
+    "mtime": 1780695754.5299518,
+    "ast_hash": "9a4cc6f9f3155ffdc1fa7c2c097f6429",
+    "semantic_hash": ""
+  },
+  "frontend/super-admin/src/main.tsx": {
+    "mtime": 1780695747.2585988,
+    "ast_hash": "78fffb4190e85688f3e63b8caaf799e5",
+    "semantic_hash": ""
+  },
+  "frontend/super-admin/src/router.tsx": {
+    "mtime": 1780850070.399711,
+    "ast_hash": "24e663636331a255e4300f699449cf29",
+    "semantic_hash": ""
+  },
+  "frontend/super-admin/src/stores/authStore.ts": {
+    "mtime": 1780695775.308755,
+    "ast_hash": "ee921dd68dbb9e3bdd7f6f0cfb6ea59c",
+    "semantic_hash": ""
+  },
+  "frontend/super-admin/src/stores/uiStore.ts": {
+    "mtime": 1780695779.3587067,
+    "ast_hash": "7fb79af097f08885e5da074ebd2f26e9",
+    "semantic_hash": ""
+  },
+  "frontend/super-admin/src/types/api.ts": {
+    "mtime": 1780849977.393412,
+    "ast_hash": "3c4fbc137b1640a4152b770e060d1106",
+    "semantic_hash": ""
+  },
+  "frontend/super-admin/src/vite-env.d.ts": {
+    "mtime": 1780696455.854221,
+    "ast_hash": "0352474ba2918efe13895edbc3780d94",
+    "semantic_hash": ""
+  },
+  "frontend/super-admin/tailwind.config.ts": {
+    "mtime": 1780695723.9974031,
+    "ast_hash": "785ad13563316ec9fbee71c884fbfc87",
+    "semantic_hash": ""
+  },
+  "frontend/super-admin/tsconfig.json": {
+    "mtime": 1780695709.5562112,
+    "ast_hash": "4f682e009a0780aaf3e8aff15dbbc19f",
+    "semantic_hash": ""
+  },
+  "frontend/super-admin/tsconfig.node.json": {
+    "mtime": 1780695713.1766298,
+    "ast_hash": "767b2e9abe6452170cdc399ca052cfbc",
+    "semantic_hash": ""
+  },
+  "frontend/super-admin/vite.config.ts": {
+    "mtime": 1780695705.0504208,
+    "ast_hash": "32dd59c068746497290b6b8e10309842",
+    "semantic_hash": ""
+  },
+  "scripts/dev.ps1": {
+    "mtime": 1781126534.2724574,
+    "ast_hash": "97c50035f4f45277b497c728c6bc19d0",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Api/Authorization/RequireOwnerAttribute.cs": {
+    "mtime": 1777162463.6607108,
+    "ast_hash": "4fa0e4a0426b27081fe1775a4390cf9e",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Api/Authorization/RequireOwnerOrStaffAttribute.cs": {
+    "mtime": 1777162466.3258808,
+    "ast_hash": "9644a673f1414360c737d4ba68ab5dce",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Api/Authorization/RequirePlatformRoleAttribute.cs": {
+    "mtime": 1780694715.2463188,
+    "ast_hash": "fbcb09b63ecb1961bc9ecc8fb48c1c42",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Api/Controllers/AuthController.cs": {
+    "mtime": 1777154384.3091547,
+    "ast_hash": "f601a40dba282473a4ddec1a8dfe5341",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Api/Controllers/BookingController.cs": {
+    "mtime": 1780690191.7215161,
+    "ast_hash": "8ec086af0371c7d677cf4aa4091a20a8",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Api/Controllers/CustomerController.cs": {
+    "mtime": 1778451861.9006588,
+    "ast_hash": "341f064c07d3b83b65a9d4b85b57a09d",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Api/Controllers/InviteController.cs": {
+    "mtime": 1777162530.6405416,
+    "ast_hash": "062789acbf738c74f42d010055754e42",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Api/Controllers/PlatformAuthController.cs": {
+    "mtime": 1780694724.5572095,
+    "ast_hash": "6cd7ae0cfafe50327da3f3cedc7367f4",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Api/Controllers/PlatformCouponsController.cs": {
+    "mtime": 1780845506.1406567,
+    "ast_hash": "5fd5138002ec8859962adcf61708e766",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Api/Controllers/PlatformPricingController.cs": {
+    "mtime": 1780845510.7842922,
+    "ast_hash": "6da133033991bce9511210944ee63047",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Api/Controllers/PlatformStatsController.cs": {
+    "mtime": 1780694731.428993,
+    "ast_hash": "04d0cea5f7a224ce6b4939b2abc9e7e5",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Api/Controllers/PlatformSubscriptionsController.cs": {
+    "mtime": 1780694755.1711218,
+    "ast_hash": "768d5db0791834755d237eb72e0bbb5c",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Api/Controllers/PlatformTenantsController.cs": {
+    "mtime": 1780694748.711887,
+    "ast_hash": "587e88be1b5dd1b346860d2e8d3b627d",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Api/Controllers/PlatformUsersController.cs": {
+    "mtime": 1780848876.341834,
+    "ast_hash": "c9bcda6a2a342a6d83d6281ae7febbde",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Api/Controllers/ReservationController.cs": {
+    "mtime": 1779310549.8432486,
+    "ast_hash": "9a7947aa2454147386974af1ecda97f4",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Api/Controllers/RuleController.cs": {
+    "mtime": 1779305199.366968,
+    "ast_hash": "c824e7e021e3b383b3fcaced281bdd3f",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Api/Controllers/StaffController.cs": {
+    "mtime": 1777162518.591665,
+    "ast_hash": "760e1d39800d7225d914e3b246a0f4ef",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Api/Controllers/TableCombinationController.cs": {
+    "mtime": 1777164411.474446,
+    "ast_hash": "8cd0397911b860b8ba614cf8a5ab2bca",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Api/Controllers/TableController.cs": {
+    "mtime": 1777164308.972026,
+    "ast_hash": "0b0a0b953bb9dfe423bb71598437e745",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Api/Controllers/TenantController.cs": {
+    "mtime": 1780873303.5136116,
+    "ast_hash": "c4d7c3073f8175d2fe7754b8b5b60f3e",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Api/Controllers/VenueClosureController.cs": {
+    "mtime": 1777163912.182905,
+    "ast_hash": "0735445d243c11e0c8d0f13c1ad3df14",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Api/Controllers/VenueController.cs": {
+    "mtime": 1777163515.2564626,
+    "ast_hash": "31bd4f68c565b867ba20b345ea145899",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Api/Controllers/VenueCustomFieldController.cs": {
+    "mtime": 1777164028.2964313,
+    "ast_hash": "998e2be3848271779aa727511af95767",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Api/Controllers/WhatsAppSettingsController.cs": {
+    "mtime": 1780690087.567433,
+    "ast_hash": "97ab85a5f7c9789c147fe66b02fea630",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Api/Controllers/WhatsAppWebhookController.cs": {
+    "mtime": 1780349534.9968886,
+    "ast_hash": "08123c76d661560deabb534d97198e88",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Api/Middleware/GlobalExceptionHandler.cs": {
+    "mtime": 1778786713.1467314,
+    "ast_hash": "06b1d13c56c6be5d0545a35ef9db1abb",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Api/Middleware/IdempotencyMiddleware.cs": {
+    "mtime": 1778786015.0806804,
+    "ast_hash": "9bcf2e06f72d1101faaa9c1be9ae625c",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Api/Middleware/TenantResolverMiddleware.cs": {
+    "mtime": 1780844458.9906275,
+    "ast_hash": "87228d7b98a4d12d3db469bee1eead67",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Api/Program.cs": {
+    "mtime": 1780694769.5436182,
+    "ast_hash": "e19bf15854ce4c76e6823ed3041f0e21",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Api/Properties/launchSettings.json": {
+    "mtime": 1776718386.2361276,
+    "ast_hash": "071c63a8f521134095332d4a08e35457",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Api/Tablewise.Api.csproj": {
+    "mtime": 1777167160.4485354,
+    "ast_hash": "c8ae6482df0f12d62cde2a97d5c87bc2",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Api/appsettings.Development.json": {
+    "mtime": 1778456397.8078744,
+    "ast_hash": "3172e6ef66eb391f217a83c642c076bc",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Api/appsettings.json": {
+    "mtime": 1780349423.278575,
+    "ast_hash": "8505b893800c8e8a9a92006a8e83618e",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Common/DateTimeNormalization.cs": {
+    "mtime": 1779311502.8733752,
+    "ast_hash": "dbd8ed226f84059b5ae22d5caa7d490d",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/DTOs/Auth/AuthResultDto.cs": {
+    "mtime": 1777154061.7325728,
+    "ast_hash": "2f9ceb7e1b7663135fd013a9e870b2b6",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/DTOs/Auth/ForgotPasswordDto.cs": {
+    "mtime": 1777154065.9968276,
+    "ast_hash": "983b69ef7dcbc6820d206a2457c4fa83",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/DTOs/Auth/LoginDto.cs": {
+    "mtime": 1777154052.7793393,
+    "ast_hash": "7dccfc925225189bde5841d99aba3e9c",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/DTOs/Auth/RefreshTokenDto.cs": {
+    "mtime": 1777154063.008917,
+    "ast_hash": "4350851e55c63c163728f604edca5598",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/DTOs/Auth/RegisterTenantDto.cs": {
+    "mtime": 1777154050.6469836,
+    "ast_hash": "bbe297de9efb81d0ad43ed1a666208b4",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/DTOs/Auth/ResetPasswordDto.cs": {
+    "mtime": 1777154067.5555751,
+    "ast_hash": "be57132cf2858d7a6701a4691bada915",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/DTOs/Auth/TokenResponseDto.cs": {
+    "mtime": 1777154055.2746518,
+    "ast_hash": "a0542a245c10c1442921f9b9b16b4b27",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/DTOs/Auth/VerifyEmailDto.cs": {
+    "mtime": 1777154064.2812598,
+    "ast_hash": "ed01b29627ad59159ef38700dd9d5629",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/DTOs/Booking/AvailabilityRequestDto.cs": {
+    "mtime": 1777165484.7770782,
+    "ast_hash": "8f7ce5a5a41fd6acb7798cff27b56d69",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/DTOs/Booking/ReservationDetailDto.cs": {
+    "mtime": 1777165512.4039917,
+    "ast_hash": "d41a59e5c77471a6786a6d850c9c0ccb",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/DTOs/Booking/ReserveRequestDto.cs": {
+    "mtime": 1780690208.3619783,
+    "ast_hash": "88388cecc24dcc498f4d1a4300f0581f",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/DTOs/Booking/VenueConfigDto.cs": {
+    "mtime": 1779313486.457454,
+    "ast_hash": "39261a2b77744928a47d657311b46636",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/DTOs/Common/PagedResult.cs": {
+    "mtime": 1780690017.606623,
+    "ast_hash": "656961029a5375ab9d9b5e031b15ceaa",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/DTOs/Customer/CustomerDto.cs": {
+    "mtime": 1780855273.5140529,
+    "ast_hash": "4334bbc05b2a93441cb506bf9313068e",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/DTOs/Platform/CouponDtos.cs": {
+    "mtime": 1780845053.6631837,
+    "ast_hash": "417a604ab9df638e4ea5202247c2aba2",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/DTOs/Platform/PlatformAuthDtos.cs": {
+    "mtime": 1780694571.0821908,
+    "ast_hash": "8eb69dde2d70456ae451518bfdaeb909",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/DTOs/Platform/PlatformStatsDto.cs": {
+    "mtime": 1780694575.1693015,
+    "ast_hash": "411660ddfc10af4a9ebbbd66dc81eff0",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/DTOs/Platform/PlatformUserDtos.cs": {
+    "mtime": 1780848803.5224347,
+    "ast_hash": "513b4bec07939c9e185a9a69089d9226",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/DTOs/Platform/TenantDtos.cs": {
+    "mtime": 1780694583.857674,
+    "ast_hash": "78a0ce3440791eb051df6c99393937c1",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/DTOs/Reservation/CreateReservationDto.cs": {
+    "mtime": 1777165544.986496,
+    "ast_hash": "05a9a64b284fe1bdc895c73334be2ac9",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/DTOs/Reservation/EvaluateManualReservationDto.cs": {
+    "mtime": 1779310534.2153268,
+    "ast_hash": "6a84aeac168b2d109960f9a1272c2a76",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/DTOs/Reservation/ReservationDto.cs": {
+    "mtime": 1777165532.9131455,
+    "ast_hash": "1ad7fc7e71109ea4cae9cb39f6a9c5b2",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/DTOs/Rule/CreateRuleDto.cs": {
+    "mtime": 1778441061.5667505,
+    "ast_hash": "0460d8807f6be3ea0a155cfba87a5293",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/DTOs/Rule/ReorderRulesDto.cs": {
+    "mtime": 1778441066.4964607,
+    "ast_hash": "1c34f383ff8181201f39baa47c881b26",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/DTOs/Rule/RuleDto.cs": {
+    "mtime": 1778441400.6228023,
+    "ast_hash": "73578f41c7bee9e9103619d56f99ac6e",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/DTOs/Rule/RuleTemplateDto.cs": {
+    "mtime": 1778441074.5510821,
+    "ast_hash": "f323994f49f654d52777f6d1b5b9dbee",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/DTOs/Rule/RuleTestResultDto.cs": {
+    "mtime": 1778443545.4800558,
+    "ast_hash": "d633b46824ce6f975fcc8c294d5a5f15",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/DTOs/Rule/TestDraftRuleRequestDto.cs": {
+    "mtime": 1779305175.740498,
+    "ast_hash": "5c4ebf1eec5db9787c34de01a2e15aa9",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/DTOs/Rule/TestRuleRequestDto.cs": {
+    "mtime": 1778443610.6524084,
+    "ast_hash": "106cd87897f20abcec219de7d5e41701",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/DTOs/Rule/UpdateRuleDto.cs": {
+    "mtime": 1778441064.3355505,
+    "ast_hash": "0f0a54d8fbd3f9fed39f808b035d0087",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/DTOs/Staff/AcceptInvitationDto.cs": {
+    "mtime": 1777162194.378771,
+    "ast_hash": "1e3001c4adc9042ec81e8f8d3abb1556",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/DTOs/Staff/InvitationDto.cs": {
+    "mtime": 1777162200.0528035,
+    "ast_hash": "a136c7d00ac1a8a42aea61221193e5d2",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/DTOs/Staff/InvitationPreviewDto.cs": {
+    "mtime": 1777162207.1718285,
+    "ast_hash": "a70ebabf19c7e148ee31e4be88689ad9",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/DTOs/Staff/InviteStaffDto.cs": {
+    "mtime": 1777162193.706151,
+    "ast_hash": "40a8dd0aace1fd2be6e060d47d379ab7",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/DTOs/Staff/StaffMemberDto.cs": {
+    "mtime": 1777162203.0739279,
+    "ast_hash": "2170c7b093b59f0c7b7189eff540423c",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/DTOs/Staff/UpdateStaffRoleDto.cs": {
+    "mtime": 1777162204.110114,
+    "ast_hash": "11ab595353b63a64d77ff9ff21dc40e8",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/DTOs/TableCombination/CreateTableCombinationDto.cs": {
+    "mtime": 1777164321.3492885,
+    "ast_hash": "cd94e77b4bf2d9b4bb564310e9b2713c",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/DTOs/TableCombination/TableCombinationDto.cs": {
+    "mtime": 1777164318.4026234,
+    "ast_hash": "be04eed349fd6d776d63c79c30f9aca7",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/DTOs/TableCombination/UpdateTableCombinationDto.cs": {
+    "mtime": 1777164323.2042103,
+    "ast_hash": "eb100ca2ebe0f50ae7243e034150221d",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/DTOs/Table/CreateTableDto.cs": {
+    "mtime": 1777164187.9819496,
+    "ast_hash": "287daff2e39ae825c1a6b6ad9ae6fe8f",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/DTOs/Table/ReorderTablesDto.cs": {
+    "mtime": 1777164192.6857598,
+    "ast_hash": "a864a82a9b5f892604517f6b6a704fea",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/DTOs/Table/TableDto.cs": {
+    "mtime": 1777164185.9195344,
+    "ast_hash": "5af899932040960048d6541cb2c66a78",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/DTOs/Table/UpdateTableDto.cs": {
+    "mtime": 1777164189.96652,
+    "ast_hash": "ab9f5155a1abc1ae281a3c4c30da9492",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/DTOs/Tenant/AuditLogDto.cs": {
+    "mtime": 1777162844.5079906,
+    "ast_hash": "d2c8e0ac8a2a97d771556931ca1aff8c",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/DTOs/Tenant/ConfirmLogoUploadDto.cs": {
+    "mtime": 1777163264.039717,
+    "ast_hash": "214482ac575332fa49f467b78ae4af87",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/DTOs/Tenant/GenerateLogoUploadUrlDto.cs": {
+    "mtime": 1777163263.0749965,
+    "ast_hash": "a55f41536ff9c14b2c516da7c00dd5fb",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/DTOs/Tenant/LogoUploadUrlDto.cs": {
+    "mtime": 1777162838.6713595,
+    "ast_hash": "c207d9c328af8aa0a2884ef39ba12776",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/DTOs/Tenant/PlanLimitsDto.cs": {
+    "mtime": 1778451923.6073203,
+    "ast_hash": "8b2ca26ca6dd5a0ee8b2dd2bcc348509",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/DTOs/Tenant/TenantDashboardStatsDto.cs": {
+    "mtime": 1778455003.6546116,
+    "ast_hash": "7b05be422071148b0bc737a0f165cdee",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/DTOs/Tenant/TenantProfileDto.cs": {
+    "mtime": 1777162834.7066786,
+    "ast_hash": "fe859f1f374bc98c2337229a6b207d65",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/DTOs/Tenant/TenantUsageDto.cs": {
+    "mtime": 1777163062.1512017,
+    "ast_hash": "d430ee92f18537af069e0283f2de2589",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/DTOs/Tenant/TenantVenueDto.cs": {
+    "mtime": 1778451926.1109207,
+    "ast_hash": "f26acc167a8063ac30a0cdec08ffaee7",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/DTOs/Tenant/UpdateTenantDto.cs": {
+    "mtime": 1777162835.9420435,
+    "ast_hash": "0725bce4518112a522e7726ec2b33a26",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/DTOs/Tenant/WeeklyChartPointDto.cs": {
+    "mtime": 1778455005.26018,
+    "ast_hash": "97a792852e810d0f84655c3b798997b8",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/DTOs/VenueClosure/BulkCreateVenueClosureDto.cs": {
+    "mtime": 1777163787.5453959,
+    "ast_hash": "528314ae042ed1b9f0fd919b63ff0505",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/DTOs/VenueClosure/CreateVenueClosureDto.cs": {
+    "mtime": 1777163783.3693817,
+    "ast_hash": "a993d608368f75e6bcf470ac26ef33cf",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/DTOs/VenueClosure/UpdateVenueClosureDto.cs": {
+    "mtime": 1777163786.4322033,
+    "ast_hash": "e69eb4b9498510cc1d38f917429e61fe",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/DTOs/VenueClosure/VenueClosureDto.cs": {
+    "mtime": 1777163780.6582139,
+    "ast_hash": "c7e046ec4f8590308a96791242a9e0ca",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/DTOs/VenueCustomField/CreateVenueCustomFieldDto.cs": {
+    "mtime": 1777163923.1854374,
+    "ast_hash": "149f32ff6dd6f9f37913f41fe0c9824a",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/DTOs/VenueCustomField/ReorderCustomFieldsDto.cs": {
+    "mtime": 1777163927.770778,
+    "ast_hash": "4c03135347942950683713d52c4e842c",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/DTOs/VenueCustomField/UpdateVenueCustomFieldDto.cs": {
+    "mtime": 1777163925.1805634,
+    "ast_hash": "1745a5348db82b304d2028bb1d2316cb",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/DTOs/VenueCustomField/VenueCustomFieldDto.cs": {
+    "mtime": 1777163920.723637,
+    "ast_hash": "aa031cb593c550e88d96080c7cc44050",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/DTOs/Venue/CreateVenueDto.cs": {
+    "mtime": 1777163135.3962677,
+    "ast_hash": "d22b5b5837ff440ca57bcfec0b30c04d",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/DTOs/Venue/UpdateVenueDto.cs": {
+    "mtime": 1777163139.369611,
+    "ast_hash": "ea7d64d199e9d3a409d441fd23123c39",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/DTOs/Venue/UpdateWorkingHoursDto.cs": {
+    "mtime": 1777163265.4743953,
+    "ast_hash": "baa23d29d96ae930d2ce0e87fb0bcb42",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/DTOs/Venue/VenueDto.cs": {
+    "mtime": 1780690170.719695,
+    "ast_hash": "9a3efbd3c14745352586f036a1eb14e0",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/DTOs/Venue/VenueWhatsAppSettingsDto.cs": {
+    "mtime": 1780689928.5661092,
+    "ast_hash": "fb625a5011fa1a13debc485d4398197c",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/DTOs/Venue/WorkingHoursDto.cs": {
+    "mtime": 1777163142.5726082,
+    "ast_hash": "0688c0ffb8815d77cf07f5544f21c646",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/DTOs/WhatsApp/WhatsAppMessageHistoryDto.cs": {
+    "mtime": 1780689941.889083,
+    "ast_hash": "e4e7a379c46e152a5850066a1812f4f2",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Exceptions/NotFoundException.cs": {
+    "mtime": 1778452257.767817,
+    "ast_hash": "1e234429f3f02e2cfda1146ee16e09e1",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Booking/Commands/CancelPublicReservationCommand.cs": {
+    "mtime": 1777165783.1305146,
+    "ast_hash": "8a2cfbe4020a4c460b787866caebfc04",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Booking/Commands/CancelPublicReservationCommandHandler.cs": {
+    "mtime": 1780690166.1730435,
+    "ast_hash": "76d52575b8459a7062cd162a80f7656c",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Booking/Commands/EvaluateRulesCommand.cs": {
+    "mtime": 1777165802.0115936,
+    "ast_hash": "315dc8e5393798e86618c7ab6338df08",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Booking/Commands/EvaluateRulesCommandHandler.cs": {
+    "mtime": 1777165810.8754804,
+    "ast_hash": "20add995a21eb6c9677e65a2a205ada3",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Booking/Commands/ModifyReservationCommand.cs": {
+    "mtime": 1777165738.9758735,
+    "ast_hash": "8e1c001d4e25d67d99c8fd0ef51671f3",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Booking/Commands/ModifyReservationCommandHandler.cs": {
+    "mtime": 1778786104.6434505,
+    "ast_hash": "0a6329c6c9f0f658128a4fada3105382",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Booking/Commands/ReserveCommand.cs": {
+    "mtime": 1780689909.7614365,
+    "ast_hash": "1f227c6a59e41dfb5be7d6b00f402ce5",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Booking/Commands/ReserveCommandHandler.cs": {
+    "mtime": 1780690215.3898127,
+    "ast_hash": "ad8730f9a1d859367ef7bd523e670f70",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Booking/Queries/GetAvailableSlotsQuery.cs": {
+    "mtime": 1777165655.5070903,
+    "ast_hash": "064469b040c8876f8667fa8109f18c24",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Booking/Queries/GetAvailableSlotsQueryHandler.cs": {
+    "mtime": 1779313964.2787004,
+    "ast_hash": "e4abefcdd23e0f07ac24a0a1c754e4b4",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Booking/Queries/GetReservationByCodeQuery.cs": {
+    "mtime": 1777165668.0007625,
+    "ast_hash": "6cc335443843759677200aa0fa8b7337",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Booking/Queries/GetReservationByCodeQueryHandler.cs": {
+    "mtime": 1777165677.136058,
+    "ast_hash": "ff4297ea50618e92f8d45f61f37ef6db",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Booking/Queries/GetVenueConfigQuery.cs": {
+    "mtime": 1777165640.1499593,
+    "ast_hash": "60210753a1fc738c7720cdea750655c7",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Booking/Queries/GetVenueConfigQueryHandler.cs": {
+    "mtime": 1779313490.6302497,
+    "ast_hash": "87af9ce8847768cda94812f3003355c9",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Customer/Commands/UpdateCustomerBlacklistCommand.cs": {
+    "mtime": 1778452535.7656853,
+    "ast_hash": "26b32ae1ae92756ac687bb111800738b",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Customer/Commands/UpdateCustomerNotesCommand.cs": {
+    "mtime": 1778452538.5841084,
+    "ast_hash": "566144fd91099cfd029146813a259271",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Customer/Commands/UpdateCustomerTierCommand.cs": {
+    "mtime": 1778452517.0558019,
+    "ast_hash": "311e3a93f7f011156dc690c0dcce4146",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Customer/Queries/GetCustomerByIdQuery.cs": {
+    "mtime": 1778452495.0989573,
+    "ast_hash": "ee339c8b061e8491d97920a1550f8149",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Customer/Queries/GetCustomersQuery.cs": {
+    "mtime": 1780856115.2487872,
+    "ast_hash": "3e32857ec2e6ebfc3e733c1245c6960f",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Customer/Queries/SearchCustomersQuery.cs": {
+    "mtime": 1778452485.9140296,
+    "ast_hash": "67b46404a9f42fc9d1cc7a6294487348",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Platform/Auth/PlatformLoginCommand.cs": {
+    "mtime": 1780694603.8845081,
+    "ast_hash": "9971d348a4650d13c16e244bf4046154",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Platform/Auth/PlatformLoginCommandHandler.cs": {
+    "mtime": 1780694614.0751033,
+    "ast_hash": "490ec4eecf7c743b3db56d54c83fdac9",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Platform/Commands/AddPlatformNoteCommand.cs": {
+    "mtime": 1780694700.0148437,
+    "ast_hash": "e32cfa398b5d7374c33e7955d8f38ef7",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Platform/Commands/AddPlatformNoteCommandHandler.cs": {
+    "mtime": 1780694811.7534797,
+    "ast_hash": "fa689e51bb45620e157289a768f0f325",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Platform/Commands/CreateCouponCommand.cs": {
+    "mtime": 1780845066.1946526,
+    "ast_hash": "2a71e82285e8c2c439423642c180baf4",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Platform/Commands/CreateCouponCommandHandler.cs": {
+    "mtime": 1780845072.0495038,
+    "ast_hash": "c150e916111601a24c1e9efa679297e2",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Platform/Commands/DeactivateCouponCommand.cs": {
+    "mtime": 1780845073.205836,
+    "ast_hash": "3d7f8e65fcca0407a0667f4ded4c8e79",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Platform/Commands/DeactivateCouponCommandHandler.cs": {
+    "mtime": 1780845075.7403917,
+    "ast_hash": "f91b46ae2a2cafd6f3e6959a18c3b720",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Platform/Commands/InvitePlatformUserCommand.cs": {
+    "mtime": 1780848829.3437197,
+    "ast_hash": "4030f903fcdad0487ad8edd8f7ef4016",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Platform/Commands/SuspendTenantCommand.cs": {
+    "mtime": 1780694679.1564174,
+    "ast_hash": "3e2b43457aaba0d87f4b97dc051e0814",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Platform/Commands/SuspendTenantCommandHandler.cs": {
+    "mtime": 1780694806.5952392,
+    "ast_hash": "7c58867cc6cd59d99423949c452662ca",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Platform/Commands/TogglePlatformUserActiveCommand.cs": {
+    "mtime": 1780849088.7200255,
+    "ast_hash": "f4037163d6d970ed34c4e1aa9ce3a7c7",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Platform/Commands/UpdatePlanPricingCommand.cs": {
+    "mtime": 1780845471.7603886,
+    "ast_hash": "f761f253aa3616bce7010be6560e72c9",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Platform/Commands/UpdatePlanPricingCommandHandler.cs": {
+    "mtime": 1780845477.9304996,
+    "ast_hash": "0f6bf15ae82b62c72ba2b01d9eda9b81",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Platform/Commands/UpdatePlatformUserRoleCommand.cs": {
+    "mtime": 1780849081.0747514,
+    "ast_hash": "a9ea409da06a1d5d36ec24d1c74c9e54",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Platform/Commands/UpdateTenantPlanCommand.cs": {
+    "mtime": 1780694669.113526,
+    "ast_hash": "5a2ef50e525e96939b683b7b8064e4b4",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Platform/Commands/UpdateTenantPlanCommandHandler.cs": {
+    "mtime": 1780694802.6575868,
+    "ast_hash": "b37ce0f94086e15e8136ca18e71798da",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Platform/Queries/GetCouponsQuery.cs": {
+    "mtime": 1780845444.5863912,
+    "ast_hash": "6b2ce413aceb059acfef1fa6938f3c00",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Platform/Queries/GetCouponsQueryHandler.cs": {
+    "mtime": 1780845462.448036,
+    "ast_hash": "bed0499e9ddf08a93cc9a0a2bfd8307b",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Platform/Queries/GetPlatformStatsQuery.cs": {
+    "mtime": 1780694624.5440147,
+    "ast_hash": "a2ee191888f303411fce88e1a5df4de1",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Platform/Queries/GetPlatformStatsQueryHandler.cs": {
+    "mtime": 1780694634.2550619,
+    "ast_hash": "c825a33bd0a59c3937de355347f64089",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Platform/Queries/GetPlatformUsersQuery.cs": {
+    "mtime": 1780848812.9807875,
+    "ast_hash": "50fc9888f11f1c18820de95491cd674d",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Platform/Queries/GetPricingPlansQuery.cs": {
+    "mtime": 1780845466.7524292,
+    "ast_hash": "dc6e0d14e03e640df581a1510e799cb9",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Platform/Queries/GetPricingPlansQueryHandler.cs": {
+    "mtime": 1780845470.4386556,
+    "ast_hash": "62d3d259b2499b27f664645cf267abd5",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Platform/Queries/GetTenantDetailQuery.cs": {
+    "mtime": 1780694651.8037386,
+    "ast_hash": "508a2ebecf5d323d14df09e995a0d3f6",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Platform/Queries/GetTenantDetailQueryHandler.cs": {
+    "mtime": 1780694815.6388824,
+    "ast_hash": "6abc508caf769e4f70661a882a46314b",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Platform/Queries/GetTenantsQuery.cs": {
+    "mtime": 1780694637.9397302,
+    "ast_hash": "000afb9008329ca4cc556f29fbfd5375",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Platform/Queries/GetTenantsQueryHandler.cs": {
+    "mtime": 1780694647.4487326,
+    "ast_hash": "b74258acc7bfd8180fb1aa7f37f472f5",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Reservation/Commands/AddInternalNoteCommand.cs": {
+    "mtime": 1777165932.8301044,
+    "ast_hash": "49146fd3e36062383221e17da8467af5",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Reservation/Commands/AddInternalNoteCommandHandler.cs": {
+    "mtime": 1777166957.4546554,
+    "ast_hash": "08db4e8d8d4e516e9b06439836f411c2",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Reservation/Commands/CancelReservationByStaffCommand.cs": {
+    "mtime": 1777165919.143978,
+    "ast_hash": "2c7a5b084ad4f8904fbe3a2ee1916d45",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Reservation/Commands/CancelReservationByStaffCommandHandler.cs": {
+    "mtime": 1778786105.5138066,
+    "ast_hash": "6198f98dbf05e1046282e2ad0bca29dd",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Reservation/Commands/CreateManualReservationCommand.cs": {
+    "mtime": 1777165868.625977,
+    "ast_hash": "ef843cbff072028cc2aa6ecf72f1242e",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Reservation/Commands/CreateManualReservationCommandHandler.cs": {
+    "mtime": 1779311516.312947,
+    "ast_hash": "62487098f636974a958aeb023871158a",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Reservation/Commands/EvaluateManualReservationCommand.cs": {
+    "mtime": 1779310536.9162948,
+    "ast_hash": "1b302a91a848deef2d27a81343514a02",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Reservation/Commands/EvaluateManualReservationCommandHandler.cs": {
+    "mtime": 1779311505.1413662,
+    "ast_hash": "a33301f159c6bc6fddfca689cd0848c6",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Reservation/Commands/UpdateReservationStatusCommand.cs": {
+    "mtime": 1777165904.3042748,
+    "ast_hash": "4bdce39669b4bed2e3850cb6229ae20e",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Reservation/Commands/UpdateReservationStatusCommandHandler.cs": {
+    "mtime": 1777167000.0495727,
+    "ast_hash": "f4f9bfd483b1cc04b7ab88f88884e47a",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Reservation/Queries/ExportReservationsQuery.cs": {
+    "mtime": 1777165847.9469726,
+    "ast_hash": "9ad1c86d35edfc675de81be135dcfcbc",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Reservation/Queries/ExportReservationsQueryHandler.cs": {
+    "mtime": 1777165858.837487,
+    "ast_hash": "392557d033d080e47668aa90a931783c",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Reservation/Queries/GetReservationByIdQuery.cs": {
+    "mtime": 1777165837.8088198,
+    "ast_hash": "620d931ec051613f33eaa08b70022ac3",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Reservation/Queries/GetReservationByIdQueryHandler.cs": {
+    "mtime": 1777165844.1209364,
+    "ast_hash": "c00c5f9f28117c82e037049b98ea4070",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Reservation/Queries/GetReservationsQuery.cs": {
+    "mtime": 1777165819.7015758,
+    "ast_hash": "d05f8b4521a903f3e5b3a5b9debbca26",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Reservation/Queries/GetReservationsQueryHandler.cs": {
+    "mtime": 1777167110.252063,
+    "ast_hash": "21bc2c8ccef2ade9d36e099c03748130",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Rule/Commands/CreateRuleCommand.cs": {
+    "mtime": 1778441081.8745139,
+    "ast_hash": "2ebf0e0f94aee8c25f17fe99c1ab466e",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Rule/Commands/CreateRuleCommandHandler.cs": {
+    "mtime": 1778786357.7421737,
+    "ast_hash": "75f914cd1462ba7df3dacde75811d00f",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Rule/Commands/DeleteRuleCommand.cs": {
+    "mtime": 1778441110.0973098,
+    "ast_hash": "67a52d05bfc4a523c73c9b54c6042d05",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Rule/Commands/DeleteRuleCommandHandler.cs": {
+    "mtime": 1778786372.8331788,
+    "ast_hash": "0e833bcf3b27a0525d5b2b9ec04aa991",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Rule/Commands/ReorderRulesCommand.cs": {
+    "mtime": 1778441124.5837247,
+    "ast_hash": "31050f45600579ee3a26045f6b5790f5",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Rule/Commands/ReorderRulesCommandHandler.cs": {
+    "mtime": 1778786376.6927407,
+    "ast_hash": "671255a416a35c7ef27c5ea3a51a83b9",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Rule/Commands/TestDraftRuleCommand.cs": {
+    "mtime": 1779305176.7485883,
+    "ast_hash": "d07381dabac1dd692e77735ef2984e16",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Rule/Commands/TestDraftRuleCommandHandler.cs": {
+    "mtime": 1779305179.1489136,
+    "ast_hash": "9b4bb1b4d64cbf9fdb446f8b99b16ccb",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Rule/Commands/TestRuleCommand.cs": {
+    "mtime": 1778443624.7461448,
+    "ast_hash": "f7b204c5f97d24ebb38da41edbb1afeb",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Rule/Commands/TestRuleCommandHandler.cs": {
+    "mtime": 1778443634.0842173,
+    "ast_hash": "208cc2b8b069d0713184b224337c351a",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Rule/Commands/ToggleRuleCommand.cs": {
+    "mtime": 1778441116.9635687,
+    "ast_hash": "e39bf86e3c01af31f8da8296c57668c1",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Rule/Commands/ToggleRuleCommandHandler.cs": {
+    "mtime": 1778786369.189678,
+    "ast_hash": "1889ba33ca24024288bd2a1435412a94",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Rule/Commands/UpdateRuleCommand.cs": {
+    "mtime": 1778441098.4839315,
+    "ast_hash": "ee595b0b59285be76e0d383c1b0ec1d8",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Rule/Commands/UpdateRuleCommandHandler.cs": {
+    "mtime": 1778786364.2918737,
+    "ast_hash": "eb03048e6253029f3313eb63d80780b7",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Rule/Queries/GetRuleByIdQuery.cs": {
+    "mtime": 1778441157.6567185,
+    "ast_hash": "42241a1c7ee1a9978659ec671c392fc2",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Rule/Queries/GetRuleByIdQueryHandler.cs": {
+    "mtime": 1778441162.1560438,
+    "ast_hash": "76adb505e8fa9a7e85e8911948d2e1e2",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Rule/Queries/GetRuleStatsQuery.cs": {
+    "mtime": 1778441163.5661788,
+    "ast_hash": "250fc9892e9cfabb86eac72195f49103",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Rule/Queries/GetRuleStatsQueryHandler.cs": {
+    "mtime": 1778441167.5583985,
+    "ast_hash": "628f7e62c022002876742b81eae72634",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Rule/Queries/GetRulesQuery.cs": {
+    "mtime": 1778441149.5025823,
+    "ast_hash": "18e34b812cd042c18efb9dc9b5259972",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Rule/Queries/GetRulesQueryHandler.cs": {
+    "mtime": 1778441156.1732066,
+    "ast_hash": "194a1aa39708a62f84cfbc261bda79e8",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Staff/Commands/AcceptInvitationCommand.cs": {
+    "mtime": 1777162243.8564713,
+    "ast_hash": "734eeea251a79099b9badde6a2a9f408",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Staff/Commands/AcceptInvitationCommandHandler.cs": {
+    "mtime": 1777166888.9584768,
+    "ast_hash": "e070f5b595c24433a9dd69c950475e1a",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Staff/Commands/CancelInvitationCommand.cs": {
+    "mtime": 1777162267.3984182,
+    "ast_hash": "ef22bd91ebe032e007ba60b5781554bb",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Staff/Commands/CancelInvitationCommandHandler.cs": {
+    "mtime": 1777166781.3188865,
+    "ast_hash": "b95e874eb75a43e3303d4d8294f0dc00",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Staff/Commands/InviteStaffCommand.cs": {
+    "mtime": 1777166263.6494565,
+    "ast_hash": "06d2774d49b6eeb1f14549f03b296d73",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Staff/Commands/InviteStaffCommandHandler.cs": {
+    "mtime": 1780854817.2518394,
+    "ast_hash": "22d65f4d4d953f85251f09ca7dcca20a",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Staff/Commands/RemoveStaffCommand.cs": {
+    "mtime": 1777162305.3361866,
+    "ast_hash": "d4180da774e76e05537308518c927bb9",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Staff/Commands/RemoveStaffCommandHandler.cs": {
+    "mtime": 1778786108.7853813,
+    "ast_hash": "f90d28169290cba2015e5fe6863d4e0d",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Staff/Commands/ResendInvitationCommand.cs": {
+    "mtime": 1777162276.1228402,
+    "ast_hash": "3789006e6857c95fb2ca065d6d546472",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Staff/Commands/ResendInvitationCommandHandler.cs": {
+    "mtime": 1777166888.9796793,
+    "ast_hash": "c2b0fb7e357165e083bb829fcdd2c8d9",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Staff/Commands/UpdateStaffRoleCommand.cs": {
+    "mtime": 1777162293.3431478,
+    "ast_hash": "d3da53e340123ae9ddceefb13ea0ad91",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Staff/Commands/UpdateStaffRoleCommandHandler.cs": {
+    "mtime": 1778786107.5802786,
+    "ast_hash": "ea2a7d34dff0a3cb6ddde0d93cec8fff",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Staff/Queries/GetInvitationPreviewQuery.cs": {
+    "mtime": 1777162336.7213297,
+    "ast_hash": "20262067dfbfba8d695614572bf9e3bb",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Staff/Queries/GetInvitationPreviewQueryHandler.cs": {
+    "mtime": 1777166888.9836848,
+    "ast_hash": "c316210af43a294a76e48ba3ccbf24a9",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Staff/Queries/ListInvitationsQuery.cs": {
+    "mtime": 1777162321.8440485,
+    "ast_hash": "40269350692c3d8025ae790247caaee1",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Staff/Queries/ListInvitationsQueryHandler.cs": {
+    "mtime": 1777167055.3713386,
+    "ast_hash": "fe9a12715dee075137e709508c02f5da",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Staff/Queries/ListStaffQuery.cs": {
+    "mtime": 1777162329.8477156,
+    "ast_hash": "ea134a24c91a66b81f42cfea651a5b6d",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Staff/Queries/ListStaffQueryHandler.cs": {
+    "mtime": 1777167055.3733585,
+    "ast_hash": "8a989901b86976eee384b270dd6bc686",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/TableCombination/Commands/CreateTableCombinationCommand.cs": {
+    "mtime": 1777164329.6652036,
+    "ast_hash": "3681bdfd540e3a25a9d0b1eb8f92dad0",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/TableCombination/Commands/CreateTableCombinationCommandHandler.cs": {
+    "mtime": 1777166781.3599317,
+    "ast_hash": "9f3ce2ff27df37b448ad5e0aaca85236",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/TableCombination/Commands/DeleteTableCombinationCommand.cs": {
+    "mtime": 1777164366.5077353,
+    "ast_hash": "109a351121043daf98f152f072f7a5e5",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/TableCombination/Commands/DeleteTableCombinationCommandHandler.cs": {
+    "mtime": 1777166781.3619325,
+    "ast_hash": "4c369508db93e93aa12cf5e50a21d1ac",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/TableCombination/Commands/UpdateTableCombinationCommand.cs": {
+    "mtime": 1777164352.6616488,
+    "ast_hash": "b88742ec0ffad477a8fb7c80f520cb88",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/TableCombination/Commands/UpdateTableCombinationCommandHandler.cs": {
+    "mtime": 1777166781.3668752,
+    "ast_hash": "57eb7e6a125fedec9a423891ecc9af34",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/TableCombination/Queries/GetTableCombinationsQuery.cs": {
+    "mtime": 1777164381.1033251,
+    "ast_hash": "858ab2392e312ab0c7689efcc3277914",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/TableCombination/Queries/GetTableCombinationsQueryHandler.cs": {
+    "mtime": 1777166781.3711417,
+    "ast_hash": "1c9f74d5f3bea6cd61fb5304393538e8",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Table/Commands/CreateTableCommand.cs": {
+    "mtime": 1777164198.7915375,
+    "ast_hash": "d088c6493a2b8bf1d41ec2a821f493c3",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Table/Commands/CreateTableCommandHandler.cs": {
+    "mtime": 1777166594.3030303,
+    "ast_hash": "c35bc13db1bcd3938269fc321469527e",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Table/Commands/DeleteTableCommand.cs": {
+    "mtime": 1777164224.5127356,
+    "ast_hash": "d4acf1761a99bef868f251e1647611fc",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Table/Commands/DeleteTableCommandHandler.cs": {
+    "mtime": 1777166902.6528637,
+    "ast_hash": "7ec9a9842b69ed8e18ba4033981c86de",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Table/Commands/ReorderTablesCommand.cs": {
+    "mtime": 1777164234.6650186,
+    "ast_hash": "3c16382f9ad7b737513c8774855594b7",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Table/Commands/ReorderTablesCommandHandler.cs": {
+    "mtime": 1777166781.3498983,
+    "ast_hash": "280863a731650fe803beb8c9f3c7f472",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Table/Commands/ToggleTableActiveCommand.cs": {
+    "mtime": 1777164245.5554767,
+    "ast_hash": "1342f5341bef6f31b4b285a042e8edc9",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Table/Commands/ToggleTableActiveCommandHandler.cs": {
+    "mtime": 1777166902.6701949,
+    "ast_hash": "f150e054d679da67b2bf255ae9152e9e",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Table/Commands/UpdateTableCommand.cs": {
+    "mtime": 1777164215.0673945,
+    "ast_hash": "638334747666cb2c65e013e2d127d3ad",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Table/Commands/UpdateTableCommandHandler.cs": {
+    "mtime": 1777166781.3557985,
+    "ast_hash": "2dbdf072bb2ab0568b857beb29318892",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Table/Queries/GetTablesQuery.cs": {
+    "mtime": 1777164262.3251548,
+    "ast_hash": "6279bc7b4f2637fe116b07f40d82b379",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Table/Queries/GetTablesQueryHandler.cs": {
+    "mtime": 1777166781.3576562,
+    "ast_hash": "61a0cafe6d5a6ed1b7c3839458f27a34",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Tenant/Commands/ConfirmLogoUploadCommand.cs": {
+    "mtime": 1777163385.044929,
+    "ast_hash": "d0e600ebcb7c5863002bb8b72f5bfd11",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Tenant/Commands/ConfirmLogoUploadCommandHandler.cs": {
+    "mtime": 1777166594.3365924,
+    "ast_hash": "1c586be5e03a03b21297848768810caf",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Tenant/Commands/GenerateLogoUploadUrlCommand.cs": {
+    "mtime": 1777163371.9777029,
+    "ast_hash": "e09e3998975d4e4357b0b0f5ae9a8abf",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Tenant/Commands/GenerateLogoUploadUrlCommandHandler.cs": {
+    "mtime": 1777163383.249056,
+    "ast_hash": "9c58df94de66f571f8daf755e02fc333",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Tenant/Commands/UpdateTenantCommand.cs": {
+    "mtime": 1777163064.4181187,
+    "ast_hash": "2da81fe92fbed8e0a7c96e3ad2812b24",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Tenant/Commands/UpdateTenantCommandHandler.cs": {
+    "mtime": 1777166781.375572,
+    "ast_hash": "e108c2ea8effbcbc36ea0621bee95ca7",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Tenant/Queries/GetAuditLogsQuery.cs": {
+    "mtime": 1777163088.6969397,
+    "ast_hash": "091c860f41329d6589b9aeeef6a9a08a",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Tenant/Queries/GetAuditLogsQueryHandler.cs": {
+    "mtime": 1777166781.3779533,
+    "ast_hash": "f76adf6a4ed41a59398c31144adaec33",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Tenant/Queries/GetPlanLimitsQuery.cs": {
+    "mtime": 1778783678.8101308,
+    "ast_hash": "869b1a80200824462c3dc50f30860247",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Tenant/Queries/GetTenantDashboardStatsQuery.cs": {
+    "mtime": 1778455006.5054963,
+    "ast_hash": "d5f9ea832644550ee9b8afcbbff7c71a",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Tenant/Queries/GetTenantDashboardStatsQueryHandler.cs": {
+    "mtime": 1780854844.0424037,
+    "ast_hash": "9e526008ff9661fbcb35d101a5e7a44e",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Tenant/Queries/GetTenantProfileQuery.cs": {
+    "mtime": 1777162845.8595998,
+    "ast_hash": "aba2c798f9b6e456f39b65fee6709729",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Tenant/Queries/GetTenantProfileQueryHandler.cs": {
+    "mtime": 1780855244.1630921,
+    "ast_hash": "7729bfe6ec19ec8e92cf512040e08cb9",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Tenant/Queries/GetTenantUsageQuery.cs": {
+    "mtime": 1777163077.4676888,
+    "ast_hash": "36dee84568e96f3a0eef0030f8bb425e",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Tenant/Queries/GetTenantUsageQueryHandler.cs": {
+    "mtime": 1777166594.3481054,
+    "ast_hash": "123f1903e91574885c710b4e31dbe569",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Tenant/Queries/GetTenantVenuesQuery.cs": {
+    "mtime": 1778452569.2267406,
+    "ast_hash": "f493f9e12a7f4658b9add083eefe4d03",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Tenant/Queries/GetTenantWeeklyChartQuery.cs": {
+    "mtime": 1778455023.697013,
+    "ast_hash": "fe27048508f82e1745d25cb734bdd19d",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Tenant/Queries/GetTenantWeeklyChartQueryHandler.cs": {
+    "mtime": 1778455070.3735223,
+    "ast_hash": "37e456924b8c9418a133e7c3aee1b61e",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/VenueClosure/Commands/BulkCreateVenueClosureCommand.cs": {
+    "mtime": 1777163839.3987002,
+    "ast_hash": "ecc94ced843af8e121bae0cf27fe3745",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/VenueClosure/Commands/BulkCreateVenueClosureCommandHandler.cs": {
+    "mtime": 1777166781.396093,
+    "ast_hash": "682ffbc6d674712b951d6a5b1d79866c",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/VenueClosure/Commands/CreateVenueClosureCommand.cs": {
+    "mtime": 1777163796.2975478,
+    "ast_hash": "c2e358d97610cd4133d4fc0a7ecedf36",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/VenueClosure/Commands/CreateVenueClosureCommandHandler.cs": {
+    "mtime": 1777166902.6893108,
+    "ast_hash": "cccf57e0f114eabf463d8c8c9efb5b5e",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/VenueClosure/Commands/DeleteVenueClosureCommand.cs": {
+    "mtime": 1777163828.4264226,
+    "ast_hash": "4ee7494bcd84b6607f71a8ace38c4b59",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/VenueClosure/Commands/DeleteVenueClosureCommandHandler.cs": {
+    "mtime": 1777166781.4004672,
+    "ast_hash": "1b44b4d6da07979c02bc0f7a3e030d8a",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/VenueClosure/Commands/UpdateVenueClosureCommand.cs": {
+    "mtime": 1777163816.1615424,
+    "ast_hash": "1d491340374ea63612aec541e6fa7b67",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/VenueClosure/Commands/UpdateVenueClosureCommandHandler.cs": {
+    "mtime": 1777166781.4031806,
+    "ast_hash": "4a7d570b58fee16a5b861d95f04d6333",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/VenueClosure/Queries/GetVenueClosuresQuery.cs": {
+    "mtime": 1777163859.2947001,
+    "ast_hash": "00f8b4ae87cfbb23641ccbdcef476b3d",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/VenueClosure/Queries/GetVenueClosuresQueryHandler.cs": {
+    "mtime": 1777166781.405336,
+    "ast_hash": "9d7acd8fda1e1f85b4326b0f1ae220fa",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/VenueCustomField/Commands/CreateVenueCustomFieldCommand.cs": {
+    "mtime": 1777163934.784454,
+    "ast_hash": "bf9633ec9b89224cb26e7552b405cee0",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/VenueCustomField/Commands/CreateVenueCustomFieldCommandHandler.cs": {
+    "mtime": 1777166781.4074695,
+    "ast_hash": "5f848a749f6fa7121081d1f229885ba7",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/VenueCustomField/Commands/DeleteVenueCustomFieldCommand.cs": {
+    "mtime": 1777163967.7014358,
+    "ast_hash": "72b667a9f0baa722bd836950d73ae130",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/VenueCustomField/Commands/DeleteVenueCustomFieldCommandHandler.cs": {
+    "mtime": 1777166781.4096408,
+    "ast_hash": "6a023412f22191d19b0d431fd94d76a1",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/VenueCustomField/Commands/ReorderCustomFieldsCommand.cs": {
+    "mtime": 1777163975.8320513,
+    "ast_hash": "b8abe299a98e44894a868ea3991cc81b",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/VenueCustomField/Commands/ReorderCustomFieldsCommandHandler.cs": {
+    "mtime": 1777166781.41071,
+    "ast_hash": "b8b659f76e6c84b7e6a0074bbd7aace0",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/VenueCustomField/Commands/UpdateVenueCustomFieldCommand.cs": {
+    "mtime": 1777163955.4439106,
+    "ast_hash": "6f65705a6acdbae8a939c9fa4c8cfbec",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/VenueCustomField/Commands/UpdateVenueCustomFieldCommandHandler.cs": {
+    "mtime": 1777166781.4148889,
+    "ast_hash": "236b91dd9809dae7883e445970cb5ecd",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/VenueCustomField/Queries/GetVenueCustomFieldsQuery.cs": {
+    "mtime": 1777163991.8484573,
+    "ast_hash": "482e84f6030e15a60aee298d35fcdd15",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/VenueCustomField/Queries/GetVenueCustomFieldsQueryHandler.cs": {
+    "mtime": 1777166781.4177804,
+    "ast_hash": "712744e853c35a43c02b19b3ebe87d83",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Venue/Commands/CreateVenueCommand.cs": {
+    "mtime": 1777163151.8120718,
+    "ast_hash": "70852c3e93af13ca051acb7a56359b96",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Venue/Commands/CreateVenueCommandHandler.cs": {
+    "mtime": 1777166594.3521478,
+    "ast_hash": "dee3a6fc95a5da1a4a204fe9ccdd73c7",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Venue/Commands/DeleteVenueCommand.cs": {
+    "mtime": 1777163474.1650226,
+    "ast_hash": "d77efced3b28c34812b77dab83be6699",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Venue/Commands/DeleteVenueCommandHandler.cs": {
+    "mtime": 1777166902.682246,
+    "ast_hash": "9e8be9bd40bb44b9f7f9c62f9aabcff3",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Venue/Commands/SendWhatsAppTestMessageCommand.cs": {
+    "mtime": 1780689987.4092467,
+    "ast_hash": "5e9c98bdf89e8459f40139e230089670",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Venue/Commands/SendWhatsAppTestMessageCommandHandler.cs": {
+    "mtime": 1780689997.1593482,
+    "ast_hash": "a9ae2e6b3c7300824b6662dd49625b62",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Venue/Commands/UpdateVenueCommand.cs": {
+    "mtime": 1777163449.4543183,
+    "ast_hash": "82891dfd7564b4bf6fbafc93e5d07b4a",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Venue/Commands/UpdateVenueCommandHandler.cs": {
+    "mtime": 1777166781.3875432,
+    "ast_hash": "61720bb31183e58bf044796235a862ae",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Venue/Commands/UpdateVenueWhatsAppSettingsCommand.cs": {
+    "mtime": 1780689964.8616605,
+    "ast_hash": "d01cc3fc0b3f4e9e20ea1ed42980eda6",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Venue/Commands/UpdateVenueWhatsAppSettingsCommandHandler.cs": {
+    "mtime": 1780690249.0389092,
+    "ast_hash": "8d32c60165ce3ba1f0eb05c0ddced252",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Venue/Commands/UpdateWorkingHoursCommand.cs": {
+    "mtime": 1777163484.881076,
+    "ast_hash": "0937623917907193897c369a655824f1",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Venue/Commands/UpdateWorkingHoursCommandHandler.cs": {
+    "mtime": 1777166781.3893466,
+    "ast_hash": "f7ffef8584f59d2df55c242df6b622ba",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Venue/Queries/GetVenueByIdQuery.cs": {
+    "mtime": 1777163187.6609092,
+    "ast_hash": "fc8d4b9dd305897d76da07c55b715e89",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Venue/Queries/GetVenueByIdQueryHandler.cs": {
+    "mtime": 1780690176.537441,
+    "ast_hash": "79578519fe963f38fd7aad49ff2bff36",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Venue/Queries/GetVenueWhatsAppSettingsQuery.cs": {
+    "mtime": 1780689947.281027,
+    "ast_hash": "4e05a9984303f6c19047baba097db47d",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Venue/Queries/GetVenueWhatsAppSettingsQueryHandler.cs": {
+    "mtime": 1780690245.5313234,
+    "ast_hash": "9c2e4f8a14d9d1bbaf1bc9f2577280df",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Venue/Queries/GetVenuesQuery.cs": {
+    "mtime": 1777163181.1985068,
+    "ast_hash": "29204ad7a3aeaf938e1137d796d709c8",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/Venue/Queries/GetVenuesQueryHandler.cs": {
+    "mtime": 1780690182.9298837,
+    "ast_hash": "07e6281a12cd43bd8f93350d3266103c",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/WhatsApp/Queries/GetWhatsAppMessageHistoryQuery.cs": {
+    "mtime": 1780690024.4405475,
+    "ast_hash": "83616626118fcdf33dbee213663abcc9",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Features/WhatsApp/Queries/GetWhatsAppMessageHistoryQueryHandler.cs": {
+    "mtime": 1780690253.2190268,
+    "ast_hash": "4ff865e9c7d0df0f30605e4c0fdd7096",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Interfaces/IApplicationDbContext.cs": {
+    "mtime": 1780845042.0706956,
+    "ast_hash": "0ecf19f44514ee95fbc41de7e8d8eeed",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Interfaces/IAuthService.cs": {
+    "mtime": 1777154083.766508,
+    "ast_hash": "186a2e42b7196b2ec69ae1dab1471ec3",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Interfaces/ICacheService.cs": {
+    "mtime": 1777154099.8312168,
+    "ast_hash": "71250659a972ce5e5c52732eec0450e3",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Interfaces/IDistributedLockService.cs": {
+    "mtime": 1777165457.059672,
+    "ast_hash": "212dd05dbd6b657e8a5507cfc9540394",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Interfaces/IEmailService.cs": {
+    "mtime": 1778445210.277042,
+    "ast_hash": "7bf80b1a9b4015c095883fc239640b30",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Interfaces/IFileStorageService.cs": {
+    "mtime": 1776722517.081696,
+    "ast_hash": "d7ffae0b9c51b9fcbdaa3bcb28dd9616",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Interfaces/IIdempotencyService.cs": {
+    "mtime": 1777165415.5659003,
+    "ast_hash": "5372c553c1520eea7cb94270f9c019a6",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Interfaces/IJwtTokenService.cs": {
+    "mtime": 1777154090.1576579,
+    "ast_hash": "b3f8025d1065751bfc1404bea872aaa2",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Interfaces/IPlanLimitService.cs": {
+    "mtime": 1777166728.323008,
+    "ast_hash": "f85a1795e9cefaca73f89a8e65f47243",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Interfaces/IPlatformJwtTokenService.cs": {
+    "mtime": 1780694549.8386462,
+    "ast_hash": "c1ab2afa561aa4da1e00cb246d3445ff",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Interfaces/IRuleEvaluator.cs": {
+    "mtime": 1778786306.3768272,
+    "ast_hash": "de230a2e611ba4f6cbc0918d1f1d1280",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Interfaces/IRuleTestService.cs": {
+    "mtime": 1779305180.8666866,
+    "ast_hash": "13040989ff02fb0028ee69900c14acdf",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Interfaces/ISlotAvailabilityService.cs": {
+    "mtime": 1777165434.6265264,
+    "ast_hash": "4027f046a3b91c767f45250e2608c1c1",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Interfaces/IStorageService.cs": {
+    "mtime": 1777163365.845959,
+    "ast_hash": "59d8d2b54962dc6178362c3e9de0be5b",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Interfaces/ITenantService.cs": {
+    "mtime": 1778452256.0263367,
+    "ast_hash": "92840be7e626f064d078cad11b79b4f7",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Interfaces/IWhatsAppOrchestrator.cs": {
+    "mtime": 1780690118.321618,
+    "ast_hash": "2ef5be5bb64e46e08fdd1d470d296b15",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/RuleEngine/RuleEngineRulesCacheInvalidation.cs": {
+    "mtime": 1778786351.1757793,
+    "ast_hash": "57ec05171e12231c4370cb2546206ee8",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Services/PlanLimitService.cs": {
+    "mtime": 1779310032.5950956,
+    "ast_hash": "3d763dab2ccdee68f70e9e70193bc7f5",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Services/RuleSchemaValidator.cs": {
+    "mtime": 1778443579.4310503,
+    "ast_hash": "1f00d80e4f546f80b33e37aa21c04335",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Services/RuleTemplatesProvider.cs": {
+    "mtime": 1778794528.683447,
+    "ast_hash": "8064c4f6eba18c00fc97dcdd7e579fc9",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Settings/AuthSettings.cs": {
+    "mtime": 1777166617.5611727,
+    "ast_hash": "1e1dc30de2e2960d0d24e3a9c6adae43",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Settings/SendGridSettings.cs": {
+    "mtime": 1778445237.1058912,
+    "ast_hash": "767155c608c3f25b807a045e29036d31",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Settings/WhatsAppSettings.cs": {
+    "mtime": 1780349210.936058,
+    "ast_hash": "8eb05a130e26447f895b07c02dce64e4",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Tablewise.Application.csproj": {
+    "mtime": 1777166362.108163,
+    "ast_hash": "baec53d06f918404f86e94fec65341e1",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Validators/Auth/ForgotPasswordDtoValidator.cs": {
+    "mtime": 1777154265.8038554,
+    "ast_hash": "1b4e81e0b9434fe4c5e5263d1ba77cb2",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Validators/Auth/LoginDtoValidator.cs": {
+    "mtime": 1777154260.2324102,
+    "ast_hash": "e939a0f7907b394387a41b2a99912fc8",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Validators/Auth/RefreshTokenDtoValidator.cs": {
+    "mtime": 1777154261.9604468,
+    "ast_hash": "53c10f7f74dd6a2c576cac85d6e5be0d",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Validators/Auth/RegisterTenantDtoValidator.cs": {
+    "mtime": 1777154258.5533128,
+    "ast_hash": "e428aced4babcf93527db0b76c337fa8",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Validators/Auth/ResetPasswordDtoValidator.cs": {
+    "mtime": 1777154268.983911,
+    "ast_hash": "4bea799c7b5083fc2e740c8f841c1c0a",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Validators/Auth/VerifyEmailDtoValidator.cs": {
+    "mtime": 1777154264.2195845,
+    "ast_hash": "749c2ebfbe2358755e173c51027a38cf",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Validators/Booking/CancelReservationRequestDtoValidator.cs": {
+    "mtime": 1778440362.3719788,
+    "ast_hash": "bcfe1f7657f2e564bc0bab591d3bcf1c",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Validators/Booking/EvaluateRulesRequestDtoValidator.cs": {
+    "mtime": 1778440366.3272738,
+    "ast_hash": "0bb4c4ed64696f7d99ec3f5533eef056",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Validators/Booking/ModifyReservationRequestDtoValidator.cs": {
+    "mtime": 1778440359.8114731,
+    "ast_hash": "5e84336323875c3bc6cfe3bcb6502d6e",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Validators/Booking/ReserveRequestDtoValidator.cs": {
+    "mtime": 1778440355.6466823,
+    "ast_hash": "6818cedc245527f5688594b99f4b0630",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Validators/Rule/CreateRuleDtoValidator.cs": {
+    "mtime": 1778443705.2479596,
+    "ast_hash": "8a66430c349b4c6f03b10ff2ace12fec",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Validators/Rule/ReorderRulesDtoValidator.cs": {
+    "mtime": 1778441192.9654367,
+    "ast_hash": "1dba6255df3fe9df5b69a8594e16feba",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Validators/Rule/TestDraftRuleRequestDtoValidator.cs": {
+    "mtime": 1779305196.5089135,
+    "ast_hash": "e5f760bfe55afbdda50f1525f8a9a0cd",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Validators/Rule/TestRuleRequestDtoValidator.cs": {
+    "mtime": 1778443818.7886426,
+    "ast_hash": "393b90c149826cd55b851ac14b59211f",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Validators/Rule/UpdateRuleDtoValidator.cs": {
+    "mtime": 1778443720.175698,
+    "ast_hash": "354ecf10a0076df27429b9c3a1b51d99",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Validators/Staff/AcceptInvitationDtoValidator.cs": {
+    "mtime": 1777162476.4745338,
+    "ast_hash": "083b2721ca9ad4ff06b81decefa7de10",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Validators/Staff/InviteStaffDtoValidator.cs": {
+    "mtime": 1777162470.0352252,
+    "ast_hash": "e195b7102c6cee72c41c0e297a7ba37b",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Validators/Staff/UpdateStaffRoleDtoValidator.cs": {
+    "mtime": 1777162477.6958582,
+    "ast_hash": "8277bd22517f759efa68eec6e6a1158b",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Validators/TableCombination/CreateTableCombinationDtoValidator.cs": {
+    "mtime": 1777164390.4594939,
+    "ast_hash": "a207139d7b9976b55c673a457b0b93d0",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Validators/TableCombination/UpdateTableCombinationDtoValidator.cs": {
+    "mtime": 1777164393.4552693,
+    "ast_hash": "a0198d220846774304ef363aed4fa540",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Validators/Table/CreateTableDtoValidator.cs": {
+    "mtime": 1777164270.968639,
+    "ast_hash": "655257ebc80af635a751748ed2453f11",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Validators/Table/ReorderTablesDtoValidator.cs": {
+    "mtime": 1777164276.9967747,
+    "ast_hash": "a4247057eef3211367af38e7197a794d",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Validators/Table/UpdateTableDtoValidator.cs": {
+    "mtime": 1777164273.9850917,
+    "ast_hash": "4d6bdfa11945abed3c30c93612044e89",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Validators/Tenant/ConfirmLogoUploadDtoValidator.cs": {
+    "mtime": 1777163409.0995648,
+    "ast_hash": "effd2f871c90efa8d9deadae5e156011",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Validators/Tenant/GenerateLogoUploadUrlDtoValidator.cs": {
+    "mtime": 1777163405.8622344,
+    "ast_hash": "27a98753d35f20aae732f1203e3dfc6d",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Validators/Tenant/UpdateTenantDtoValidator.cs": {
+    "mtime": 1777163076.3115447,
+    "ast_hash": "aaf1522553cf34ade713a013388d7f96",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Validators/VenueClosure/BulkCreateVenueClosureDtoValidator.cs": {
+    "mtime": 1777163880.5105653,
+    "ast_hash": "9deace597c0da41c9b0264b04263e72c",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Validators/VenueClosure/CreateVenueClosureDtoValidator.cs": {
+    "mtime": 1777163873.3101966,
+    "ast_hash": "20f314efc4287bd7ea67e3711bd377b5",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Validators/VenueClosure/UpdateVenueClosureDtoValidator.cs": {
+    "mtime": 1777163877.9664302,
+    "ast_hash": "27f18973427ace45b5bf8a74d4fb610c",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Validators/VenueCustomField/CreateVenueCustomFieldDtoValidator.cs": {
+    "mtime": 1777164000.9868622,
+    "ast_hash": "b4070b40cc01754579060f201e030357",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Validators/VenueCustomField/ReorderCustomFieldsDtoValidator.cs": {
+    "mtime": 1777164006.8030195,
+    "ast_hash": "e0c815a5e0ca2c8789ae1b5c3b3bee87",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Validators/VenueCustomField/UpdateVenueCustomFieldDtoValidator.cs": {
+    "mtime": 1777164004.6183612,
+    "ast_hash": "fb305a45d55a46311f6b2b8d04610559",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Validators/Venue/CreateVenueDtoValidator.cs": {
+    "mtime": 1777163180.3329678,
+    "ast_hash": "6eafb525126d1da2c966588d6fd4bc4c",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Validators/Venue/UpdateVenueDtoValidator.cs": {
+    "mtime": 1777163472.7279522,
+    "ast_hash": "8d412ec3da101fb17a5ea7dbdcd89395",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Application/Validators/Venue/UpdateWorkingHoursDtoValidator.cs": {
+    "mtime": 1777163494.9729352,
+    "ast_hash": "488d03d818cbe31aca5625ec4b871171",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Domain/Common/BaseEntity.cs": {
+    "mtime": 1776719115.3699944,
+    "ast_hash": "66e345cd7ef3973da51da0b72916ff9f",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Domain/Common/Result.cs": {
+    "mtime": 1776719234.862208,
+    "ast_hash": "ca3ab27fbe85fbb7fa5cf33994dff7de",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Domain/Common/TenantScopedEntity.cs": {
+    "mtime": 1776719122.9213445,
+    "ast_hash": "9e557a19222e9585c1e4a68cba21aa72",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Domain/Entities/AppliedRule.cs": {
+    "mtime": 1776720240.2303622,
+    "ast_hash": "3455e73694cbb52ef9271d9c07a39c12",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Domain/Entities/AuditLog.cs": {
+    "mtime": 1776720240.5413094,
+    "ast_hash": "522f2653be8997fa53a16389f68a7687",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Domain/Entities/Coupon.cs": {
+    "mtime": 1780845525.6763527,
+    "ast_hash": "e5bc21cb0d874bc4f6b4f9d315ff32c1",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Domain/Entities/Customer.cs": {
+    "mtime": 1776720240.080262,
+    "ast_hash": "282fa5c2df3fef20dd64f7e829646181",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Domain/Entities/IdempotencyKey.cs": {
+    "mtime": 1776720240.5679085,
+    "ast_hash": "c2e382cf88a2b48768671eed65e7029d",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Domain/Entities/NotificationLog.cs": {
+    "mtime": 1776720240.5069113,
+    "ast_hash": "40a337dfcfe9f585667bdd45029bb4b3",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Domain/Entities/Plan.cs": {
+    "mtime": 1776720240.4011457,
+    "ast_hash": "0d03e44d62195bce06cf546673b292ba",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Domain/Entities/PlatformNote.cs": {
+    "mtime": 1780694535.6070857,
+    "ast_hash": "a93e8bf8873cc0e12d0b1bed57913b43",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Domain/Entities/PlatformUser.cs": {
+    "mtime": 1780694530.5960965,
+    "ast_hash": "04dc0b1048e32b19db5dbd1fa7fd7fc9",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Domain/Entities/Reservation.cs": {
+    "mtime": 1780689904.0568507,
+    "ast_hash": "d0d41d347cdb9eee1fa15a9e9efc0f41",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Domain/Entities/ReservationStatusLog.cs": {
+    "mtime": 1776720240.2921104,
+    "ast_hash": "56468fe84441aa9f5fbed62b3020e7c5",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Domain/Entities/RevocableRefreshToken.cs": {
+    "mtime": 1777154030.2886894,
+    "ast_hash": "73fbc0c7aed4c11e1410cfe7f9dd438a",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Domain/Entities/Rule.cs": {
+    "mtime": 1776720240.340604,
+    "ast_hash": "5e87a4996b9ee23efde3c73007eccfcc",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Domain/Entities/Subscription.cs": {
+    "mtime": 1776720240.4716325,
+    "ast_hash": "6ba8caa98486659ca51a7dfd96561002",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Domain/Entities/Table.cs": {
+    "mtime": 1776720239.9683137,
+    "ast_hash": "4dcdc7aef2314e2f66ffe2edc321fc70",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Domain/Entities/TableCombination.cs": {
+    "mtime": 1776720240.0158987,
+    "ast_hash": "5b64e80e04fac217f9cc3e0f378279c3",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Domain/Entities/Tenant.cs": {
+    "mtime": 1776720697.4365246,
+    "ast_hash": "08c98a8e0d43ac5f891407ea80d9dd65",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Domain/Entities/User.cs": {
+    "mtime": 1777154042.4071798,
+    "ast_hash": "f3daac9727baaa367f1718ab41deb964",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Domain/Entities/UserInvitation.cs": {
+    "mtime": 1776720239.8022835,
+    "ast_hash": "f54b5e58ef1348d5c3d8da4e3b17fcff",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Domain/Entities/Venue.cs": {
+    "mtime": 1780689894.3932738,
+    "ast_hash": "0e6f0df45f29adbf43729c2b3b9850f8",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Domain/Entities/VenueClosure.cs": {
+    "mtime": 1776720239.8811498,
+    "ast_hash": "7d9095150a6f15645951851d89702344",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Domain/Entities/VenueCustomField.cs": {
+    "mtime": 1777167071.678908,
+    "ast_hash": "46a5c7f190fdb37120aa731a3e4497a6",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Domain/Entities/WhatsAppMessage.cs": {
+    "mtime": 1780349187.949002,
+    "ast_hash": "1a153614b5d8d979f4ee17c72311de0e",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Domain/Enums/CustomFieldType.cs": {
+    "mtime": 1776719173.3493123,
+    "ast_hash": "d7a9d2aa6c6118cc2fc710c3426fca90",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Domain/Enums/CustomerTier.cs": {
+    "mtime": 1776719149.18216,
+    "ast_hash": "0efb904dae975eb6eefd283e112941e5",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Domain/Enums/DepositRefundPolicy.cs": {
+    "mtime": 1776719170.2754345,
+    "ast_hash": "6afc5c08ab77c65bafe6acb3394bb5a7",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Domain/Enums/DepositStatus.cs": {
+    "mtime": 1776719167.60799,
+    "ast_hash": "d532f0497316301b7b9cb719e683ff74",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Domain/Enums/DiscountType.cs": {
+    "mtime": 1780845016.887382,
+    "ast_hash": "7b77b8d57f96c48b6701e53fb3b6c5a8",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Domain/Enums/EmailTemplate.cs": {
+    "mtime": 1778445172.5868785,
+    "ast_hash": "c4bf0cb3c3f7cb2fde0459e255c536e4",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Domain/Enums/MessagingChannelType.cs": {
+    "mtime": 1780349177.6645057,
+    "ast_hash": "661881a51c4551af932082805f7168be",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Domain/Enums/NotificationChannel.cs": {
+    "mtime": 1780349162.8728218,
+    "ast_hash": "5ae9e90dfb95581366454a565c8a358c",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Domain/Enums/NotificationType.cs": {
+    "mtime": 1778445184.5590365,
+    "ast_hash": "c21661a3c1d331faae488aad42e9089f",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Domain/Enums/PlanStatus.cs": {
+    "mtime": 1776719138.550504,
+    "ast_hash": "795e1843bdf43fe260d5452d81be121c",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Domain/Enums/PlanTier.cs": {
+    "mtime": 1776719134.678072,
+    "ast_hash": "1ccb910c1974331a2542e8b23254a8fa",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Domain/Enums/PlatformRole.cs": {
+    "mtime": 1780694525.3011818,
+    "ast_hash": "52ac435a3e8a5e94782eda9c5fd925ff",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Domain/Enums/ReservationSource.cs": {
+    "mtime": 1776719146.0129538,
+    "ast_hash": "6c6bfefbd099e5d2d4df45c1cda5d2f5",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Domain/Enums/ReservationStatus.cs": {
+    "mtime": 1777165400.1456478,
+    "ast_hash": "c1f83907c8ceb4cca3fdde54feb2a4ee",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Domain/Enums/RuleActionType.cs": {
+    "mtime": 1776719161.9021926,
+    "ast_hash": "14b5114138a9048ac18deb407cc42963",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Domain/Enums/RuleTrigger.cs": {
+    "mtime": 1776719163.9898157,
+    "ast_hash": "3da646d70607dcdd1cbf2dc6c3f6d8ef",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Domain/Enums/TableLocation.cs": {
+    "mtime": 1776719151.866223,
+    "ast_hash": "bf9f6c0db754591418a649443153c8c6",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Domain/Enums/UserRole.cs": {
+    "mtime": 1776719129.4861062,
+    "ast_hash": "a07339689cb69e65f37e2fd86b12af2c",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Domain/Enums/WhatsAppMessageStatus.cs": {
+    "mtime": 1780349174.0360565,
+    "ast_hash": "52f88ffd280fdfbd46b8348d7e559943",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Domain/Enums/WhatsAppMessageTemplate.cs": {
+    "mtime": 1780349168.3962152,
+    "ast_hash": "f67f4721c34593f28d1da1554977915a",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Domain/Exceptions/BusinessRuleException.cs": {
+    "mtime": 1776719208.2104635,
+    "ast_hash": "737b332bcfe00b384d70b9e163a65b90",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Domain/Exceptions/ConflictException.cs": {
+    "mtime": 1777166842.8055384,
+    "ast_hash": "a99e8654c014ea783c3ec2349db576b1",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Domain/Exceptions/DomainException.cs": {
+    "mtime": 1776719182.4954743,
+    "ast_hash": "a76ce0d4454c7f20acd8510982d6ab16",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Domain/Exceptions/ForbiddenException.cs": {
+    "mtime": 1776719198.1688466,
+    "ast_hash": "6192f02c3caf804a2efe5cd8d66f177b",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Domain/Exceptions/NotFoundException.cs": {
+    "mtime": 1776719186.6935103,
+    "ast_hash": "64e6aa281bbdb7f199207d7bb9b4c383",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Domain/Exceptions/PlanLimitExceededException.cs": {
+    "mtime": 1776719204.3415098,
+    "ast_hash": "4948645c4cef02d3c2a31e42433ceee7",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Domain/Exceptions/TenantIsolationException.cs": {
+    "mtime": 1776719214.4901507,
+    "ast_hash": "8a977a0cb263bc505472d6e949b31f84",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Domain/Exceptions/UnauthorizedException.cs": {
+    "mtime": 1776719194.5282578,
+    "ast_hash": "b02dffdee224e9f2bb9d5bcd1952fa8e",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Domain/Exceptions/ValidationException.cs": {
+    "mtime": 1776719191.7275338,
+    "ast_hash": "ad7d4d305596d81b968bccad3a0ce3d8",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Domain/Interfaces/ICurrentUser.cs": {
+    "mtime": 1776719242.4950519,
+    "ast_hash": "2e4c9b283e504311700f506f87b9959b",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Domain/Interfaces/IMessagingChannel.cs": {
+    "mtime": 1780349197.7205856,
+    "ast_hash": "598b6b2114a7e6ae5f3a9db7201ad883",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Domain/Interfaces/IRepository.cs": {
+    "mtime": 1776720809.1740687,
+    "ast_hash": "4d1a32b6ba3afccbf567feb0e78b763c",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Domain/Interfaces/ITenantContext.cs": {
+    "mtime": 1778456131.002597,
+    "ast_hash": "c44bae5a17435c09330056fc966753a8",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Domain/Interfaces/IUnitOfWork.cs": {
+    "mtime": 1780349339.2109165,
+    "ast_hash": "a01ff5ff5b671d413c944e876ab3a3fd",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Domain/Tablewise.Domain.csproj": {
+    "mtime": 1777159732.6510518,
+    "ast_hash": "a09b26111c660da58a84b7d66e16c694",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Infrastructure/Auth/AuthService.cs": {
+    "mtime": 1778457541.9642797,
+    "ast_hash": "d820ff4ef83818931cb4bafb72a999d5",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Infrastructure/Auth/CustomClaimTypes.cs": {
+    "mtime": 1777158691.2993824,
+    "ast_hash": "b62619e7a9406939330e1b78331a627d",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Infrastructure/Auth/JwtSettings.cs": {
+    "mtime": 1777154114.643592,
+    "ast_hash": "b15ae9ddf707bd4e34655509ec3ec6eb",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Infrastructure/Auth/JwtTokenService.cs": {
+    "mtime": 1777158692.9550486,
+    "ast_hash": "08b23234b0f93594019c54e755d4591c",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Infrastructure/Auth/PlatformJwtTokenService.cs": {
+    "mtime": 1780694560.6548681,
+    "ast_hash": "60815ab530db3b9646c298a9ce65e1fd",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Infrastructure/Auth/SlugGenerator.cs": {
+    "mtime": 1777154171.4945724,
+    "ast_hash": "649c8aeb2edf0a1f354bb31227c8a54e",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Infrastructure/Cache/RedisCacheService.cs": {
+    "mtime": 1777158674.0443788,
+    "ast_hash": "275c8fc3b46a3e466135904dee2119fe",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Infrastructure/Cache/RedisSettings.cs": {
+    "mtime": 1777154135.1675558,
+    "ast_hash": "5e25d35f14b81bc525a3fa827c0be3f3",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Infrastructure/DependencyInjection.cs": {
+    "mtime": 1780694783.7356813,
+    "ast_hash": "75c90c8db6f5b98bca234ad5f27320b3",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Infrastructure/Email/Models/EmailRequest.cs": {
+    "mtime": 1778445219.0992775,
+    "ast_hash": "25d58316e3ee70c9698168b85b7a701e",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Infrastructure/Email/Services/EmailQueueService.cs": {
+    "mtime": 1778445515.0167162,
+    "ast_hash": "eb08d2e028fc1764640b98fce34299a5",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Infrastructure/Email/Services/EmailTemplateRenderer.cs": {
+    "mtime": 1778445249.536112,
+    "ast_hash": "13a0cfb8222c08b4f65b66fd86b06762",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Infrastructure/Email/Services/QueuedEmailService.cs": {
+    "mtime": 1778445654.5787654,
+    "ast_hash": "5704505f7c699449e2af3f830c03ea67",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Infrastructure/Email/Services/SendGridEmailService.cs": {
+    "mtime": 1780349985.9194963,
+    "ast_hash": "18d2b1e50a022d19914f3606a7ce2867",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Infrastructure/GlobalUsings.cs": {
+    "mtime": 1776720539.584973,
+    "ast_hash": "dd4db342767f1d456fc1e45057d68f60",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Infrastructure/HostedServices/EmailWorkerService.cs": {
+    "mtime": 1778445557.9647322,
+    "ast_hash": "86619346d715f63f6b59df7765e6b73d",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Infrastructure/HostedServices/WhatsAppReminderService.cs": {
+    "mtime": 1780690156.2518675,
+    "ast_hash": "c1b9754427c1d359bdc3aaf42c8c8643",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Infrastructure/Messaging/TwilioWhatsAppChannel.cs": {
+    "mtime": 1780349998.6250641,
+    "ast_hash": "97b3b5ddfba7e9f7fb0a18b110ac76ef",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Infrastructure/Messaging/WhatsAppOrchestrator.cs": {
+    "mtime": 1780690140.931698,
+    "ast_hash": "95066dae19cdcac5597de49ad3dfe01a",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Infrastructure/Migrations/20260420213028_InitialCreate.Designer.cs": {
+    "mtime": 1776720628.6124437,
+    "ast_hash": "0370d889ff39ec2f1d3424648fefc3fa",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Infrastructure/Migrations/20260420213028_InitialCreate.cs": {
+    "mtime": 1776720628.6124437,
+    "ast_hash": "824d20749625edccc0a49a32820678f8",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Infrastructure/Migrations/20260426000738_AddRevocableRefreshTokens.Designer.cs": {
+    "mtime": 1777162058.0564203,
+    "ast_hash": "242da24800fd66a03d2b66286e613624",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Infrastructure/Migrations/20260426000738_AddRevocableRefreshTokens.cs": {
+    "mtime": 1777162058.0540943,
+    "ast_hash": "8f5622f3711092d7e1051bfb02f81dc0",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Infrastructure/Migrations/20260510234016_SyncVenueCustomFieldColumns.Designer.cs": {
+    "mtime": 1778456416.566557,
+    "ast_hash": "bd458944dee446ed8095e0247f43b32f",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Infrastructure/Migrations/20260510234016_SyncVenueCustomFieldColumns.cs": {
+    "mtime": 1778456426.8092082,
+    "ast_hash": "274785e36b3e9d3cb1b87d536f529b07",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Infrastructure/Migrations/20260601213436_AddWhatsAppMessageEntity.Designer.cs": {
+    "mtime": 1780349677.0031383,
+    "ast_hash": "f06fb2393257ecf51807e2c4e6bf66dc",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Infrastructure/Migrations/20260601213436_AddWhatsAppMessageEntity.cs": {
+    "mtime": 1780349677.0031383,
+    "ast_hash": "ce01bbd25c2d1211734a29f87996fc4f",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Infrastructure/Migrations/20260601214351_AddWhatsAppEnabledToVenue.Designer.cs": {
+    "mtime": 1780350231.6829257,
+    "ast_hash": "804369769cdb155fbbd01de008efc7b0",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Infrastructure/Migrations/20260601214351_AddWhatsAppEnabledToVenue.cs": {
+    "mtime": 1780350231.6819248,
+    "ast_hash": "50008819067fa4c6dea364d6c27895f3",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Infrastructure/Migrations/20260605201117_AddVenueWhatsAppPreferences.Designer.cs": {
+    "mtime": 1780690277.1774426,
+    "ast_hash": "5deab44997eb2865e2ed8623d555732e",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Infrastructure/Migrations/20260605201117_AddVenueWhatsAppPreferences.cs": {
+    "mtime": 1780690301.6228285,
+    "ast_hash": "60283c8bfdbf40b267a9f32f370f2735",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Infrastructure/Migrations/20260605212830_AddPlatformUsersAndNotes.Designer.cs": {
+    "mtime": 1780694910.7525308,
+    "ast_hash": "14d03be3d00c0f21057581e4533270a0",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Infrastructure/Migrations/20260605212830_AddPlatformUsersAndNotes.cs": {
+    "mtime": 1780694937.9471543,
+    "ast_hash": "633730ee01542ea971e9ef2762ac8a22",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Infrastructure/Migrations/20260607152146_AddCoupons.Designer.cs": {
+    "mtime": 1780845706.1471212,
+    "ast_hash": "e8c08f3fb3c85a42b32e41e4e0bf5e7c",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Infrastructure/Migrations/20260607152146_AddCoupons.cs": {
+    "mtime": 1780845737.5744324,
+    "ast_hash": "880937c260de5471572dd8671c998c1e",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Infrastructure/Migrations/TablewiseDbContextModelSnapshot.cs": {
+    "mtime": 1780845706.1471212,
+    "ast_hash": "e3b7457d9f090dce4a6ed25524f86d42",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Infrastructure/Persistence/Configurations/CustomerConfiguration.cs": {
+    "mtime": 1776720352.988073,
+    "ast_hash": "f3e2d97ee5667ba683c603b29f2a51aa",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Infrastructure/Persistence/Configurations/OtherConfigurations.cs": {
+    "mtime": 1776720389.7298124,
+    "ast_hash": "8c6ec1529321c6b57e578efcc7a0d544",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Infrastructure/Persistence/Configurations/PlanConfiguration.cs": {
+    "mtime": 1776720362.2537613,
+    "ast_hash": "80bda5bb0ebc92b9fa2356e648bf7349",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Infrastructure/Persistence/Configurations/ReservationConfiguration.cs": {
+    "mtime": 1776720344.8984773,
+    "ast_hash": "fda51174eefd881d7fb093adea9f4351",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Infrastructure/Persistence/Configurations/RevocableRefreshTokenConfiguration.cs": {
+    "mtime": 1777154035.5503857,
+    "ast_hash": "ccf854dfd6a74bc75175b594bf8b2076",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Infrastructure/Persistence/Configurations/RuleConfiguration.cs": {
+    "mtime": 1776720357.6909995,
+    "ast_hash": "2ad5d6cdffbb0cfd250f662b1b67d1ed",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Infrastructure/Persistence/Configurations/TenantConfiguration.cs": {
+    "mtime": 1776720317.0790868,
+    "ast_hash": "e6b7506491942bc5d64e10e335db1999",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Infrastructure/Persistence/Configurations/UserConfiguration.cs": {
+    "mtime": 1776720321.5275548,
+    "ast_hash": "378175a9a24285a0842f494c80b58557",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Infrastructure/Persistence/Configurations/VenueConfiguration.cs": {
+    "mtime": 1776720329.4012012,
+    "ast_hash": "9da49852412bffdcc6906badfcbb0276",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Infrastructure/Persistence/Configurations/WhatsAppMessageConfiguration.cs": {
+    "mtime": 1780349328.1335974,
+    "ast_hash": "6083eebd9a4fb07dd01923b978c15d5f",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Infrastructure/Persistence/Interceptors/AuditSaveChangesInterceptor.cs": {
+    "mtime": 1776720305.09422,
+    "ast_hash": "c0c38eded06ffaaeb8c9130e75db5ade",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Infrastructure/Persistence/Interceptors/SoftDeleteInterceptor.cs": {
+    "mtime": 1776720281.8922203,
+    "ast_hash": "a1581226ae1b1326e4aff6f32536f41d",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Infrastructure/Persistence/Repositories/GenericRepository.cs": {
+    "mtime": 1776720839.1826727,
+    "ast_hash": "c5bcbff9e8d0ac668ebc147ee67aae0e",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Infrastructure/Persistence/SeedData/DbSeeder.cs": {
+    "mtime": 1780695331.2968447,
+    "ast_hash": "c80ef5d71029dc278be66b2c0aa0057e",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Infrastructure/Persistence/SeedData/SeedIds.cs": {
+    "mtime": 1778444279.5161796,
+    "ast_hash": "b66ceddbc0676ce482647510c5125d57",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Infrastructure/Persistence/TablewiseDbContext.cs": {
+    "mtime": 1780845034.3628812,
+    "ast_hash": "e29cd6c2043eb88277f2d888c3c52704",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Infrastructure/Persistence/TablewiseDbContextFactory.cs": {
+    "mtime": 1776720523.7264779,
+    "ast_hash": "09bd8b2bfc263d3d1be34a86fdfde2c4",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Infrastructure/Persistence/UnitOfWork.cs": {
+    "mtime": 1780349346.65996,
+    "ast_hash": "2fa60d295ebd436485f9e8de706a9604",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Infrastructure/Services/CurrentUserService.cs": {
+    "mtime": 1778458260.9896667,
+    "ast_hash": "9484ac5999e9d2826666dc7b004ba425",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Infrastructure/Services/DesignTimeServices.cs": {
+    "mtime": 1778456158.7770028,
+    "ast_hash": "71102fe8b071aecf181566135d307fe4",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Infrastructure/Services/DistributedLockService.cs": {
+    "mtime": 1777165631.4555748,
+    "ast_hash": "0957831921563aa233143aa2c9c36b06",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Infrastructure/Services/IdempotencyService.cs": {
+    "mtime": 1777165563.675285,
+    "ast_hash": "2ed0dc62c37410ce5a12dc91f79a8f21",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Infrastructure/Services/PlaceholderEmailService.cs": {
+    "mtime": 1778445643.2873912,
+    "ast_hash": "076af3ed079033e64d5b7e71133539a0",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Infrastructure/Services/RuleTestService.cs": {
+    "mtime": 1779305189.9115152,
+    "ast_hash": "36951b1a85b98e2e046a98712ca0b5ea",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Infrastructure/Services/SlotAvailabilityService.cs": {
+    "mtime": 1780854544.646986,
+    "ast_hash": "314043efdbadae1e8a045b00f2b5acde",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Infrastructure/Services/StubRuleEvaluator.cs": {
+    "mtime": 1778786304.8700242,
+    "ast_hash": "db374b139c17cb9597dd2ebc46e7e9f3",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Infrastructure/Services/TenantContext.cs": {
+    "mtime": 1778456131.0775573,
+    "ast_hash": "e181650db10dfa71e7203c21177a1b79",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Infrastructure/Services/TenantService.cs": {
+    "mtime": 1778458257.9956627,
+    "ast_hash": "88d7ceb9d14b4cccf2db71efd6132ddf",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Infrastructure/Storage/FileStorageConstants.cs": {
+    "mtime": 1776722524.4942634,
+    "ast_hash": "ea126116aefa9bbb517aa94bf0b1cfa8",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Infrastructure/Storage/R2FileStorageService.cs": {
+    "mtime": 1778453326.2579248,
+    "ast_hash": "e8a3d5dc86907f38257b50fa61a7025c",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Infrastructure/Storage/R2StorageOptions.cs": {
+    "mtime": 1776722522.1274686,
+    "ast_hash": "dda7d959c90684faba5585e2dde08228",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Infrastructure/Tablewise.Infrastructure.csproj": {
+    "mtime": 1780349156.5173817,
+    "ast_hash": "7ae60ed2d0ce57d48794f253e057a0f5",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.RuleEngine/Base/RuleEvaluatorBase.cs": {
+    "mtime": 1778786301.9912517,
+    "ast_hash": "d5697d55f0b122475487465dfe0b8599",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.RuleEngine/DependencyInjection.cs": {
+    "mtime": 1778442098.3905785,
+    "ast_hash": "a1f7afb40ac1fde0fa5ff5482d47b816",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.RuleEngine/Evaluators/CustomConditionRuleEvaluator.cs": {
+    "mtime": 1778443837.8527868,
+    "ast_hash": "54ed2c47091229963b9b5a1b242955a7",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.RuleEngine/Evaluators/DepositRequiredRuleEvaluator.cs": {
+    "mtime": 1778442681.0476828,
+    "ast_hash": "bbbc0af4f41da0163cb66f81f1c166f7",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.RuleEngine/Evaluators/EarlyBookingRuleEvaluator.cs": {
+    "mtime": 1778442573.1663258,
+    "ast_hash": "48d7cd2b15d9cdac7e131ba258b8ee5e",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.RuleEngine/Evaluators/GroupCompositionRuleEvaluator.cs": {
+    "mtime": 1778442910.9196875,
+    "ast_hash": "27ea9ae6196a37c1a5f6aef316a8d58a",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.RuleEngine/Evaluators/LargeGroupRuleEvaluator.cs": {
+    "mtime": 1778442636.7100332,
+    "ast_hash": "35817e2d85b75a2a993c8698397efb32",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.RuleEngine/Evaluators/Models/CustomConditionModels.cs": {
+    "mtime": 1778443463.6419992,
+    "ast_hash": "3cfb6ee70f9730290b2a885f8e97f3be",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.RuleEngine/Evaluators/Models/DepositRequiredModels.cs": {
+    "mtime": 1778442538.2046196,
+    "ast_hash": "2babcf6337ebe4f335d8a9f750dea749",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.RuleEngine/Evaluators/Models/EarlyBookingModels.cs": {
+    "mtime": 1778442524.3199935,
+    "ast_hash": "9135fef68bcf82053277b43669ccd795",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.RuleEngine/Evaluators/Models/GroupCompositionModels.cs": {
+    "mtime": 1778442555.72679,
+    "ast_hash": "9723bd24a42a32e38b3a03a4d22ee60e",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.RuleEngine/Evaluators/Models/LargeGroupModels.cs": {
+    "mtime": 1778442530.9583228,
+    "ast_hash": "f21c424875bf6601c5a683f7cec9eb2f",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.RuleEngine/Evaluators/Models/PeakHourModels.cs": {
+    "mtime": 1778442543.5849237,
+    "ast_hash": "5a83246da008e2d04662db4242e009aa",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.RuleEngine/Evaluators/Models/TableCooldownModels.cs": {
+    "mtime": 1778442546.9064715,
+    "ast_hash": "8967fc33c32ebd6c3a7e298020927e52",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.RuleEngine/Evaluators/Models/VipPriorityModels.cs": {
+    "mtime": 1778442527.432846,
+    "ast_hash": "cfb72ff7584b108a4c33d9189d251e9d",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.RuleEngine/Evaluators/PeakHourRuleEvaluator.cs": {
+    "mtime": 1778442723.033512,
+    "ast_hash": "ec9cb1161ee6bd76959593b231d0c3c0",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.RuleEngine/Evaluators/TableCooldownRuleEvaluator.cs": {
+    "mtime": 1778442761.913402,
+    "ast_hash": "2d8a190e4b55112bbe6710cf3b437102",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.RuleEngine/Evaluators/VipPriorityRuleEvaluator.cs": {
+    "mtime": 1778442603.493104,
+    "ast_hash": "f56fcc4900762960152fe4f66ff92aa2",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.RuleEngine/Facts/ReservationContext.cs": {
+    "mtime": 1778441753.6541862,
+    "ast_hash": "a16ab55fd712f98363d00c97b6d0007c",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.RuleEngine/Interfaces/IRuleEnginePipeline.cs": {
+    "mtime": 1778442041.8134007,
+    "ast_hash": "6c3e908cae0193a117203e108a0aee0f",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.RuleEngine/Interfaces/IRuleEvaluator.cs": {
+    "mtime": 1778442034.102734,
+    "ast_hash": "ce86788e0fb48c780d7e5824a9807e2a",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.RuleEngine/Interfaces/IRuleEvaluatorFactory.cs": {
+    "mtime": 1778442037.3652704,
+    "ast_hash": "f8d637f5a661ff075d9f570648fd903d",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.RuleEngine/Results/RuleEvaluationResult.cs": {
+    "mtime": 1778442052.6029112,
+    "ast_hash": "cdfee9df19fe32bbafeb97e18f98d7c3",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.RuleEngine/Results/RuleOutcome.cs": {
+    "mtime": 1778786303.7135642,
+    "ast_hash": "07d496b991c3f8554b4ccfd5c1e3d62b",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.RuleEngine/RuleEngineCacheKeys.cs": {
+    "mtime": 1778786294.1000736,
+    "ast_hash": "a943223444e7176e6cd56e8e41141e37",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.RuleEngine/Services/FieldResolver.cs": {
+    "mtime": 1778443480.1969316,
+    "ast_hash": "1b7fd9fefed6f15768a2e452f3604aee",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.RuleEngine/Services/RuleEnginePipeline.cs": {
+    "mtime": 1780856805.3758101,
+    "ast_hash": "d2b6e356caa06726a7f9e80a3affcfee",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.RuleEngine/Services/RuleEvaluatorFactory.cs": {
+    "mtime": 1778442070.0139563,
+    "ast_hash": "83d7da0494c67932a360558bb05fe552",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.RuleEngine/Tablewise.RuleEngine.csproj": {
+    "mtime": 1778442222.8388126,
+    "ast_hash": "68c91577819e7461bb148baf92b169ad",
+    "semantic_hash": ""
+  },
+  "tests/Tablewise.IntegrationTests/AssemblyInfo.cs": {
+    "mtime": 1778788405.9088874,
+    "ast_hash": "eb9bfb6fe324224cabb60a3c5e23bd5b",
+    "semantic_hash": ""
+  },
+  "tests/Tablewise.IntegrationTests/Features/Booking/ConcurrentReservationTests.cs": {
+    "mtime": 1778788557.5038202,
+    "ast_hash": "b7231c55ffeed82305dcef4f8004728d",
+    "semantic_hash": ""
+  },
+  "tests/Tablewise.IntegrationTests/Features/Booking/RuleEngineIntegrationTests.cs": {
+    "mtime": 1778786414.3675933,
+    "ast_hash": "4d2c8db4abcf0eb88bf3b0f123f85a22",
+    "semantic_hash": ""
+  },
+  "tests/Tablewise.IntegrationTests/Features/Booking/ZMultipleSlotsReservationTests.cs": {
+    "mtime": 1778788798.1086895,
+    "ast_hash": "821e532672ff6fc4d41efa557ce2cb17",
+    "semantic_hash": ""
+  },
+  "tests/Tablewise.IntegrationTests/Fixtures/CustomWebApplicationFactory.cs": {
+    "mtime": 1778787489.4576936,
+    "ast_hash": "deea84639b071c87748ea690b24b9ce7",
+    "semantic_hash": ""
+  },
+  "tests/Tablewise.IntegrationTests/Fixtures/DatabaseCollection.cs": {
+    "mtime": 1778440410.995817,
+    "ast_hash": "fac387f1fe410e2531c8676a0495fe4d",
+    "semantic_hash": ""
+  },
+  "tests/Tablewise.IntegrationTests/Tablewise.IntegrationTests.csproj": {
+    "mtime": 1778786881.210898,
+    "ast_hash": "c660891e474f7d74c6877a428252409f",
+    "semantic_hash": ""
+  },
+  "tests/Tablewise.IntegrationTests/xunit.runner.json": {
+    "mtime": 1778786878.7574036,
+    "ast_hash": "dceacdfd27e43838879cc998d0fb5110",
+    "semantic_hash": ""
+  },
+  "tests/Tablewise.UnitTests/Features/Booking/ModifyReservationCommandHandlerTests.cs": {
+    "mtime": 1777167252.316583,
+    "ast_hash": "23f01db44553eca0f1735140b81ae0dc",
+    "semantic_hash": ""
+  },
+  "tests/Tablewise.UnitTests/Features/Booking/ReserveCommandHandlerTests.cs": {
+    "mtime": 1780349552.0502582,
+    "ast_hash": "d51e6661a1194a78ea360df1f6ba6ccb",
+    "semantic_hash": ""
+  },
+  "tests/Tablewise.UnitTests/Infrastructure/R2FileStorageServiceTests.cs": {
+    "mtime": 1776722697.5761056,
+    "ast_hash": "7253a0ae7e60dbe03c222815012cef8b",
+    "semantic_hash": ""
+  },
+  "tests/Tablewise.UnitTests/RuleEngine/Evaluators/CustomConditionRuleEvaluatorTests.cs": {
+    "mtime": 1778443766.1633124,
+    "ast_hash": "8af16c5cf6854713f0b164d329c897cb",
+    "semantic_hash": ""
+  },
+  "tests/Tablewise.UnitTests/RuleEngine/Evaluators/DepositRequiredRuleEvaluatorTests.cs": {
+    "mtime": 1778442701.2073176,
+    "ast_hash": "832fdbf54725f97dff022457a876ea7e",
+    "semantic_hash": ""
+  },
+  "tests/Tablewise.UnitTests/RuleEngine/Evaluators/EarlyBookingRuleEvaluatorTests.cs": {
+    "mtime": 1778442587.3294039,
+    "ast_hash": "ec4e7b73e1df7c71273544154534ee4d",
+    "semantic_hash": ""
+  },
+  "tests/Tablewise.UnitTests/RuleEngine/Evaluators/GroupCompositionRuleEvaluatorTests.cs": {
+    "mtime": 1778442860.6025076,
+    "ast_hash": "80530219721daa3aa59f948573f94db6",
+    "semantic_hash": ""
+  },
+  "tests/Tablewise.UnitTests/RuleEngine/Evaluators/LargeGroupRuleEvaluatorTests.cs": {
+    "mtime": 1778442657.0757263,
+    "ast_hash": "1a51cafa059ec093e6d413d948f68bc2",
+    "semantic_hash": ""
+  },
+  "tests/Tablewise.UnitTests/RuleEngine/Evaluators/PeakHourRuleEvaluatorTests.cs": {
+    "mtime": 1778442741.5650556,
+    "ast_hash": "6751a00cd36482846ceb23cc0127c3f3",
+    "semantic_hash": ""
+  },
+  "tests/Tablewise.UnitTests/RuleEngine/Evaluators/TableCooldownRuleEvaluatorTests.cs": {
+    "mtime": 1778442793.514496,
+    "ast_hash": "05b5af14e08fd3dc22148bf3f08518a4",
+    "semantic_hash": ""
+  },
+  "tests/Tablewise.UnitTests/RuleEngine/Evaluators/VipPriorityRuleEvaluatorTests.cs": {
+    "mtime": 1778442618.746264,
+    "ast_hash": "2b4f8796baa05818fad10a61d38f7927",
+    "semantic_hash": ""
+  },
+  "tests/Tablewise.UnitTests/RuleEngine/FactoryTests.cs": {
+    "mtime": 1778442180.192296,
+    "ast_hash": "7406c3043489dab2652913a53d5daf98",
+    "semantic_hash": ""
+  },
+  "tests/Tablewise.UnitTests/RuleEngine/PipelineTests.cs": {
+    "mtime": 1778786342.4276838,
+    "ast_hash": "b159616a4fd1969026ae3168985e67df",
+    "semantic_hash": ""
+  },
+  "tests/Tablewise.UnitTests/Services/DistributedLockServiceTests.cs": {
+    "mtime": 1778440771.967383,
+    "ast_hash": "da64ca3b5f88f552077006143de4b795",
+    "semantic_hash": ""
+  },
+  "tests/Tablewise.UnitTests/Services/IdempotencyServiceTests.cs": {
+    "mtime": 1777167276.9673803,
+    "ast_hash": "315bc04b3a2e7d52fa9dd7b7d261c57c",
+    "semantic_hash": ""
+  },
+  "tests/Tablewise.UnitTests/Services/RuleSchemaValidatorTests.cs": {
+    "mtime": 1778443787.8655481,
+    "ast_hash": "360526f8ad1f148f62a15fdb843d54a6",
+    "semantic_hash": ""
+  },
+  "tests/Tablewise.UnitTests/Tablewise.UnitTests.csproj": {
+    "mtime": 1778785454.5372963,
+    "ast_hash": "a07833d5c99dcff7d6dba14d9138ced9",
+    "semantic_hash": ""
+  },
+  "tests/Tablewise.UnitTests/UnitTest1.cs": {
+    "mtime": 1776718408.049361,
+    "ast_hash": "f52605c1366685eccf436efbfa44d3b3",
+    "semantic_hash": ""
+  },
+  ".claude/CLAUDE.md": {
+    "mtime": 1781124415.1248124,
+    "ast_hash": "817fe671013b35ae0bc9301dfe449a87",
+    "semantic_hash": ""
+  },
+  ".claude/commands/obsidian-update.md": {
+    "mtime": 1780692338.5561535,
+    "ast_hash": "34d430f80957b897c5afa21012db347a",
+    "semantic_hash": ""
+  },
+  ".claude/skills/frontend-design/SKILL.md": {
+    "mtime": 1781124111.4971528,
+    "ast_hash": "cf7d2ef44d584ae93e1fd56024353e96",
+    "semantic_hash": ""
+  },
+  ".claude/skills/graphify/SKILL.md": {
+    "mtime": 1781124415.1248124,
+    "ast_hash": "41f700d6535cc2f2b6b6d0a9eecc7525",
+    "semantic_hash": ""
+  },
+  ".claude/skills/graphify/references/add-watch.md": {
+    "mtime": 1781124395.090854,
+    "ast_hash": "0df0589623217ca38a12bdcabfb42f4c",
+    "semantic_hash": ""
+  },
+  ".claude/skills/graphify/references/exports.md": {
+    "mtime": 1781124395.092853,
+    "ast_hash": "7fb1a81aca17a462db70684a324fcfb0",
+    "semantic_hash": ""
+  },
+  ".claude/skills/graphify/references/extraction-spec.md": {
+    "mtime": 1781124395.0938537,
+    "ast_hash": "24808b03abfeaf5f6435bb69c0125b2c",
+    "semantic_hash": ""
+  },
+  ".claude/skills/graphify/references/github-and-merge.md": {
+    "mtime": 1781124395.094853,
+    "ast_hash": "cde13df085e4c492aeb7ba298a996d0d",
+    "semantic_hash": ""
+  },
+  ".claude/skills/graphify/references/hooks.md": {
+    "mtime": 1781124395.0958538,
+    "ast_hash": "3f545db6ce646650bb9de588f5512a27",
+    "semantic_hash": ""
+  },
+  ".claude/skills/graphify/references/query.md": {
+    "mtime": 1781124395.1028562,
+    "ast_hash": "8b40ed8c9e9060fc215219a8fc964091",
+    "semantic_hash": ""
+  },
+  ".claude/skills/graphify/references/transcribe.md": {
+    "mtime": 1781124395.1048515,
+    "ast_hash": "70f6aa30d6211f3a2c7e9fc45479f50c",
+    "semantic_hash": ""
+  },
+  ".claude/skills/graphify/references/update.md": {
+    "mtime": 1781124395.1048515,
+    "ast_hash": "0dad167a95bdb389f02fecffb60b1bc8",
+    "semantic_hash": ""
+  },
+  "CLAUDE.md": {
+    "mtime": 1781124415.125812,
+    "ast_hash": "1f4bb07ca159aa0a749dce6aa43ada6f",
+    "semantic_hash": ""
+  },
+  "README.md": {
+    "mtime": 1776718618.134524,
+    "ast_hash": "2b98d4e726f991ff840afcee943cab6b",
+    "semantic_hash": ""
+  },
+  "backend frontend \u00e7al\u0131\u015ft\u0131rma.txt": {
+    "mtime": 1780342004.3552485,
+    "ast_hash": "151545d5b2ce4b94ab7be4c09dad7e7f",
+    "semantic_hash": ""
+  },
+  "docker/docker-compose.prod.yml": {
+    "mtime": 1776718672.7453434,
+    "ast_hash": "695b8d66ccb2f994a49ee450c64d64a5",
+    "semantic_hash": ""
+  },
+  "docker/docker-compose.yml": {
+    "mtime": 1778454598.4499078,
+    "ast_hash": "f596734d93af7d552ec91da70477c76f",
+    "semantic_hash": ""
+  },
+  "docs/FAZ_1.8_PERSONEL_DAVETI.md": {
+    "mtime": 1777162573.257732,
+    "ast_hash": "4931d2c0c8dc9939f7a358b7123dc861",
+    "semantic_hash": ""
+  },
+  "docs/FAZ_2.1a_PATTERN_SABLONU.md": {
+    "mtime": 1777163257.080239,
+    "ast_hash": "fdd2781382a588492294483586bcf493",
+    "semantic_hash": ""
+  },
+  "docs/FAZ_2.1a_TAMAMLANDI.md": {
+    "mtime": 1777163560.791226,
+    "ast_hash": "d4312f75587520b18bb11f3cc4002d10",
+    "semantic_hash": ""
+  },
+  "docs/FAZ_2.1b_TAMAMLANDI.md": {
+    "mtime": 1777164074.3544822,
+    "ast_hash": "deb4bae97e7c3756e351047249eb2ffb",
+    "semantic_hash": ""
+  },
+  "docs/FAZ_2.1c_TAMAMLANDI.md": {
+    "mtime": 1777164466.5037897,
+    "ast_hash": "b04f2f9f63b43d626b36d7d60835533c",
+    "semantic_hash": ""
+  },
+  "docs/FAZ_5_TAMAMLANDI.md": {
+    "mtime": 1779311802.9919803,
+    "ast_hash": "29accb88d8198dc0ec823c821dbb525f",
+    "semantic_hash": ""
+  },
+  "docs/README.md": {
+    "mtime": 1779311804.5477402,
+    "ast_hash": "bdd1b45c0ebac32538e7f6cbee79c1e3",
+    "semantic_hash": ""
+  },
+  "docs/faz11-landing-page-prompt.md": {
+    "mtime": 1781123513.9034116,
+    "ast_hash": "cf0de0a922001fb43ea8c41d9430bba6",
+    "semantic_hash": ""
+  },
+  "docs/faz11-plan-limitleri-prompt.md": {
+    "mtime": 1781123513.9074142,
+    "ast_hash": "6f65ee3ecaf4df9d80a5868886d856a8",
+    "semantic_hash": ""
+  },
+  "docs/graphify-frontend-design-kurulum.md": {
+    "mtime": 1781123793.2752807,
+    "ast_hash": "ec7e1666be16c97b01dcf54ca7326c45",
+    "semantic_hash": ""
+  },
+  "docs/ozel-limitler-prompt-1-backend.md": {
+    "mtime": 1781123513.911414,
+    "ast_hash": "100a6088a600fbc03f1728e404469aad",
+    "semantic_hash": ""
+  },
+  "docs/ozel-limitler-prompt-2-super-admin.md": {
+    "mtime": 1781123513.9144132,
+    "ast_hash": "b7761eb8b373af7e2ab32a9759d96c6a",
+    "semantic_hash": ""
+  },
+  "docs/ozel-limitler-prompt-3-admin-panel.md": {
+    "mtime": 1781123513.9184132,
+    "ast_hash": "d891a8e7681d7bf9bd079bf1a4ec0dda",
+    "semantic_hash": ""
+  },
+  "docs/qa-asama-1-booking-ui.md": {
+    "mtime": 1781123513.9214134,
+    "ast_hash": "c9b98a99626a22141506e7ac37a424aa",
+    "semantic_hash": ""
+  },
+  "docs/qa-asama-2-admin-panel.md": {
+    "mtime": 1781123513.9254117,
+    "ast_hash": "370c47596a50495291fcea2e8007bb86",
+    "semantic_hash": ""
+  },
+  "docs/qa-asama-3-super-admin.md": {
+    "mtime": 1781123513.8924162,
+    "ast_hash": "7cb26bf3957ed67fbe30fabb19906e28",
+    "semantic_hash": ""
+  },
+  "docs/qa-asama-4-cross-frontend.md": {
+    "mtime": 1781123513.8964136,
+    "ast_hash": "08fe854c7370dd58030bb2e1cc2c9de4",
+    "semantic_hash": ""
+  },
+  "docs/qa-asama-9-landing-page.md": {
+    "mtime": 1781123513.9004133,
+    "ast_hash": "79b0ca94fc5a1d29f2859715be493b97",
+    "semantic_hash": ""
+  },
+  "docs/tablewise-admin-panel-bugfix-round2.md": {
+    "mtime": 1780851831.292538,
+    "ast_hash": "c4528d1844b828668122f9cf0d0754d4",
+    "semantic_hash": ""
+  },
+  "docs/tablewise-cursor-prompts-faz-15-oneriler.md": {
+    "mtime": 1780344884.2576685,
+    "ast_hash": "76cb211ac191c2051a1a8badfb5883e4",
+    "semantic_hash": ""
+  },
+  "docs/tablewise-cursor-prompts-faz-6.5.md": {
+    "mtime": 1780344884.2466693,
+    "ast_hash": "70a3246003c075361ce3fc46a3870129",
+    "semantic_hash": ""
+  },
+  "docs/tablewise-cursor-prompts-faz-6.7.md": {
+    "mtime": 1780344884.2506683,
+    "ast_hash": "cb1a4361aede31c1903281719443494f",
+    "semantic_hash": ""
+  },
+  "docs/tablewise-cursor-prompts-faz-7-8.5-14.md": {
+    "mtime": 1780344884.254668,
+    "ast_hash": "db721fa9152dad0ad5ff591a89484bac",
+    "semantic_hash": ""
+  },
+  "docs/tablewise-cursor-prompts-v1.1.md": {
+    "mtime": 1778450354.5275316,
+    "ast_hash": "799e69ebf6cc5eade392a239c421edf9",
+    "semantic_hash": ""
+  },
+  "e2e/playwright-report/data/13c2f98f326e723d0d7f5e8a2357d062e8da3042.md": {
+    "mtime": 1780871162.8022094,
+    "ast_hash": "7d59e7c63b4b663a1ebdff3a089f6658",
+    "semantic_hash": ""
+  },
+  "e2e/playwright-report/data/5a4dfc8148fa554a7d772c0472cef1f99ec47e1d.md": {
+    "mtime": 1780871162.800205,
+    "ast_hash": "fdeb4632b39e0d80b53d0e7690404e36",
+    "semantic_hash": ""
+  },
+  "e2e/playwright-report/data/9a9b243f16b2b138aadf24536c61b4d1bd20d36e.md": {
+    "mtime": 1780871162.8042133,
+    "ast_hash": "7502ce04fb8d888b0993e4567f2f849f",
+    "semantic_hash": ""
+  },
+  "e2e/playwright-report/data/e77f7401fe5babd330c55e22de854ba7ea288eb3.md": {
+    "mtime": 1780871162.8062136,
+    "ast_hash": "53a87e31d9f092b33d532d1df4d88725",
+    "semantic_hash": ""
+  },
+  "e2e/playwright-report/index.html": {
+    "mtime": 1780871162.8277254,
+    "ast_hash": "90391177ffde06d964a0496af0d5e0ff",
+    "semantic_hash": ""
+  },
+  "e2e/playwright-report/trace/index.html": {
+    "mtime": 1780864533.038512,
+    "ast_hash": "f7612965001814131b6fe0d2806c73c7",
+    "semantic_hash": ""
+  },
+  "e2e/playwright-report/trace/snapshot.html": {
+    "mtime": 1780864533.0395155,
+    "ast_hash": "b3f6c8feef059d0224548d9620a56a6a",
+    "semantic_hash": ""
+  },
+  "e2e/playwright-report/trace/uiMode.html": {
+    "mtime": 1780864533.0405154,
+    "ast_hash": "89e45a5ab7b37ff282057723a9500a32",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/README.md": {
+    "mtime": 1778446196.2638023,
+    "ast_hash": "9f50a03b945e37cd452f2749c3b468f4",
+    "semantic_hash": ""
+  },
+  "frontend/admin-panel/index.html": {
+    "mtime": 1778445963.7634063,
+    "ast_hash": "f3095c42ee02b6b813529ff0f3816017",
+    "semantic_hash": ""
+  },
+  "frontend/booking-ui/IMPLEMENTATION_SUMMARY.md": {
+    "mtime": 1779312685.9711537,
+    "ast_hash": "9b70f3dbaaf9354c0888435952375674",
+    "semantic_hash": ""
+  },
+  "frontend/booking-ui/README.md": {
+    "mtime": 1779312489.588742,
+    "ast_hash": "12b0d7bdfc171af1b68151adac890a0b",
+    "semantic_hash": ""
+  },
+  "frontend/booking-ui/index.html": {
+    "mtime": 1779312060.4703014,
+    "ast_hash": "6c9b58c0bcb1ebac853246320fb44dde",
+    "semantic_hash": ""
+  },
+  "frontend/super-admin/index.html": {
+    "mtime": 1780695734.3427374,
+    "ast_hash": "bf5720ff0b859ae26c2f686107a886cc",
+    "semantic_hash": ""
+  },
+  "scripts/dev.md": {
+    "mtime": 1779313295.1989777,
+    "ast_hash": "0b87421a681b9425ae32acd88569308b",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Infrastructure/Email/Templates/deposit-paid.html": {
+    "mtime": 1778445451.5917614,
+    "ast_hash": "5fd70e9c5f26b279016796235e8cd6c5",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Infrastructure/Email/Templates/deposit-refunded.html": {
+    "mtime": 1778445466.0231206,
+    "ast_hash": "a35eeb3f3b8e34cde10f70b6ad146789",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Infrastructure/Email/Templates/email-verification.html": {
+    "mtime": 1778445285.5363057,
+    "ast_hash": "5c87c382955bff5789d59871b88688e6",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Infrastructure/Email/Templates/new-reservation-owner.html": {
+    "mtime": 1778445358.330789,
+    "ast_hash": "3d45d78a1d452ca9eb6b0a39a6a22508",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Infrastructure/Email/Templates/no-show-notification.html": {
+    "mtime": 1778445369.155797,
+    "ast_hash": "ecf1577a9b8330cd6dd4e011c090080e",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Infrastructure/Email/Templates/plan-payment-failed.html": {
+    "mtime": 1778445433.1708736,
+    "ast_hash": "9196b5f58f17dda60b9e4fea02562abd",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Infrastructure/Email/Templates/plan-upgraded.html": {
+    "mtime": 1778445418.5652213,
+    "ast_hash": "c1381814794c545cd389f0b4edcb0bf3",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Infrastructure/Email/Templates/reservation-cancelled.html": {
+    "mtime": 1778445334.2462885,
+    "ast_hash": "20d7373e523ac284c66b1f59b78095e2",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Infrastructure/Email/Templates/reservation-confirm.html": {
+    "mtime": 1778445308.6850097,
+    "ast_hash": "bd46c972c9d1f868626a074d40ed046f",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Infrastructure/Email/Templates/reservation-modified.html": {
+    "mtime": 1778445320.6950827,
+    "ast_hash": "7d6480acb541b94274ca7db0af72118e",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Infrastructure/Email/Templates/reservation-reminder.html": {
+    "mtime": 1778445346.9129667,
+    "ast_hash": "a6b3e85a7e7f15db2fa2cb6de2d000ab",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Infrastructure/Email/Templates/staff-invitation.html": {
+    "mtime": 1778445392.768163,
+    "ast_hash": "73180a37cd8597488eca8470b0a607c6",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Infrastructure/Email/Templates/trial-expiry-reminder.html": {
+    "mtime": 1778445406.647853,
+    "ast_hash": "83a0d7af608bfd76bf08f7acb23a5e11",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Infrastructure/Email/Templates/welcome.html": {
+    "mtime": 1778445273.1697667,
+    "ast_hash": "02a3aabc530e61aed2e2c28e69cfe3e9",
+    "semantic_hash": ""
+  },
+  "e2e/playwright-report/data/031525c20232372ba0b47d30288e8d2fef4633e5.png": {
+    "mtime": 1780871162.7992053,
+    "ast_hash": "243c656cf10cac5bb8dae2d04122388c",
+    "semantic_hash": ""
+  },
+  "e2e/playwright-report/data/11eaae9a23ecd7d51134f2dcda95d2940f914443.png": {
+    "mtime": 1780871162.805212,
+    "ast_hash": "8f2c9d5a2d8a7e653351c83a934688d1",
+    "semantic_hash": ""
+  },
+  "e2e/playwright-report/data/bd253964367bdfdae724fbe6156561fcfad703af.png": {
+    "mtime": 1780871162.8042133,
+    "ast_hash": "f10c11cb2bf23af68afccedbd232f5a1",
+    "semantic_hash": ""
+  },
+  "e2e/playwright-report/data/ff67f88821d7c4608e19d8461141210f4f5c9a50.png": {
+    "mtime": 1780871162.8012135,
+    "ast_hash": "34bd6b6fb795fc53b8194837cc5b4f02",
+    "semantic_hash": ""
+  },
+  "e2e/playwright-report/trace/playwright-logo.svg": {
+    "mtime": 1780864533.2743487,
+    "ast_hash": "3a2e616a4c02faa220f078f403535bfa",
+    "semantic_hash": ""
+  },
+  "e2e/playwright-report/data/4dd1ca4fe1fe3146a5a380a360920ca9acdd5e35.webm": {
+    "mtime": 1780871162.8042133,
+    "ast_hash": "cf384f87d461242e1033dd4417d91461",
+    "semantic_hash": ""
+  },
+  "e2e/playwright-report/data/78bd1ef455c5e387e786a06ce5132f05a7a272fb.webm": {
+    "mtime": 1780871162.800205,
+    "ast_hash": "476c6813232266e0294b7ae57412f58e",
+    "semantic_hash": ""
+  },
+  "e2e/playwright-report/data/acbb5e96c9fd42792187c3acdb0459f6eb07274c.webm": {
+    "mtime": 1780871162.8022094,
+    "ast_hash": "da2d4001eed41eeb506f9368648af7cd",
+    "semantic_hash": ""
+  },
+  "e2e/playwright-report/data/fd767c6daefc93224306f85e057a66e188b1b6b7.webm": {
+    "mtime": 1780871162.8062136,
+    "ast_hash": "311afb5e397a3071e17969741b19558c",
+    "semantic_hash": ""
+  },
+  "frontend/landing/package.json": {
+    "mtime": 1781126057.5534525,
+    "ast_hash": "ef1ea1df1b31c056863d6f09782f05cc",
+    "semantic_hash": ""
+  },
+  "frontend/landing/postcss.config.js": {
+    "mtime": 1781126092.509701,
+    "ast_hash": "ef3ba2a81ba19f8ea5ddf625521e96f0",
+    "semantic_hash": ""
+  },
+  "frontend/landing/src/App.tsx": {
+    "mtime": 1781126298.2160196,
+    "ast_hash": "57ba7524aa1450842471765e39f389e1",
+    "semantic_hash": ""
+  },
+  "frontend/landing/src/components/layout/Footer.tsx": {
+    "mtime": 1781126162.7971156,
+    "ast_hash": "85e0ae0e1828b20815d711b49b6a084d",
+    "semantic_hash": ""
+  },
+  "frontend/landing/src/components/layout/Navbar.tsx": {
+    "mtime": 1781126149.4062667,
+    "ast_hash": "3f65796abd5505120d6db94d6ef506fa",
+    "semantic_hash": ""
+  },
+  "frontend/landing/src/components/sections/CtaBanner.tsx": {
+    "mtime": 1781126292.795092,
+    "ast_hash": "7f3d8b12c17c045c4c7e4ad8e165e954",
+    "semantic_hash": ""
+  },
+  "frontend/landing/src/components/sections/Features.tsx": {
+    "mtime": 1781126232.687968,
+    "ast_hash": "d2b2d4f94df98f5214edef9e6bc02f07",
+    "semantic_hash": ""
+  },
+  "frontend/landing/src/components/sections/Hero.tsx": {
+    "mtime": 1781126192.587755,
+    "ast_hash": "328d9de3266cbb8099077cc4a3a21d91",
+    "semantic_hash": ""
+  },
+  "frontend/landing/src/components/sections/HowItWorks.tsx": {
+    "mtime": 1781126243.7514405,
+    "ast_hash": "cbf292ef42ff358c24de85e8b081e92d",
+    "semantic_hash": ""
+  },
+  "frontend/landing/src/components/sections/Pricing.tsx": {
+    "mtime": 1781126272.6404169,
+    "ast_hash": "b8f7bda09f83141e42cde2fbfd410742",
+    "semantic_hash": ""
+  },
+  "frontend/landing/src/components/sections/ProblemSolution.tsx": {
+    "mtime": 1781126332.5793943,
+    "ast_hash": "bc58712d1ff730a139217cc5f3b962dc",
+    "semantic_hash": ""
+  },
+  "frontend/landing/src/components/sections/SocialProof.tsx": {
+    "mtime": 1781126199.7404652,
+    "ast_hash": "cd2b3f00d7a2809c2cc8aaaaad8c858c",
+    "semantic_hash": ""
+  },
+  "frontend/landing/src/components/sections/Testimonials.tsx": {
+    "mtime": 1781126283.9138,
+    "ast_hash": "87f12a39a3cde479398aa0aa598257ee",
+    "semantic_hash": ""
+  },
+  "frontend/landing/src/config.ts": {
+    "mtime": 1781126119.8631003,
+    "ast_hash": "28cbc85a48f73820d63a2887b852e09e",
+    "semantic_hash": ""
+  },
+  "frontend/landing/src/hooks/usePricing.ts": {
+    "mtime": 1781126132.0131507,
+    "ast_hash": "e1908ea6a3a8c5788bc5cd5b4ef7bf77",
+    "semantic_hash": ""
+  },
+  "frontend/landing/src/main.tsx": {
+    "mtime": 1781126109.2539861,
+    "ast_hash": "787e5a07efeb2bf6209d5937195f2f68",
+    "semantic_hash": ""
+  },
+  "frontend/landing/src/types/pricing.ts": {
+    "mtime": 1781126123.834312,
+    "ast_hash": "a9f940be4bc6b41dd82eea434e990c7b",
+    "semantic_hash": ""
+  },
+  "frontend/landing/tailwind.config.ts": {
+    "mtime": 1781126087.0665636,
+    "ast_hash": "8978b7c5cef1c858a597de95c8992a75",
+    "semantic_hash": ""
+  },
+  "frontend/landing/tsconfig.json": {
+    "mtime": 1781126355.6683211,
+    "ast_hash": "9f4d642aa393573594155a4e48713dd9",
+    "semantic_hash": ""
+  },
+  "frontend/landing/vite.config.ts": {
+    "mtime": 1781126074.8418918,
+    "ast_hash": "cb45c15f1541559af5bae8ac0f480a32",
+    "semantic_hash": ""
+  },
+  "src/Tablewise.Api/Controllers/PublicController.cs": {
+    "mtime": 1781125994.7595212,
+    "ast_hash": "8cd5c8de5264245da3f611ecaf65e6fe",
+    "semantic_hash": ""
+  },
+  "frontend/landing/index.html": {
+    "mtime": 1781126105.0916202,
+    "ast_hash": "831c48870fab52d4cda2035b2f2ed6ec",
+    "semantic_hash": ""
+  },
+  "frontend/landing/public/favicon.svg": {
+    "mtime": 1781126004.776417,
+    "ast_hash": "7e840862161341271697daa99a40d76b",
+    "semantic_hash": ""
+  },
+  "frontend/landing/public/icons.svg": {
+    "mtime": 1781126004.7895503,
+    "ast_hash": "3b4fcfcf393eca4d264dca4a4663bc37",
+    "semantic_hash": ""
+  }
+}

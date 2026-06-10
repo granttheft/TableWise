@@ -1,16 +1,16 @@
-# Graph Report - TableWise  (2026-06-10)
+# Graph Report - TableWise  (2026-06-11)
 
 ## Corpus Check
-- 816 files · ~307,982 words
+- 834 files · ~311,661 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 7119 nodes · 11432 edges · 681 communities (592 shown, 89 thin omitted)
+- 7211 nodes · 11528 edges · 685 communities (596 shown, 89 thin omitted)
 - Extraction: 98% EXTRACTED · 2% INFERRED · 0% AMBIGUOUS · INFERRED: 206 edges (avg confidence: 0.8)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `81c10eed`
+- Built from commit: `6de08981`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -531,19 +531,19 @@
 ## Import Cycles
 - None detected.
 
-## Communities (681 total, 89 thin omitted)
+## Communities (685 total, 89 thin omitted)
 
 ### Community 0 - "Community 0"
 Cohesion: 0.02
-Nodes (93): __(), _0, a0, aA(), ad(), Ah(), ax(), b2() (+85 more)
+Nodes (83): __(), _0, a0, aA(), Ah(), ax(), b2(), Ba (+75 more)
 
 ### Community 1 - "Community 1"
 Cohesion: 0.03
-Nodes (74): $, Ar, as(), bi, _block(), Bn, ca, calculate() (+66 more)
+Nodes (74): $, Ai(), Ar, bi, _block(), ca, calculate(), Ce() (+66 more)
 
 ### Community 2 - "Community 2"
-Cohesion: 0.04
-Nodes (19): br(), bv, Di(), fx, gn(), Ho(), jb(), l_() (+11 more)
+Cohesion: 0.05
+Nodes (17): ab(), av(), Bo(), br(), bv, Ho(), iT(), jb() (+9 more)
 
 ### Community 3 - "Community 3"
 Cohesion: 0.08
@@ -551,11 +551,11 @@ Nodes (10): fr(), Go(), Ha(), jS(), lS, nT, Th(), wb() (+2 more)
 
 ### Community 4 - "Community 4"
 Cohesion: 0.04
-Nodes (57): ar(), at(), c_(), Ch, eE(), ev, fl(), fs() (+49 more)
+Nodes (59): ad(), ar(), at(), c_(), Ch, eE(), ev, fl() (+51 more)
 
 ### Community 5 - "Community 5"
-Cohesion: 0.05
-Nodes (56): ac(), al(), Bi(), ct(), cv(), dr(), dv(), Eb() (+48 more)
+Cohesion: 0.06
+Nodes (46): al(), B_(), ct(), cv(), dr(), dv(), Eb(), ei() (+38 more)
 
 ### Community 6 - "Community 6"
 Cohesion: 0.04
@@ -566,16 +566,16 @@ Cohesion: 0.10
 Nodes (18): EmailQueueService, IEmailService, PlaceholderEmailService, QueuedEmailService, CancellationToken, DateTime, Dictionary, EmailRequest (+10 more)
 
 ### Community 8 - "Community 8"
-Cohesion: 0.04
-Nodes (34): AbstractValidator, ForgotPasswordDtoValidator, LoginDtoValidator, RefreshTokenDtoValidator, RegisterTenantDtoValidator, ResetPasswordDtoValidator, VerifyEmailDtoValidator, EvaluateRulesRequestDtoValidator (+26 more)
+Cohesion: 0.03
+Nodes (39): AbstractValidator, ForgotPasswordDtoValidator, LoginDtoValidator, RefreshTokenDtoValidator, RegisterTenantDtoValidator, ResetPasswordDtoValidator, VerifyEmailDtoValidator, EvaluateRulesRequestDtoValidator (+31 more)
 
 ### Community 9 - "Community 9"
 Cohesion: 0.05
 Nodes (25): Migration, InitialCreate, Tablewise.Infrastructure.Migrations, AddRevocableRefreshTokens, Tablewise.Infrastructure.Migrations, SyncVenueCustomFieldColumns, Tablewise.Infrastructure.Migrations, AddWhatsAppMessageEntity (+17 more)
 
 ### Community 10 - "Community 10"
-Cohesion: 0.07
-Nodes (16): _2(), Bo(), cr, eS, hb, hc(), Hr, Ia (+8 more)
+Cohesion: 0.08
+Nodes (14): _2(), cr, eS, hb, hc(), Hr, Ia, ld() (+6 more)
 
 ### Community 11 - "Community 11"
 Cohesion: 0.06
@@ -594,23 +594,23 @@ Cohesion: 0.10
 Nodes (22): ConcurrentReservationTests, RuleEngineIntegrationTests, ZMultipleSlotsReservationTests, HttpResponseMessage, IClassFixture, CustomWebApplicationFactory, Fact, HttpClient (+14 more)
 
 ### Community 15 - "Community 15"
-Cohesion: 0.07
-Nodes (35): ab(), b0, Bt(), bx(), cx(), g0(), gC(), gx() (+27 more)
+Cohesion: 0.05
+Nodes (31): b0, Bt(), bx(), e_(), g0(), gx(), id, jd (+23 more)
 
 ### Community 16 - "Community 16"
-Cohesion: 0.06
-Nodes (17): d0(), e_(), i2(), id, N0, p2(), sl(), t_ (+9 more)
+Cohesion: 0.08
+Nodes (15): d0(), i2(), jx(), kh(), kx(), mx(), p2(), sl() (+7 more)
 
 ### Community 17 - "Community 17"
 Cohesion: 0.10
 Nodes (30): RuleTestDialog(), RuleTestDialogProps, RuleTestDraftPayload, TestContextForm, testContextSchema, usePlanLimits(), useCreateRule(), useDeleteRule() (+22 more)
 
 ### Community 18 - "Community 18"
-Cohesion: 0.09
-Nodes (25): ao(), B(), ba(), be(), co(), De(), fi(), fo() (+17 more)
+Cohesion: 0.13
+Nodes (24): ao(), B(), ba(), be(), co(), De(), fi(), fo() (+16 more)
 
 ### Community 19 - "Community 19"
-Cohesion: 0.10
+Cohesion: 0.12
 Nodes (3): eA(), nA(), tA()
 
 ### Community 20 - "Community 20"
@@ -618,7 +618,7 @@ Cohesion: 0.15
 Nodes (8): bb(), d_, f_, h_, mc(), r0(), u_, Ze()
 
 ### Community 21 - "Community 21"
-Cohesion: 0.09
+Cohesion: 0.07
 Nodes (6): close(), Dh(), mb(), moveTo(), show(), Yy()
 
 ### Community 22 - "Community 22"
@@ -626,8 +626,8 @@ Cohesion: 0.05
 Nodes (36): 📊 API Endpoint'leri: **10 adet**, 📊 Audit Logging, 🎯 Business Rules İmplementasyonu, 🏗️ Clean Architecture, Commands (12 dosya), Commands (8 dosya), Controller (1 dosya), Controller (1 dosya) (+28 more)
 
 ### Community 23 - "Community 23"
-Cohesion: 0.09
-Nodes (13): Eo(), es, Fn(), go(), lt(), Mt(), Nn(), Nt() (+5 more)
+Cohesion: 0.10
+Nodes (12): dr, Eo(), Fn(), go(), Mt(), nr, read_buf(), read_byte() (+4 more)
 
 ### Community 24 - "Community 24"
 Cohesion: 0.06
@@ -642,8 +642,8 @@ Cohesion: 0.10
 Nodes (23): ReserveCommandHandler, AppliedRuleSnapshot, CancellationToken, CustomerEntity, Dictionary, Guid, ICacheService, ICurrentUser (+15 more)
 
 ### Community 27 - "Community 27"
-Cohesion: 0.09
-Nodes (15): av(), CA(), cs(), dd(), hd(), Ka(), Mh, nv() (+7 more)
+Cohesion: 0.06
+Nodes (20): bs(), CA(), cs(), dd(), Di(), Fa, gn(), hd() (+12 more)
 
 ### Community 29 - "Community 29"
 Cohesion: 0.11
@@ -666,7 +666,7 @@ Cohesion: 0.09
 Nodes (25): RecentActivity(), RecentActivityProps, statusMap, TodayReservationsList(), TodayReservationsListProps, TopRules(), TopRulesProps, WeeklyChart() (+17 more)
 
 ### Community 34 - "Community 34"
-Cohesion: 0.14
+Cohesion: 0.15
 Nodes (5): el(), Gh(), iS(), isShowing(), xA
 
 ### Community 35 - "Community 35"
@@ -694,8 +694,8 @@ Cohesion: 0.13
 Nodes (29): af(), ef(), ff(), hf, Ja(), lf(), mt(), nf() (+21 more)
 
 ### Community 41 - "Community 41"
-Cohesion: 0.07
-Nodes (22): a2(), B_(), cE(), e2(), f0, hx(), i_(), i0() (+14 more)
+Cohesion: 0.08
+Nodes (20): a2(), cE(), e2(), f0, hx(), i_(), i0(), j0() (+12 more)
 
 ### Community 42 - "Community 42"
 Cohesion: 0.11
@@ -758,8 +758,8 @@ Cohesion: 0.08
 Nodes (25): API Integration, Auth State (Zustand + Persist), Authentication, Customers, Dark Mode, Dashboard, Development, Environment Variables (+17 more)
 
 ### Community 57 - "Community 57"
-Cohesion: 0.14
-Nodes (17): AppliedRule, AuditLog, CustomerConfiguration, AppliedRuleConfiguration, AuditLogConfiguration, IdempotencyKeyConfiguration, NotificationLogConfiguration, ReservationStatusLogConfiguration (+9 more)
+Cohesion: 0.09
+Nodes (22): AppliedRule, AuditLog, CustomerConfiguration, AppliedRuleConfiguration, AuditLogConfiguration, IdempotencyKeyConfiguration, NotificationLogConfiguration, ReservationStatusLogConfiguration (+14 more)
 
 ### Community 58 - "Community 58"
 Cohesion: 0.21
@@ -782,8 +782,8 @@ Cohesion: 0.08
 Nodes (26): dependencies, axios, class-variance-authority, clsx, date-fns, framer-motion, @hookform/resolvers, lucide-react (+18 more)
 
 ### Community 63 - "Community 63"
-Cohesion: 0.09
-Nodes (9): bs(), dt(), fa, gs(), ha, pa(), Ts, ua (+1 more)
+Cohesion: 0.08
+Nodes (12): bs(), dt(), es, fa, gs(), ha, Nn(), Nt() (+4 more)
 
 ### Community 64 - "Community 64"
 Cohesion: 0.16
@@ -818,16 +818,16 @@ Cohesion: 0.12
 Nodes (9): bo(), Js(), mo, pr, so, wr(), Wt(), xo() (+1 more)
 
 ### Community 73 - "Community 73"
-Cohesion: 0.18
-Nodes (3): adminTest, superAdminTest, SEED
+Cohesion: 0.15
+Nodes (5): createReservation(), getNextWeekday(), adminTest, superAdminTest, SEED
 
 ### Community 74 - "Community 74"
-Cohesion: 0.19
-Nodes (4): a_(), nl(), tl(), _r
+Cohesion: 0.24
+Nodes (3): a_(), nl(), tl()
 
 ### Community 75 - "Community 75"
-Cohesion: 0.12
-Nodes (12): bs(), dc(), ds(), Fa, Ga, hv(), ii(), oc() (+4 more)
+Cohesion: 0.09
+Nodes (32): ac(), Bi(), dc(), ds(), Eh(), fv(), Ga, gC() (+24 more)
 
 ### Community 76 - "Community 76"
 Cohesion: 0.21
@@ -926,8 +926,8 @@ Cohesion: 0.12
 Nodes (14): TableCombinationConfiguration, GetTableCombinationsQuery, GetTableCombinationsQueryHandler, CancellationToken, IApplicationDbContext, ITenantContext, List, Task (+6 more)
 
 ### Community 101 - "Community 101"
-Cohesion: 0.11
-Nodes (12): PlanConfiguration, ReservationConfiguration, TenantConfiguration, VenueConfiguration, Plan, EntityTypeBuilder, EntityTypeBuilder, Reservation (+4 more)
+Cohesion: 0.08
+Nodes (15): PlanConfiguration, RuleConfiguration, TenantConfiguration, UserConfiguration, VenueConfiguration, Plan, EntityTypeBuilder, EntityTypeBuilder (+7 more)
 
 ### Community 102 - "Community 102"
 Cohesion: 0.15
@@ -1017,17 +1017,13 @@ Nodes (13): IDistributedLockService, DistributedLockService, RedisLockHandle, bo
 Cohesion: 0.14
 Nodes (12): TestAsyncEnumerable, TestAsyncEnumerator, TestAsyncQueryProvider, CancellationToken, Expression, IEnumerator, IQueryable, IQueryProvider (+4 more)
 
-### Community 124 - "Community 124"
-Cohesion: 0.20
-Nodes (3): fe(), gt, pe()
-
 ### Community 125 - "Community 125"
 Cohesion: 0.15
 Nodes (4): aE, iE, rE, sE
 
 ### Community 126 - "Community 126"
-Cohesion: 0.17
-Nodes (10): bc(), cb(), hT(), jc(), kd(), Nb(), pb, pc() (+2 more)
+Cohesion: 0.12
+Nodes (12): bc(), cb(), fx, hT(), jc(), kd(), Nb(), o_() (+4 more)
 
 ### Community 128 - "Community 128"
 Cohesion: 0.14
@@ -1045,13 +1041,9 @@ Nodes (11): RuleEvaluatorBase, IRuleTypeEvaluator, CancellationToken, ILogger, J
 Cohesion: 0.24
 Nodes (11): CompositionRule, GroupCompositionRuleEvaluator, hasViolation, reason, CancellationToken, int, ReservationContext, Rule (+3 more)
 
-### Community 132 - "Community 132"
-Cohesion: 0.12
-Nodes (8): VenueClosureConfiguration, BulkCreateVenueClosureDto, CreateVenueClosureDto, UpdateVenueClosureDto, VenueClosure, BulkCreateVenueClosureDtoValidator, CreateVenueClosureDtoValidator, UpdateVenueClosureDtoValidator
-
 ### Community 133 - "Community 133"
-Cohesion: 0.12
-Nodes (13): ControllerBase, PlatformStatsController, PlatformSubscriptionsController, ActionResult, CancellationToken, HttpGet, IMediator, PlatformStatsDto (+5 more)
+Cohesion: 0.20
+Nodes (8): PlatformStatsController, ActionResult, CancellationToken, HttpGet, IMediator, PlatformStatsDto, ProducesResponseType, Task
 
 ### Community 134 - "Community 134"
 Cohesion: 0.17
@@ -1086,8 +1078,8 @@ Cohesion: 0.12
 Nodes (16): devDependencies, autoprefixer, eslint, eslint-plugin-react-hooks, eslint-plugin-react-refresh, postcss, tailwindcss, tailwindcss-animate (+8 more)
 
 ### Community 142 - "Community 142"
-Cohesion: 0.15
-Nodes (12): DeactivateCouponCommandHandler, UpdatePlatformUserRoleCommandHandler, DeactivateCouponCommand, IRequestHandler, CancellationToken, IApplicationDbContext, Task, CancellationToken (+4 more)
+Cohesion: 0.32
+Nodes (6): UpdatePlatformUserRoleCommandHandler, CancellationToken, IApplicationDbContext, PlatformUserDto, Task, UpdatePlatformUserRoleCommand
 
 ### Community 143 - "Community 143"
 Cohesion: 0.12
@@ -1116,6 +1108,10 @@ Nodes (15): ASPNETCORE_ENVIRONMENT, applicationUrl, commandName, dotnetRunMessag
 ### Community 149 - "Community 149"
 Cohesion: 0.12
 Nodes (16): devDependencies, autoprefixer, eslint, eslint-plugin-react-hooks, eslint-plugin-react-refresh, postcss, tailwindcss, tailwindcss-animate (+8 more)
+
+### Community 150 - "Community 150"
+Cohesion: 0.08
+Nodes (4): hr, lt(), po, _r
 
 ### Community 151 - "Community 151"
 Cohesion: 0.15
@@ -1210,8 +1206,8 @@ Cohesion: 0.19
 Nodes (10): ResendInvitationCommandHandler, ResendInvitationCommand, AuthSettings, CancellationToken, IApplicationDbContext, ICurrentUser, IEmailService, ILogger (+2 more)
 
 ### Community 175 - "Community 175"
-Cohesion: 0.21
-Nodes (9): UpdateCustomerBlacklistCommand, UpdateCustomerBlacklistCommandHandler, Customer, CancellationToken, CustomerDto, IApplicationDbContext, ITenantService, Task (+1 more)
+Cohesion: 0.29
+Nodes (8): UpdateCustomerBlacklistCommand, UpdateCustomerBlacklistCommandHandler, IRequest, CancellationToken, CustomerDto, IApplicationDbContext, ITenantService, Task
 
 ### Community 176 - "Community 176"
 Cohesion: 0.19
@@ -1222,8 +1218,8 @@ Cohesion: 0.21
 Nodes (10): VenueHeader(), VenueHeaderProps, addDays(), isDateInRange(), Step1Date(), Step1DateProps, Step4InfoProps, VenueConfig (+2 more)
 
 ### Community 178 - "Community 178"
-Cohesion: 0.17
-Nodes (8): TableConfiguration, CreateTableDto, ReorderTablesDto, UpdateTableDto, Table, CreateTableDtoValidator, ReorderTablesDtoValidator, UpdateTableDtoValidator
+Cohesion: 0.11
+Nodes (14): TableConfiguration, GetTablesQuery, GetTablesQueryHandler, CancellationToken, IApplicationDbContext, ITenantContext, List, Task (+6 more)
 
 ### Community 179 - "Community 179"
 Cohesion: 0.19
@@ -1246,8 +1242,8 @@ Cohesion: 0.19
 Nodes (8): IJwtTokenService, ClaimsPrincipal, DateTime, ExpiresAt, PlanTier, Tenant, Token, User
 
 ### Community 184 - "Community 184"
-Cohesion: 0.24
-Nodes (8): IRequest, PlanLimitsDto, GetPlanLimitsQuery, GetPlanLimitsQueryHandler, CancellationToken, IApplicationDbContext, ITenantService, Task
+Cohesion: 0.27
+Nodes (7): PlanLimitsDto, GetPlanLimitsQuery, GetPlanLimitsQueryHandler, CancellationToken, IApplicationDbContext, ITenantService, Task
 
 ### Community 186 - "Community 186"
 Cohesion: 0.24
@@ -1318,8 +1314,8 @@ Cohesion: 0.17
 Nodes (11): Microsoft.AspNetCore.Mvc.Testing (8.0.11), Testcontainers (3.11.0), Testcontainers.PostgreSql (3.11.0), Testcontainers.Redis (3.11.0), net8.0, coverlet.collector (6.0.4), Microsoft.NET.Test.Sdk (17.14.1), Moq (4.20.72) (+3 more)
 
 ### Community 203 - "Community 203"
-Cohesion: 0.21
-Nodes (11): Ai(), Ce(), Ci(), Ii(), J(), Ne(), Ni(), ns() (+3 more)
+Cohesion: 0.06
+Nodes (15): ApiPlan, NormalizedPlan, usePricing(), Feature, FEATURES, HOURS, TABLES, STEPS (+7 more)
 
 ### Community 204 - "Community 204"
 Cohesion: 0.22
@@ -1534,8 +1530,8 @@ Cohesion: 0.27
 Nodes (8): GetRuleStatsQuery, GetRuleStatsQueryHandler, RuleStatDto, CancellationToken, IApplicationDbContext, ITenantContext, List, Task
 
 ### Community 259 - "Community 259"
-Cohesion: 0.27
-Nodes (8): GetTablesQuery, GetTablesQueryHandler, CancellationToken, IApplicationDbContext, ITenantContext, List, Task, TableDto
+Cohesion: 0.08
+Nodes (23): dependencies, lucide-react, react, react-dom, react-router-dom, devDependencies, autoprefixer, postcss (+15 more)
 
 ### Community 260 - "Community 260"
 Cohesion: 0.27
@@ -1622,8 +1618,8 @@ Cohesion: 0.33
 Nodes (7): UpdateCustomerNotesCommand, UpdateCustomerNotesCommandHandler, CancellationToken, CustomerDto, IApplicationDbContext, ITenantService, Task
 
 ### Community 282 - "Community 282"
-Cohesion: 0.33
-Nodes (7): UpdateCustomerTierCommand, UpdateCustomerTierCommandHandler, CancellationToken, CustomerDto, IApplicationDbContext, ITenantService, Task
+Cohesion: 0.25
+Nodes (8): UpdateCustomerTierCommand, UpdateCustomerTierCommandHandler, Customer, CancellationToken, CustomerDto, IApplicationDbContext, ITenantService, Task
 
 ### Community 283 - "Community 283"
 Cohesion: 0.28
@@ -1726,8 +1722,8 @@ Cohesion: 0.22
 Nodes (8): net8.0, coverlet.collector (6.0.4), Microsoft.EntityFrameworkCore (8.0.4), Microsoft.NET.Test.Sdk (17.14.1), Moq (4.20.72), xunit (2.9.3), xunit.runner.visualstudio (3.1.4), Microsoft.NET.Sdk
 
 ### Community 308 - "Community 308"
-Cohesion: 0.29
-Nodes (6): AddInternalNoteCommand, AddInternalNoteCommandHandler, CancellationToken, ICurrentUser, IUnitOfWork, Task
+Cohesion: 0.14
+Nodes (13): AddInternalNoteCommand, AddInternalNoteCommandHandler, TogglePlatformUserActiveCommandHandler, IRequestHandler, CancellationToken, IApplicationDbContext, PlatformUserDto, Task (+5 more)
 
 ### Community 309 - "Community 309"
 Cohesion: 0.32
@@ -1754,8 +1750,8 @@ Cohesion: 0.32
 Nodes (6): SuspendTenantCommandHandler, CancellationToken, IApplicationDbContext, Task, Unit, SuspendTenantCommand
 
 ### Community 315 - "Community 315"
-Cohesion: 0.32
-Nodes (6): TogglePlatformUserActiveCommandHandler, CancellationToken, IApplicationDbContext, PlatformUserDto, Task, TogglePlatformUserActiveCommand
+Cohesion: 0.09
+Nodes (21): compilerOptions, allowImportingTsExtensions, baseUrl, isolatedModules, jsx, lib, module, moduleDetection (+13 more)
 
 ### Community 316 - "Community 316"
 Cohesion: 0.32
@@ -1970,12 +1966,12 @@ Cohesion: 0.50
 Nodes (3): RevocableRefreshTokenConfiguration, RevocableRefreshToken, EntityTypeBuilder
 
 ### Community 374 - "Community 374"
-Cohesion: 0.50
-Nodes (3): RuleConfiguration, EntityTypeBuilder, Rule
+Cohesion: 0.11
+Nodes (14): ControllerBase, PlatformSubscriptionsController, PublicController, HttpGet, IActionResult, ProducesResponseType, ActionResult, CancellationToken (+6 more)
 
 ### Community 375 - "Community 375"
-Cohesion: 0.50
-Nodes (3): UserConfiguration, EntityTypeBuilder, User
+Cohesion: 0.22
+Nodes (8): as(), Bn, En(), is(), os(), St(), Ve, yn()
 
 ### Community 376 - "Community 376"
 Cohesion: 0.50
@@ -2018,8 +2014,8 @@ Cohesion: 0.50
 Nodes (3): IDesignTimeDbContextFactory, TablewiseDbContextFactory, TablewiseDbContext
 
 ### Community 386 - "Community 386"
-Cohesion: 0.40
-Nodes (4): Build, Kurulum, Landing Page, Teknolojiler
+Cohesion: 0.33
+Nodes (5): DeactivateCouponCommandHandler, DeactivateCouponCommand, CancellationToken, IApplicationDbContext, Task
 
 ### Community 387 - "Community 387"
 Cohesion: 0.40
@@ -2074,8 +2070,8 @@ Cohesion: 0.50
 Nodes (3): CancelReservationRequestDtoValidator, CancelReservationRequestDto, int
 
 ### Community 403 - "Community 403"
-Cohesion: 0.50
-Nodes (3): ReserveRequestDtoValidator, int, ReserveRequestDto
+Cohesion: 0.33
+Nodes (3): c0(), Ex(), Tx()
 
 ### Community 404 - "Community 404"
 Cohesion: 0.50
@@ -2125,29 +2121,33 @@ Nodes (3): For git commit hook, For native CLAUDE.md integration, graphify refer
 Cohesion: 0.50
 Nodes (3): For --cluster-only, For --update (incremental re-extraction), graphify reference: incremental update and cluster-only
 
+### Community 421 - "Community 421"
+Cohesion: 0.50
+Nodes (3): ReservationConfiguration, EntityTypeBuilder, Reservation
+
 ### Community 432 - "Community 432"
 Cohesion: 0.67
 Nodes (3): FAZ 9 — GÜVENLİK + MONITORING, Prompt 9.1 — Security Hardening, Prompt 9.2 — Monitoring ve Loglama
 
 ## Knowledge Gaps
-- **2392 isolated node(s):** `PreToolUse`, `allow`, `version`, `configurations`, `version` (+2387 more)
+- **2446 isolated node(s):** `PreToolUse`, `version`, `configurations`, `version`, `tasks` (+2441 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 - **89 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `__()` connect `Community 0` to `Community 2`, `Community 3`, `Community 4`, `Community 5`, `Community 6`, `Community 10`, `Community 15`, `Community 16`, `Community 400`, `Community 401`, `Community 19`, `Community 20`, `Community 21`, `Community 27`, `Community 28`, `Community 34`, `Community 40`, `Community 41`, `Community 172`, `Community 67`, `Community 74`, `Community 75`, `Community 369`, `Community 125`, `Community 126`, `Community 127`?**
-  _High betweenness centrality (0.076) - this node is a cross-community bridge._
+- **Why does `__()` connect `Community 0` to `Community 2`, `Community 3`, `Community 4`, `Community 5`, `Community 6`, `Community 10`, `Community 15`, `Community 16`, `Community 400`, `Community 401`, `Community 403`, `Community 20`, `Community 21`, `Community 19`, `Community 27`, `Community 28`, `Community 34`, `Community 40`, `Community 41`, `Community 172`, `Community 67`, `Community 74`, `Community 75`, `Community 369`, `Community 125`, `Community 126`, `Community 127`?**
+  _High betweenness centrality (0.078) - this node is a cross-community bridge._
 - **Why does `k2` connect `Community 28` to `Community 0`, `Community 16`, `Community 67`, `Community 4`?**
-  _High betweenness centrality (0.049) - this node is a cross-community bridge._
-- **Why does `$` connect `Community 1` to `Community 4`, `Community 15`, `Community 273`, `Community 18`, `Community 150`, `Community 23`, `Community 40`, `Community 425`, `Community 426`, `Community 63`, `Community 456`, `Community 457`, `Community 72`, `Community 203`, `Community 458`, `Community 459`, `Community 460`, `Community 461`, `Community 74`?**
-  _High betweenness centrality (0.019) - this node is a cross-community bridge._
+  _High betweenness centrality (0.048) - this node is a cross-community bridge._
+- **Why does `Step4Info()` connect `Community 99` to `Community 28`?**
+  _High betweenness centrality (0.018) - this node is a cross-community bridge._
 - **Are the 10 inferred relationships involving `mt()` (e.g. with `Ai()` and `Oi()`) actually correct?**
   _`mt()` has 10 INFERRED edges - model-reasoned connections that need verification._
-- **What connects `PreToolUse`, `allow`, `version` to the rest of the system?**
-  _2392 weakly-connected nodes found - possible documentation gaps or missing edges._
+- **What connects `PreToolUse`, `version`, `configurations` to the rest of the system?**
+  _2446 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Community 0` be split into smaller, more focused modules?**
-  _Cohesion score 0.019638648860958365 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.021288515406162466 - nodes in this community are weakly interconnected._
 - **Should `Community 1` be split into smaller, more focused modules?**
-  _Cohesion score 0.028282828282828285 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.02886002886002886 - nodes in this community are weakly interconnected._
