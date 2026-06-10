@@ -412,6 +412,15 @@ src/Tablewise.Api/appsettings.Local.json
 # Frontend
 frontend/**/node_modules/
 frontend/**/dist/
+
+# Graphify — sadece özet rapor commit edilir
+graphify-out/graph.json
+graphify-out/wiki/
+graphify-out/*.html
+
+# Claude Code — makineye özel ayarlar
+.claude/settings.local.json
+.claude/CLAUDE.md
 frontend/**/build/
 frontend/**/.next/
 frontend/**/.nuxt/
