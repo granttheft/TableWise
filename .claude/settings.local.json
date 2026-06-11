@@ -91,7 +91,17 @@
       "Bash(xargs grep -l \"Iyzico\\\\|Payment\")",
       "Bash(grep -v \"^\\\\s*//\")",
       "Bash(grep -E \"\\\\.\\(tsx?|jsx?\\)$\")",
-      "Bash(claude update *)"
+      "Bash(claude update *)",
+      "Bash(Select-Object -ExpandProperty Name)",
+      "Bash(xargs grep -l \"class Deposit\")",
+      "Bash(awk '{print $3}')",
+      "Bash(xargs grep -l \"ReserveRequest\\\\|EvaluateRules\\\\|PlatformLogin\")",
+      "Bash(xargs basename -a)",
+      "Bash(sed 's/.cs//')",
+      "Bash(xargs grep -l \"Platform\\\\|platform\")",
+      "Bash(awk '{print $2}')",
+      "Bash(sed 's/Controller//')",
+      "Bash(xargs grep -l \"Subscription\\\\|Plan\")"
     ]
   }
 }
