@@ -65,7 +65,32 @@
       "Bash(git -C \"D:/Projects/TableWise\" status)",
       "Bash(git -C \"D:/Projects/TableWise\" diff --stat)",
       "Bash(git *)",
-      "Bash(Select-String \"error CS|Build succeeded|FAILED|succeeded\")"
+      "Bash(Select-String \"error CS|Build succeeded|FAILED|succeeded\")",
+      "Bash(uv tool *)",
+      "Bash(pipx install *)",
+      "Bash(pip install *)",
+      "PowerShell(pip install *)",
+      "PowerShell(python --version 2>&1; python -m pip --version 2>&1)",
+      "PowerShell(py *)",
+      "PowerShell(uv *)",
+      "PowerShell(winget install *)",
+      "PowerShell(uv tool *)",
+      "PowerShell(graphify claude *)",
+      "PowerShell(graphify update *)",
+      "PowerShell(git *)",
+      "PowerShell(Get-ChildItem \"D:\\\\Projects\\\\TableWise\\\\graphify-out\" -Recurse | Measure-Object -Property Length -Sum | Select-Object @{n=\"MB\";e={[math]::Round\\($_.Sum/1MB,1\\)}})",
+      "PowerShell(Start-Sleep 5; Invoke-WebRequest -Uri \"http://localhost:4000\" -UseBasicParsing -TimeoutSec 8 | Select-Object StatusCode 2>&1)",
+      "PowerShell(Stop-Process *)",
+      "Bash(graphify update *)",
+      "Bash(Remove-Item -Force \"D:\\\\Projects\\\\TableWise\\\\src\\\\Tablewise.Domain\\\\obj\\\\Debug\\\\net8.0\\\\Tablewise.Domain.AssemblyInfoInputs.cache\" -ErrorAction SilentlyContinue)",
+      "PowerShell(npm install *)",
+      "PowerShell(git clone --single-branch --depth 1 https://github.com/garrytan/gstack.git \"$env:USERPROFILE\\\\.claude\\\\skills\\\\gstack\" 2>&1 | Select-Object -Last 5)",
+      "PowerShell(Set-Location *)",
+      "Bash(Remove-Item -Recurse -Force \".claude\\\\skills\\\\gstack\\\\.git\")",
+      "PowerShell(Get-ChildItem -Path \"D:\\\\Projects\\\\TableWise\\\\frontend\\\\admin-panel\\\\src\" -Force -ErrorAction SilentlyContinue | Select-Object Name, @{Name=\"Type\";Expression={if\\($_.PSIsContainer\\){\"Directory\"}else{\"File\"}}} | Format-Table -AutoSize)",
+      "Bash(xargs grep -l \"Iyzico\\\\|Payment\")",
+      "Bash(grep -v \"^\\\\s*//\")",
+      "Bash(grep -E \"\\\\.\\(tsx?|jsx?\\)$\")"
     ]
   }
 }

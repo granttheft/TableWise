@@ -2,6 +2,14 @@
 
 ## Bağlam
 
+> ⚠️ **Kritik Fix 1 Notu:** `ReservationStatus` artık PascalCase.
+> `reservations.spec.ts` içinde durum filtresi ve assertion'larda:
+> `'Pending'` `'Confirmed'` `'Seated'` `'Completed'` `'Cancelled'` `'NoShow'` kullan.
+> Durum dropdown/filter seçeneklerinde de PascalCase kontrol et.
+
+> ✅ **Kritik Fix 2 Notu:** Health check endpoint artık mevcut.
+> `dashboard.spec.ts` veya ayrı bir `health.spec.ts` dosyasında test edilecek (aşağıda detay var).
+
 `e2e/admin-panel/` dizininde şu an 8 dosya var:
 - `auth.spec.ts`, `customers.spec.ts`, `dashboard.spec.ts`, `reservations.spec.ts`
 - `rules.spec.ts` — sadece 4 yüzeysel test (modal açılıyor, toggle çalışıyor — kural oluşturma yok)
@@ -60,7 +68,68 @@ Test senaryoları:
 
 ---
 
-## Mevcut Dosya: `rules.spec.ts` (GÜNCELLEŞTİR)
+## Dosya 4: `health.spec.ts` (YENİ — Kritik Fix 2)
+
+Backend health check endpoint testleri.
+`adminTest` fixture'a gerek yok — `request` fixture kullan.
+
+```typescript
+import { test, expect } from '@playwright/test'
+
+test.describe('Admin Panel — Backend Health Check', () => {
+
+  test('health endpoint 200 döndürüyor', async ({ request }) => {
+    const response = await request.get('http://localhost:5086/health')
+    expect(response.status()).toBe(200)
+  })
+
+  test('health endpoint Healthy durumu döndürüyor', async ({ request }) => {
+    const response = await request.get('http://localhost:5086/health')
+    const body = await response.json()
+    expect(body.status).toBe('Healthy')
+  })
+
+  test('liveness endpoint çalışıyor', async ({ request }) => {
+    const response = await request.get('http://localhost:5086/health/live')
+    expect(response.status()).toBe(200)
+  })
+
+  test('readiness endpoint DB ve Redis kontrolü yapıyor', async ({ request }) => {
+    const response = await request.get('http://localhost:5086/health/ready')
+    expect(response.status()).toBe(200)
+    const body = await response.json()
+    // PostgreSQL ve Redis entry'leri mevcut
+    expect(body.entries).toBeDefined()
+  })
+
+})
+```
+
+---
+
+## Mevcut Dosya: `reservations.spec.ts` (GÜNCELLE)
+
+Mevcut testlere ek olarak aşağıdaki notu uygula:
+
+**ReservationStatus PascalCase düzeltmesi:** Mevcut testlerde durum
+string'i kontrol eden her assertion'ı güncelle:
+
+```typescript
+// ESKİ — yanlış:
+expect(statusText).toContain('confirmed')
+page.getByText('pending')
+filter.selectOption('cancelled')
+
+// YENİ — doğru:
+expect(statusText).toContain('Confirmed')
+page.getByText('Pending')  // veya Türkçe karşılığı: 'Onay Bekliyor'
+filter.selectOption('Cancelled')
+```
+
+Durum filtresi dropdown'ının seçeneklerini kontrol et — backend PascalCase
+döndürdüğü için filter değerleri de PascalCase olmalı.
+
+---
 
 Mevcut 4 test korunacak, şunlar **eklenecek**:
 
@@ -105,7 +174,7 @@ cd e2e
 npx playwright test admin-panel/ --reporter=list
 ```
 
-Aşama 2 tamamlandığında admin-panel test sayısı 34'ten 55+'e çıkmalı.
+Aşama 2 tamamlandığında admin-panel test sayısı 34'ten **60+**'a çıkmalı.
 
 ---
 

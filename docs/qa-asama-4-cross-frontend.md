@@ -2,6 +2,12 @@
 
 ## Bağlam
 
+> ⚠️ **Kritik Fix 1 Notu:** `ReservationStatus` artık PascalCase.
+> Cross-frontend durum sync testlerinde:
+> - `'Confirmed'` veya `'Onaylandı'` bekle — `'confirmed'` değil
+> - `'Cancelled'` veya `'İptal edildi'` bekle — `'cancelled'` değil
+> Her iki frontend de aynı PascalCase string'i kullanıyor.
+
 Tablewise'da 4 frontend birbirine bağlı çalışıyor:
 
 | Frontend | Port | URL |
@@ -68,7 +74,8 @@ Akış:
 1. Booking UI (5174) → rezervasyon oluştur → confirmation URL'ini kaydet
 2. Admin Panel (3000) → giriş yap → rezervasyonu bul → "Onayla" butonuna tıkla
 3. Booking UI (5174) → confirmation sayfasına geri dön (kayıtlı URL)
-4. Sayfa yenilenince durum "Onaylandı" veya "Confirmed" olarak gösteriyor olmalı
+4. Sayfa yenilenince durum "Confirmed" veya "Onaylandı" gösteriyor olmalı
+   (PascalCase: 'Confirmed' — 'confirmed' değil)
 ```
 
 ### Test 3: Admin iptal ettiğinde booking UI'da durum güncelleniyor
@@ -78,7 +85,8 @@ Akış:
 1. Booking UI (5174) → rezervasyon oluştur
 2. Admin Panel (3000) → rezervasyonu bul → "İptal Et" butonuna tıkla
 3. Booking UI (5174) → aynı rezervasyonun görüntüleme sayfasına git
-4. "İptal edildi" veya "Cancelled" durumu görünüyor olmalı
+4. "Cancelled" veya "İptal edildi" durumu görünüyor olmalı
+   (PascalCase: 'Cancelled' — 'cancelled' değil)
 ```
 
 ---

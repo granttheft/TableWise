@@ -2,6 +2,11 @@
 
 ## Bağlam
 
+> ⚠️ **Kritik Fix 1 Notu:** `ReservationStatus` artık PascalCase.
+> Tüm durum string karşılaştırmalarında şunu kullan:
+> `'Pending'` `'Confirmed'` `'Seated'` `'Completed'` `'Cancelled'` `'NoShow'`
+> `'pending'`, `'confirmed'` gibi küçük harf kullanma — backend PascalCase döndürüyor.
+
 `e2e/booking-ui/` dizininde şu an 3 dosya var:
 - `booking-flow.spec.ts` — sadece 1 happy path testi, çok yüzeysel
 - `validation.spec.ts` — form validasyonları
@@ -67,6 +72,13 @@ Test senaryoları:
 2. **Rezervasyon kodu/linki sayfada görünüyor** — Başarılı rezervasyon sonrası confirmation sayfasında bir kod, barkod veya "rezervasyonunuzu yönetmek için" linki var.
 3. **Geçersiz rezervasyon koduyla onay sayfasına gidilince hata gösteriliyor** — `/rezervasyon/onay/GECERSIZ-KOD` → hata mesajı veya yönlendirme.
 4. **Rezervasyon özeti sayfasında iptal butonu var** — Aktif rezervasyonun özet sayfasında iptal seçeneği mevcut.
+5. **Rezervasyon durumu PascalCase gösteriliyor** — Confirmation sayfasında durum etiketi `'Pending'` veya `'Confirmed'` içeriyor (küçük harf `'pending'` değil):
+   ```typescript
+   const statusText = await page.locator('[data-status], [class*="status"]').textContent()
+   expect(statusText).toMatch(/Pending|Confirmed|Onay Bekliyor|Onaylandı/i)
+   // 'pending' veya 'confirmed' küçük harf görünmemeli:
+   expect(statusText).not.toMatch(/^pending$|^confirmed$/)
+   ```
 
 ---
 
