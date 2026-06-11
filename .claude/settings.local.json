@@ -90,7 +90,8 @@
       "PowerShell(Get-ChildItem -Path \"D:\\\\Projects\\\\TableWise\\\\frontend\\\\admin-panel\\\\src\" -Force -ErrorAction SilentlyContinue | Select-Object Name, @{Name=\"Type\";Expression={if\\($_.PSIsContainer\\){\"Directory\"}else{\"File\"}}} | Format-Table -AutoSize)",
       "Bash(xargs grep -l \"Iyzico\\\\|Payment\")",
       "Bash(grep -v \"^\\\\s*//\")",
-      "Bash(grep -E \"\\\\.\\(tsx?|jsx?\\)$\")"
+      "Bash(grep -E \"\\\\.\\(tsx?|jsx?\\)$\")",
+      "Bash(claude update *)"
     ]
   }
 }
