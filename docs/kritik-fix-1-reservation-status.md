@@ -1,4 +1,4 @@
-# Kritik Fix 1 — ReservationStatus Case Fix + Booking-UI Auth Interceptor
+# Kritik Fix 1 — ReservationStatus + RuleAction Case Fix + Booking-UI Auth Interceptor
 
 ## Sorun
 
@@ -7,7 +7,12 @@
    - booking-ui `src/types/api.ts`: `pending | confirmed | cancelled | completed | no_show` (snake_case, Seated yok)
    - Backend hangi case'i serialize ediyor? Bu tek kaynaktan yönetilmeli.
 
-2. booking-ui `src/lib/api.ts`'de auth token interceptor yok — modify/cancel akışlarında reservation token header'a eklenmiyor.
+2. `RuleAction` enum'unda da aynı sorun (Fable 5 bulgusu):
+   - admin-panel: `'Block' | 'Warn' | 'Suggest' | 'Discount' | 'Deposit' | 'Redirect'` (PascalCase)
+   - booking-ui: `'BLOCK' | 'WARN' | ...` (UPPERCASE) ve `'Redirect'` tipi booking-ui'de hiç yok
+   - booking-ui `.toLowerCase()` ile runtime'da düzeltmeye çalışıyor (BookingPage çevresinde) — kırılgan, backend yeni action eklediğinde sessizce kırılır.
+
+3. booking-ui `src/lib/api.ts`'de auth token interceptor yok — modify/cancel akışlarında reservation token header'a eklenmiyor.
 
 ---
 
@@ -79,6 +84,40 @@ Bulunan tüm string karşılaştırmalarını (`=== 'pending'` → `=== 'Pending
 
 ---
 
+## Adım 4b — booking-ui RuleAction Tip Güncelleme (Fable bulgusu)
+
+`frontend/booking-ui/src/types/api.ts` içinde `RuleAction`'ı şununla değiştir:
+
+```typescript
+// ESKİ (UPPERCASE, Redirect eksik — yanlış):
+export type RuleAction =
+  | 'BLOCK' | 'WARN' | 'SUGGEST' | 'DISCOUNT' | 'DEPOSIT'
+
+// YENİ (PascalCase, backend ile uyumlu, Redirect dahil):
+export type RuleAction =
+  | 'Block' | 'Warn' | 'Suggest' | 'Discount' | 'Deposit' | 'Redirect'
+```
+
+`bookingMappers.ts` ve `BookingPage.tsx` çevresinde `RuleAction` için
+yapılan `.toLowerCase()` / `.toUpperCase()` runtime dönüşümlerini bul:
+
+```bash
+grep -rn "RuleAction\|toLowerCase\|toUpperCase" frontend/booking-ui/src --include="*.ts" --include="*.tsx" | grep -i "rule\|action"
+```
+
+Bulunan tüm dönüşümleri kaldır — artık backend ile birebir aynı case
+geldiği için gerek yok. `switch`/`if` karşılaştırmalarını PascalCase'e
+güncelle (`case 'BLOCK':` → `case 'Block':`).
+
+**Redirect aksiyonu için not:** RuleEnginePipeline.cs:287'de Redirect
+mantığı henüz implement edilmemiş (`// TODO: v2'de redirect mantığı`).
+Eğer admin panelde kural oluştururken Redirect seçeneği seçilebiliyorsa,
+booking-ui'de bu action tipini handle eden bir case ekle ama davranışı
+"Suggest" gibi ele al (fallback) — Redirect tam implement edilene kadar
+booking akışını kırmasın.
+
+---
+
 ## Adım 5 — booking-ui Auth Interceptor
 
 `frontend/booking-ui/src/lib/api.ts` dosyasını aç.
@@ -113,9 +152,9 @@ Token nasıl saklanıyorsa (sessionStorage/localStorage/context) interceptor'ı 
 
 ## Adım 6 — super-admin Tip Kontrolü
 
-`frontend/super-admin/src/` içinde ReservationStatus kullanımı varsa:
+`frontend/super-admin/src/` içinde ReservationStatus veya RuleAction kullanımı varsa:
 ```bash
-grep -r "ReservationStatus\|'pending'\|'confirmed'" frontend/super-admin/src --include="*.ts" --include="*.tsx"
+grep -rn "ReservationStatus\|RuleAction\|'pending'\|'confirmed'\|'BLOCK'\|'WARN'" frontend/super-admin/src --include="*.ts" --include="*.tsx"
 ```
 Bulunursa PascalCase'e güncelle.
 
@@ -135,12 +174,15 @@ cd src/Tablewise.Api && dotnet build
 Backend çalışırken:
 - Booking UI'da bir rezervasyon oluştur
 - Admin Panel'de aynı rezervasyonun durumunun doğru göründüğünü kontrol et
+- Bir kural (rule) tetiklendiğinde (örn. Warn veya Block aksiyonu) booking UI'da doğru mesajın göründüğünü kontrol et
 
 ## Tamamlanma Kriterleri
 
-- [ ] Backend PascalCase enum serialize ediyor
+- [ ] Backend PascalCase enum serialize ediyor (ReservationStatus + RuleAction)
 - [ ] booking-ui ReservationStatus PascalCase
-- [ ] admin-panel ReservationStatus PascalCase
+- [ ] booking-ui RuleAction PascalCase + Redirect tipi tanımlı
+- [ ] admin-panel ReservationStatus ve RuleAction PascalCase
+- [ ] booking-ui'deki toLowerCase/toUpperCase runtime dönüşümleri kaldırıldı
 - [ ] booking-ui auth interceptor reservation token header'a ekliyor
 - [ ] `tsc --noEmit` her iki frontend'de hatasız
 - [ ] `dotnet build` hatasız

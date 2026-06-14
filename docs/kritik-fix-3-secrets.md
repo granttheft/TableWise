@@ -6,6 +6,15 @@
 - JWT secret: `"YOUR_SUPER_SECRET_KEY_MIN_32_CHARS_REPLACE_IN_PRODUCTION"`
 - DB password: `dev_password`
 - Redis password: `dev_password`
+- Connection string'de `Include Error Detail=true` (Fable bulgusu) —
+  production'da SQL hata detaylarının istemciye sızmasına sebep olur.
+
+Ayrıca (Fable bulgusu):
+- `appsettings.Production.json` dosyası hiç yok — production'a özel
+  override katmanı eksik.
+- `TablewiseDbContextFactory.cs:39` — environment variable bulunamazsa
+  dev connection string'e fallback yapıyor, bu sadece Development'ta
+  olmalı.
 
 Faz 9 güvenlik fazına girmeden önce secret yönetimi oturmalı.
 
@@ -52,6 +61,14 @@ User Secrets `%APPDATA%\Microsoft\UserSecrets\` altında saklanır — git'e git
 
 Boş string bırakma — startup'ta kontrol ekleyeceğiz.
 
+> ⚠️ **Fable bulgusu:** Eğer `ConnectionStrings:DefaultConnection`
+> içinde `Include Error Detail=true` parametresi varsa kaldır. Bu
+> parametre Npgsql'in SQL exception detaylarını response'a eklemesine
+> sebep olur — production'da hassas DB bilgisi (tablo/kolon adları,
+> sorgu) istemciye sızabilir. Development connection string'inde
+> kalabilir (appsettings.Development.json), ama production connection
+> string'inde olmamalı.
+
 ---
 
 ## Adım 3 — Startup Validasyonu
@@ -97,6 +114,64 @@ non-secret development override'ları koy:
       "http://localhost:4000"
     ]
   }
+}
+```
+
+---
+
+## Adım 4b — appsettings.Production.json Oluştur (Fable bulgusu)
+
+Yeni dosya: `src/Tablewise.Api/appsettings.Production.json`
+
+```json
+{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Warning",
+      "Microsoft.AspNetCore": "Warning",
+      "Microsoft.EntityFrameworkCore": "Warning"
+    }
+  },
+  "AllowedHosts": "tablewise.com.tr,app.tablewise.com.tr",
+  "Cors": {
+    "AllowedOrigins": [
+      "https://tablewise.com.tr",
+      "https://app.tablewise.com.tr"
+    ]
+  },
+  "WhatsApp": {
+    "SandboxMode": false
+  }
+}
+```
+
+> ⚠️ **Fable bulgusu (WhatsApp SandboxMode):** `SandboxMode: true`
+> appsettings.json'da varsayılan. `appsettings.Production.json`'da
+> açıkça `false` olarak override edilmesi, production'a çıkarken
+> "sandbox modda kaldı" riskini ortadan kaldırır.
+
+### TablewiseDbContextFactory Düzeltmesi
+
+`src/Tablewise.Infrastructure/Persistence/TablewiseDbContextFactory.cs:39`
+içindeki dev connection string fallback'ini sadece Development
+environment'ta etkin olacak şekilde sınırla:
+
+```csharp
+// ESKİ — her ortamda fallback'e düşebiliyor:
+var connectionString = configuration.GetConnectionString("DefaultConnection")
+    ?? "Host=localhost;Port=5433;Database=tablewise_dev;Username=postgres;Password=dev_password";
+
+// YENİ — sadece Development'ta fallback, diğer ortamlarda fail-fast:
+var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production";
+var connectionString = configuration.GetConnectionString("DefaultConnection");
+
+if (string.IsNullOrWhiteSpace(connectionString))
+{
+    if (environment == "Development")
+        connectionString = "Host=localhost;Port=5433;Database=tablewise_dev;Username=postgres;Password=dev_password";
+    else
+        throw new InvalidOperationException(
+            $"ConnectionStrings:DefaultConnection tanımlı değil ({environment} ortamında fallback yok).");
 }
 ```
 
@@ -152,8 +227,13 @@ REDIS_PASSWORD=
 .env
 .env.local
 appsettings.Local.json
-appsettings.Production.json
 ```
+
+> ⚠️ **Not:** `appsettings.Production.json` (Adım 4b'de oluşturulan)
+> **gitignore'a eklenmemeli** — içinde secret yok (CORS origin'leri,
+> log seviyeleri, SandboxMode false). Bu dosya git'e commit edilmeli ki
+> production deploy'da otomatik devreye girsin. Eğer `.gitignore`'da
+> zaten `appsettings.Production.json` varsa o satırı kaldır.
 
 ---
 
@@ -174,6 +254,10 @@ dotnet user-secrets set "JwtSettings:Secret" "..."
 ## Tamamlanma Kriterleri
 
 - [ ] `appsettings.json`'da literal secret yok
+- [ ] `appsettings.json` connection string'inde `Include Error Detail=true` yok
+- [ ] `appsettings.Production.json` oluşturuldu (CORS, logging, SandboxMode: false)
+- [ ] `appsettings.Production.json` git'e commit edilebilir (gitignore'da değil)
+- [ ] `TablewiseDbContextFactory` sadece Development'ta fallback connection string kullanıyor
 - [ ] `dotnet user-secrets list` → tüm kritik secret'lar görünüyor
 - [ ] Startup validasyonu boş secret'ta uygulama başlatmıyor
 - [ ] `docker-compose.yml` environment variable kullanıyor
