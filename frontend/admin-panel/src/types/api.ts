@@ -23,7 +23,7 @@ export interface TodayReservation {
   partySize: number
   reservedFor: string
   tableName: string
-  status: 'Pending' | 'Confirmed' | 'Seated' | 'Completed' | 'Cancelled' | 'NoShow'
+  status: 'Pending' | 'Confirmed' | 'Completed' | 'Cancelled' | 'NoShow' | 'Modified'
 }
 
 export interface AuditLogEntry {
@@ -276,7 +276,7 @@ export interface RuleTestResult {
 export type ReservationStatus = 
   | 'Pending' 
   | 'Confirmed' 
-  | 'Seated' 
+  | 'Modified'
   | 'Completed' 
   | 'Cancelled' 
   | 'NoShow'

@@ -13,7 +13,7 @@ interface TodayReservationsListProps {
 const statusMap: Record<string, { label: string; variant: 'default' | 'secondary' | 'destructive' | 'outline' }> = {
   Pending: { label: 'Bekliyor', variant: 'outline' },
   Confirmed: { label: 'Onaylandı', variant: 'default' },
-  Seated: { label: 'Oturdu', variant: 'secondary' },
+  Modified: { label: 'Değiştirildi', variant: 'secondary' },
   Completed: { label: 'Tamamlandı', variant: 'secondary' },
   Cancelled: { label: 'İptal', variant: 'destructive' },
   NoShow: { label: 'Gelmedi', variant: 'destructive' },

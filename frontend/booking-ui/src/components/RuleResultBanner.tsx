@@ -12,11 +12,13 @@ export function RuleResultBanner({ actions }: RuleResultBannerProps) {
   return (
     <div className="space-y-2">
       {actions.map((action, index) => {
-        const isBlock = action.actionType === 'BLOCK';
-        const isWarn = action.actionType === 'WARN';
-        const isDiscount = action.actionType === 'DISCOUNT';
-        const isDeposit = action.actionType === 'DEPOSIT';
-        const isSuggest = action.actionType === 'SUGGEST';
+        const isBlock = action.actionType === 'Block';
+        const isWarn = action.actionType === 'Warn';
+        const isDiscount = action.actionType === 'Discount';
+        const isDeposit = action.actionType === 'Deposit';
+        // Redirect henüz tam implement edilmedi — Suggest gibi bilgi banner'ı olarak ele al
+        const isSuggest =
+          action.actionType === 'Suggest' || action.actionType === 'Redirect';
 
         return (
           <div

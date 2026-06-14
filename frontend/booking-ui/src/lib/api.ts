@@ -110,7 +110,7 @@ export async function createReservation(
   return {
     reservationId: response.data.reservationId,
     confirmationCode: response.data.confirmCode,
-    status: (response.data.status || 'confirmed').toLowerCase() as ReservationResponse['status'],
+    status: (response.data.status ?? 'Confirmed') as ReservationResponse['status'],
     depositRequired: response.data.depositRequired ?? false,
     depositAmount: response.data.depositAmount,
     whatsAppConsent: response.data.whatsAppConsent ?? false,

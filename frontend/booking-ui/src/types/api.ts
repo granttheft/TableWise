@@ -84,7 +84,7 @@ export interface RuleEvaluationResult {
 }
 
 export interface RuleAction {
-  actionType: 'BLOCK' | 'WARN' | 'DISCOUNT' | 'DEPOSIT' | 'SUGGEST';
+  actionType: 'Block' | 'Warn' | 'Suggest' | 'Discount' | 'Deposit' | 'Redirect';
   message: string;
   value?: number; // for DISCOUNT (percentage) or DEPOSIT (amount)
   suggestedTableId?: string; // for SUGGEST
@@ -114,12 +114,13 @@ export interface ReservationResponse {
   whatsAppConsent?: boolean;
 }
 
-export type ReservationStatus = 
-  | 'pending' 
-  | 'confirmed' 
-  | 'cancelled' 
-  | 'completed' 
-  | 'no_show';
+export type ReservationStatus =
+  | 'Pending'
+  | 'Confirmed'
+  | 'Completed'
+  | 'Cancelled'
+  | 'NoShow'
+  | 'Modified';
 
 export interface ReservationDetail {
   reservationId: string;

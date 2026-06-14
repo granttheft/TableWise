@@ -35,10 +35,10 @@ export function Step5Confirm({
   onBack,
 }: Step5ConfirmProps) {
   const depositAction = evaluationResult?.actions.find(
-    (a) => a.actionType === 'DEPOSIT'
+    (a) => a.actionType === 'Deposit'
   );
   const discountAction = evaluationResult?.actions.find(
-    (a) => a.actionType === 'DISCOUNT'
+    (a) => a.actionType === 'Discount'
   );
 
   const requiresDeposit = !!depositAction?.value;

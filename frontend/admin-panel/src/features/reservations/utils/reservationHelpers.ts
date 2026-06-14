@@ -9,7 +9,7 @@ export function getStatusLabel(status: ReservationStatus): string {
   const labels: Record<ReservationStatus, string> = {
     Pending: 'Bekliyor',
     Confirmed: 'Onaylandı',
-    Seated: 'Oturdu',
+    Modified: 'Değiştirildi',
     Completed: 'Tamamlandı',
     Cancelled: 'İptal',
     NoShow: 'Gelmedi',
@@ -24,7 +24,7 @@ export function getStatusColor(status: ReservationStatus): string {
   const colors: Record<ReservationStatus, string> = {
     Pending: 'bg-amber-500',
     Confirmed: 'bg-emerald-500',
-    Seated: 'bg-blue-500',
+    Modified: 'bg-purple-500',
     Completed: 'bg-slate-500',
     Cancelled: 'bg-gray-400 opacity-50',
     NoShow: 'bg-rose-500',
@@ -39,7 +39,7 @@ export function getStatusVariant(status: ReservationStatus): 'default' | 'second
   const variants: Record<ReservationStatus, 'default' | 'secondary' | 'destructive' | 'outline'> = {
     Pending: 'outline',
     Confirmed: 'default',
-    Seated: 'secondary',
+    Modified: 'secondary',
     Completed: 'secondary',
     Cancelled: 'destructive',
     NoShow: 'destructive',

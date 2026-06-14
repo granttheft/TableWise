@@ -309,7 +309,7 @@ export function mapEvaluateResponseFromApi(
 
   if (data.isAllowed === false && data.blockReason) {
     actions.push({
-      actionType: 'BLOCK',
+      actionType: 'Block',
       message: data.blockReason,
     });
   }
@@ -317,7 +317,7 @@ export function mapEvaluateResponseFromApi(
   for (const warning of data.warnings ?? []) {
     if (warning) {
       actions.push({
-        actionType: 'WARN',
+        actionType: 'Warn',
         message: warning,
       });
     }
@@ -325,7 +325,7 @@ export function mapEvaluateResponseFromApi(
 
   if (data.discountPercent != null && data.discountPercent > 0) {
     actions.push({
-      actionType: 'DISCOUNT',
+      actionType: 'Discount',
       message: 'Indirim uygulanacak',
       value: Number(data.discountPercent),
     });
@@ -333,7 +333,7 @@ export function mapEvaluateResponseFromApi(
 
   if (data.requiresDeposit && data.depositAmount != null) {
     actions.push({
-      actionType: 'DEPOSIT',
+      actionType: 'Deposit',
       message: 'Bu rezervasyon icin on odeme gerekmektedir.',
       value: Number(data.depositAmount),
     });

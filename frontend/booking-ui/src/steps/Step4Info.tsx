@@ -142,7 +142,7 @@ export function Step4Info({
 
   const canProceed = evaluationResult?.canProceed ?? true;
   const hasBlockingAction =
-    evaluationResult?.actions.some((a) => a.actionType === 'BLOCK') ?? false;
+    evaluationResult?.actions.some((a) => a.actionType === 'Block') ?? false;
 
   const onSubmit = (data: SchemaType) => {
     onFormDataChange({

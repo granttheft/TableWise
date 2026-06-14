@@ -71,7 +71,7 @@ export function CancelPage() {
     );
   }
 
-  if (reservation.status === 'cancelled') {
+  if (reservation.status === 'Cancelled') {
     return (
       <div className="min-h-screen flex items-center justify-center px-4">
         <div className="text-center">
