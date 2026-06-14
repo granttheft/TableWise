@@ -83,6 +83,20 @@ try
     var jwtSettings = builder.Configuration.GetSection(JwtSettings.SectionName).Get<JwtSettings>()
         ?? throw new InvalidOperationException("JWT ayarları bulunamadı.");
 
+    // Secret validasyonu — boş/zayıf secret ile uygulama başlamasın (fail-fast)
+    if (string.IsNullOrWhiteSpace(jwtSettings.SecretKey) || jwtSettings.SecretKey.Length < 32)
+        throw new InvalidOperationException(
+            "Jwt:SecretKey tanımlı değil veya 32 karakterden kısa. " +
+            "Development için appsettings.Development.json / appsettings.Local.json " +
+            "veya: dotnet user-secrets set \"Jwt:SecretKey\" \"...\". " +
+            "Production için Jwt__SecretKey environment variable set edin.");
+
+    var connStr = builder.Configuration.GetConnectionString("DefaultConnection");
+    if (string.IsNullOrWhiteSpace(connStr))
+        throw new InvalidOperationException(
+            "ConnectionStrings:DefaultConnection tanımlı değil. " +
+            "Production için ConnectionStrings__DefaultConnection environment variable set edin.");
+
     builder.Services.AddAuthentication(options =>
     {
         options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;

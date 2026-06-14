@@ -35,8 +35,18 @@ public class TablewiseDbContextFactory : IDesignTimeDbContextFactory<TablewiseDb
         // DbContext options
         var optionsBuilder = new DbContextOptionsBuilder<TablewiseDbContext>();
 
-        var connectionString = configuration.GetConnectionString("DefaultConnection")
-            ?? "Host=localhost;Database=tablewise;Username=tablewise_user;Password=dev_password";
+        // Sadece Development'ta fallback connection string kullan; diğer ortamlarda fail-fast
+        var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production";
+        var connectionString = configuration.GetConnectionString("DefaultConnection");
+
+        if (string.IsNullOrWhiteSpace(connectionString))
+        {
+            if (environment == "Development")
+                connectionString = "Host=localhost;Port=5433;Database=tablewise;Username=tablewise_user;Password=dev_password";
+            else
+                throw new InvalidOperationException(
+                    $"ConnectionStrings:DefaultConnection tanımlı değil ({environment} ortamında fallback yok).");
+        }
 
         optionsBuilder.UseNpgsql(connectionString, npgsqlOptions =>
         {
