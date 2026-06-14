@@ -3,7 +3,10 @@ using System.Text.Json.Serialization;
 using System.Threading.RateLimiting;
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Sentry;
@@ -282,9 +285,17 @@ try
     builder.Services.AddProblemDetails();
 
     // Health Checks
+    // live tag = liveness (API ayakta mı?), ready tag = readiness (DB/Redis hazır mı?)
     builder.Services.AddHealthChecks()
-        .AddNpgSql(builder.Configuration.GetConnectionString("DefaultConnection")!, name: "postgresql")
-        .AddRedis(builder.Configuration["Redis:ConnectionString"] ?? "localhost:6379", name: "redis");
+        .AddNpgSql(
+            builder.Configuration.GetConnectionString("DefaultConnection")!,
+            name: "postgresql",
+            tags: ["db", "ready"])
+        .AddRedis(
+            builder.Configuration["Redis:ConnectionString"] ?? "localhost:6379",
+            name: "redis",
+            tags: ["cache", "ready"])
+        .AddCheck("api", () => HealthCheckResult.Healthy("API çalışıyor"), tags: ["api", "live"]);
 
     var app = builder.Build();
 
@@ -377,9 +388,35 @@ try
     app.MapControllers();
 
     // 11. Health Checks
-    app.MapHealthChecks("/health");
-    app.MapHealthChecks("/healthz");
-    app.MapHealthChecks("/ready");
+    // Liveness — sadece API ayakta mı? (DB/Redis'e bakmaz, Docker/LB için hızlı)
+    app.MapHealthChecks("/health/live", new HealthCheckOptions
+    {
+        Predicate = check => check.Tags.Contains("live"),
+        ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+    }).AllowAnonymous();
+
+    // Readiness — DB + Redis hazır mı? (trafiğe hazır mıyız?)
+    app.MapHealthChecks("/health/ready", new HealthCheckOptions
+    {
+        Predicate = check => check.Tags.Contains("ready"),
+        ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+    }).AllowAnonymous();
+
+    // Genel — tüm kontroller, JSON detay
+    app.MapHealthChecks("/health", new HealthCheckOptions
+    {
+        ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+    }).AllowAnonymous();
+
+    // Geriye dönük uyumluluk (eski endpoint'ler)
+    app.MapHealthChecks("/healthz", new HealthCheckOptions
+    {
+        Predicate = check => check.Tags.Contains("live")
+    }).AllowAnonymous();
+    app.MapHealthChecks("/ready", new HealthCheckOptions
+    {
+        Predicate = check => check.Tags.Contains("ready")
+    }).AllowAnonymous();
 
     Log.Information("Tablewise API başlatıldı. Environment: {Environment}", app.Environment.EnvironmentName);
 

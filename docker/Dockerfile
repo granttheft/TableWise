@@ -1,6 +1,10 @@
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 WORKDIR /app
 EXPOSE 5000
+# HEALTHCHECK için curl gerekli (aspnet runtime imajında yok)
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends curl \
+    && rm -rf /var/lib/apt/lists/*
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
@@ -21,4 +25,6 @@ RUN dotnet publish "Tablewise.Api.csproj" -c Release -o /app/publish /p:UseAppHo
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
+HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
+  CMD curl -f http://localhost:5000/health/live || exit 1
 ENTRYPOINT ["dotnet", "Tablewise.Api.dll"]
